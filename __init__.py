@@ -398,11 +398,13 @@ def create_app():
     from app.track.routes import track_bp
     from app.pages.routes import pages_bp
     from app.admin import admin_bp
+    from app.admin.flask_admin_setup import init_flask_admin
 
     app.register_blueprint(main_bp)
     app.register_blueprint(track_bp)
     app.register_blueprint(pages_bp)
     app.register_blueprint(admin_bp)
+    init_flask_admin(app)
     _apply_security_headers(app)
 
     @app.route("/health")
