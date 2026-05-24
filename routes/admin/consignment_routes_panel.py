@@ -1,7 +1,6 @@
 import logging
-from flask import render_template, request
+from flask import redirect, request, url_for
 from app.controllers.responses import json_error, json_success
-from sqlalchemy.exc import DatabaseError, OperationalError, ProgrammingError
 
 from app import limiter
 from app.admin import admin_bp
@@ -14,7 +13,6 @@ from app.services.pod_storage import (
     store_pod_bytes as _store_pod_bytes,
     delete_pod_file as _delete_pod_file,
 )
-from app.utils.errors import is_missing_column_error as _is_missing_column_error
 from app.services.logistics import (
     normalize_consignment_number,
     normalize_indian_pincode,
@@ -30,63 +28,10 @@ def _get_consignment_handles():
     return Consignment, db
 
 
-# `_is_missing_column_error` is imported from `app.utils.errors` to centralize
-# database schema-related error detection.
-
-
 @admin_bp.route("/admin/consignments", methods=["GET"], endpoint="consignments_panel")
 @require_admin
 def consignments_panel():
-    try:
-        # Delegate DB and data-shaping logic to the controller.
-        from app.controllers.consignment_controller import get_panel_rows
-
-        rows, total, large = get_panel_rows()
-        if large:
-            logger.info(
-                "consignments_panel: large table detected (total=%d); rendering empty sample and deferring to API",
-                total,
-            )
-
-        return render_template(
-            "admin/consignments.html",
-            consignments=rows,
-        )
-    except ProgrammingError as error:
-        try:
-            # Attempt rollback on DB programming errors; controller used DB directly.
-            Consignment, db = _get_consignment_handles()
-            db.session.rollback()
-        except Exception:
-            logger.exception("Failed to rollback DB session after programming error")
-        if _is_missing_column_error(error):
-            logger.exception("Schema mismatch loading admin panel")
-            return render_template(
-                "admin/consignments.html",
-                consignments=[],
-                error="Database schema needs an update. Missing consignment fields.",
-            )
-
-        logger.exception("Database error loading admin panel")
-        return render_template(
-            "admin/consignments.html",
-            consignments=[],
-            error="Unable to load data. Please try again.",
-        )
-    except (OperationalError, DatabaseError):
-        logger.exception("Database error loading admin panel")
-        return render_template(
-            "admin/consignments.html",
-            consignments=[],
-            error="Unable to load data. Please try again.",
-        )
-    except Exception:
-        logger.exception("Unexpected error in admin panel")
-        return render_template(
-            "admin/consignments.html",
-            consignments=[],
-            error="An unexpected error occurred.",
-        )
+    return redirect(url_for("consignments_admin.index_view"))
 
 
 @admin_bp.route(
@@ -94,54 +39,7 @@ def consignments_panel():
 )
 @require_admin
 def consignments_list_api():
-    try:
-        # Delegate DB access + pagination to controller helper
-        from app.controllers.consignment_controller import get_list_rows
-
-        page = request.args.get("page", 1, type=int)
-        per_page = request.args.get("per_page", 10, type=int)
-        search = request.args.get("search", "", type=str).strip()
-        sort_by = request.args.get("sort_by", "id", type=str)
-        sort_order = request.args.get("sort_order", "asc", type=str)
-
-        rows, paginated = get_list_rows(
-            page=page,
-            per_page=per_page,
-            search=search,
-            sort_by=sort_by,
-            sort_order=sort_order,
-        )
-
-        return render_template(
-            "admin/consignments.html",
-            consignments=rows,
-        )
-
-    except ProgrammingError as error:
-        try:
-            db.session.rollback()
-        except Exception:
-            logger.exception(
-                "Failed to rollback DB session after programming error in API"
-            )
-        if _is_missing_column_error(error):
-            logger.exception("Schema mismatch in consignments API")
-            return json_error(
-                "Database schema needs an update. Missing consignment fields.", 500
-            )
-
-        logger.exception("Database error in consignments API")
-        return json_error("Unable to load data. Please try again.", 500)
-    except (OperationalError, DatabaseError):
-        try:
-            db.session.rollback()
-        except Exception:
-            logger.exception("Failed to rollback DB session after DB error in API")
-        logger.exception("Database error in consignments API")
-        return json_error("Database connection error. Please try again.", 500)
-    except Exception:
-        logger.exception("Unexpected error in consignments API")
-        return json_error("An unexpected error occurred.", 500)
+    return redirect(url_for("consignments_admin.index_view"))
 
 
 @admin_bp.route(
