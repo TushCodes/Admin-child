@@ -65,7 +65,9 @@ def init_app(app, level=None, logfile=None, max_bytes=10 * 1024 * 1024, backup_c
 
     configured_logfile = logfile or app.config.get("LOG_FILE")
     if configured_logfile:
-        fh = RotatingFileHandler(configured_logfile, maxBytes=max_bytes, backupCount=backup_count)
+        fh = RotatingFileHandler(
+            configured_logfile, maxBytes=max_bytes, backupCount=backup_count
+        )
         fh.setLevel(conf_level)
         fh.setFormatter(formatter)
         fh.addFilter(RequestIdFilter())
@@ -78,8 +80,9 @@ def init_app(app, level=None, logfile=None, max_bytes=10 * 1024 * 1024, backup_c
     @app.before_request
     def _set_request_id():
         # Respect an incoming request id header, else generate one for correlation
-        rid = request.headers.get("X-Request-ID") or request.headers.get("X-RequestID") or str(uuid.uuid4())
+        rid = (
+            request.headers.get("X-Request-ID")
+            or request.headers.get("X-RequestID")
+            or str(uuid.uuid4())
+        )
         g.request_id = rid
-
-
-

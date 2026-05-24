@@ -1,6 +1,7 @@
-"""Controller helpers for admin backup generation.
+"""Shared controller helpers for backup and serialization.
 
-Contains serialization helpers and a function to build the backup payload.
+This module centralizes common controller logic so routes can remain thin
+and focused on HTTP concerns.
 """
 from datetime import datetime, UTC
 import io
@@ -49,8 +50,7 @@ def build_backup_payload(table_specs):
     for table_name, model_class, excluded_fields in table_specs:
         rows = model_class.query.order_by(model_class.id.asc()).all()
         backup_payload[table_name] = [
-            serialize_model_row(row, excluded_fields=excluded_fields)
-            for row in rows
+            serialize_model_row(row, excluded_fields=excluded_fields) for row in rows
         ]
         table_counts[table_name] = len(rows)
 

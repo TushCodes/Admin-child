@@ -21,5 +21,5 @@ def transaction(db):
         try:
             db.session.rollback()
         except Exception:
-            logger.exception('Failed to rollback DB session')
+            logger.exception("Failed to rollback DB session")
         raise

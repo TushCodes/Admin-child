@@ -16,7 +16,13 @@ def get_map_all() -> Dict[int, Consignment]:
     return {c.id: c for c in Consignment.query.all()}
 
 
-def list_paginated(page: int = 1, per_page: int = 10, search: str = "", sort_by: str = "id", sort_order: str = "asc") -> Tuple[List[Consignment], int, int, bool, bool]:
+def list_paginated(
+    page: int = 1,
+    per_page: int = 10,
+    search: str = "",
+    sort_by: str = "id",
+    sort_order: str = "asc",
+) -> Tuple[List[Consignment], int, int, bool, bool]:
     query = Consignment.query
     if search:
         pattern = f"%{search}%"
@@ -41,7 +47,13 @@ def list_paginated(page: int = 1, per_page: int = 10, search: str = "", sort_by:
         query = query.order_by(sort_column.desc())
 
     paginated = query.paginate(page=page, per_page=per_page, error_out=False)
-    return paginated.items, total, paginated.pages, paginated.has_prev, paginated.has_next
+    return (
+        paginated.items,
+        total,
+        paginated.pages,
+        paginated.has_prev,
+        paginated.has_next,
+    )
 
 
 def query_existing_numbers() -> set:

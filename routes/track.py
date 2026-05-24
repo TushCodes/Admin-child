@@ -6,7 +6,7 @@ import requests
 
 from flask import Blueprint, render_template, request
 from flask import redirect, send_file, current_app
-from app.utils.response import json_error
+from app.controllers.responses import json_error
 from sqlalchemy.exc import DatabaseError, OperationalError
 
 from app.models import db
@@ -38,13 +38,17 @@ def track_page():
         else:
             logger.info("Track lookup received for consignment %s", number)
             try:
-                consignment = TrackConsignment.query.filter_by(consignment_number=number).first()
+                consignment = TrackConsignment.query.filter_by(
+                    consignment_number=number
+                ).first()
 
                 if consignment:
                     logger.info("Shipment found for consignment %s", number)
                 else:
                     logger.info("Shipment not found for consignment %s", number)
-                    error_message = "Consignment not found. Please check the number and try again."
+                    error_message = (
+                        "Consignment not found. Please check the number and try again."
+                    )
             except (OperationalError, DatabaseError) as error:
                 logger.error("Database error while tracking %s: %s", number, error)
                 error_message = "Unable to connect to database. Please try again later."
@@ -59,7 +63,9 @@ def track_page():
     )
 
 
-@track_bp.route("/track/pod/<consignment_number>", methods=["GET"], endpoint="consignment_pod")
+@track_bp.route(
+    "/track/pod/<consignment_number>", methods=["GET"], endpoint="consignment_pod"
+)
 def consignment_pod(consignment_number):
     """Serve or stream the POD for a consignment identified by number.
 
@@ -71,13 +77,17 @@ def consignment_pod(consignment_number):
         if not number:
             return json_error("Consignment number required.", 400)
 
-        consignment = TrackConsignment.query.filter_by(consignment_number=number).first()
+        consignment = TrackConsignment.query.filter_by(
+            consignment_number=number
+        ).first()
         if not consignment or not getattr(consignment, "pod_image", None):
-                return json_error("No POD found.", 404)
+            return json_error("No POD found.", 404)
 
         pod_path = consignment.pod_image
         # If it's already a full URL, attempt to proxy and force download
-        if isinstance(pod_path, str) and (pod_path.startswith("http://") or pod_path.startswith("https://")):
+        if isinstance(pod_path, str) and (
+            pod_path.startswith("http://") or pod_path.startswith("https://")
+        ):
             try:
                 resp = requests.get(pod_path, stream=True, timeout=15)
                 resp.raise_for_status()
@@ -88,16 +98,27 @@ def consignment_pod(consignment_number):
                 # Try to convert to JPEG to ensure consistent .jpg download
                 try:
                     from PIL import Image
+
                     img = Image.open(io.BytesIO(content_bytes))
                     out = io.BytesIO()
                     rgb = img.convert("RGB")
                     rgb.save(out, format="JPEG", quality=85)
                     out.seek(0)
-                    return send_file(out, as_attachment=True, download_name=filename, mimetype='image/jpeg')
+                    return send_file(
+                        out,
+                        as_attachment=True,
+                        download_name=filename,
+                        mimetype="image/jpeg",
+                    )
                 except Exception:
                     # fallback to proxying original bytes with original content-type
                     content = io.BytesIO(content_bytes)
-                    return send_file(content, as_attachment=True, download_name=filename, mimetype=ctype)
+                    return send_file(
+                        content,
+                        as_attachment=True,
+                        download_name=filename,
+                        mimetype=ctype,
+                    )
             except Exception:
                 return json_error("Failed to retrieve external POD.", 502)
 
@@ -105,13 +126,14 @@ def consignment_pod(consignment_number):
         if isinstance(pod_path, str) and pod_path.startswith("supabase:"):
             try:
                 from app.services.pod_storage import get_pod_url as _get_pod_url
-                ttl = int(os.getenv('SUPABASE_SIGNED_URL_TTL', '30'))
+
+                ttl = int(os.getenv("SUPABASE_SIGNED_URL_TTL", "30"))
                 url = _get_pod_url(pod_path, ttl=ttl)
                 if not url:
                     return json_error("Unable to generate POD URL.", 500)
                 return redirect(url)
             except Exception:
-                logger.exception('Error generating Supabase POD URL')
+                logger.exception("Error generating Supabase POD URL")
                 return json_error("Failed to serve POD.", 500)
 
         # Otherwise treat as local filename under instance/uploads
@@ -126,15 +148,23 @@ def consignment_pod(consignment_number):
         # serve as attachment so browsers download; convert to JPEG for consistent .jpg
         try:
             from PIL import Image
-            with open(safe_path, 'rb') as fh:
+
+            with open(safe_path, "rb") as fh:
                 img = Image.open(fh)
                 out = io.BytesIO()
                 rgb = img.convert("RGB")
                 rgb.save(out, format="JPEG", quality=85)
                 out.seek(0)
-                return send_file(out, as_attachment=True, download_name=f"{number}_pod.jpg", mimetype='image/jpeg')
+                return send_file(
+                    out,
+                    as_attachment=True,
+                    download_name=f"{number}_pod.jpg",
+                    mimetype="image/jpeg",
+                )
         except Exception:
             # if conversion fails, send the original file with its filename
-            return send_file(safe_path, as_attachment=True, download_name=os.path.basename(safe_path))
+            return send_file(
+                safe_path, as_attachment=True, download_name=os.path.basename(safe_path)
+            )
     except Exception:
         return json_error("Failed to serve POD.", 500)

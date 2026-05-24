@@ -1,12 +1,16 @@
 import logging
 from flask import flash, redirect, request, send_file, url_for
-from app.utils.response import json_error
+from app.controllers.responses import json_error
 from openpyxl import Workbook
 from sqlalchemy.exc import DatabaseError, OperationalError, ProgrammingError
 
 from app.admin import admin_bp
 from app.admin.auth import require_admin
-from app.services.consignment_importer import import_from_workbook, generate_import_template_bytes, export_rows_to_workbook_bytes
+from app.services.consignment_importer import (
+    import_from_workbook,
+    generate_import_template_bytes,
+    export_rows_to_workbook_bytes,
+)
 from app.services.logistics import (
     normalize_consignment_number,
     normalize_indian_pincode,
@@ -18,12 +22,14 @@ logger = logging.getLogger(__name__)
 
 
 def _get_consignment_handles():
-    from app.admin import consignment_controller
+    from app.controllers.consignment_controller import Consignment, db
 
-    return consignment_controller.Consignment, consignment_controller.db
+    return Consignment, db
 
 
-@admin_bp.route("/admin/consignments/import", methods=["POST"], endpoint="consignments_import_excel")
+@admin_bp.route(
+    "/admin/consignments/import", methods=["POST"], endpoint="consignments_import_excel"
+)
 @require_admin
 def consignments_import_excel():
     Consignment, db = _get_consignment_handles()
@@ -47,7 +53,10 @@ def consignments_import_excel():
             normalize_indian_pincode=normalize_indian_pincode,
         )
 
-        flash(f"Import completed. Added: {added_count}, skipped duplicates: {skipped_count}.", "success")
+        flash(
+            f"Import completed. Added: {added_count}, skipped duplicates: {skipped_count}.",
+            "success",
+        )
         return redirect(url_for("admin.consignments_panel"))
     except ValueError as error:
         try:
@@ -60,13 +69,19 @@ def consignments_import_excel():
         try:
             db.session.rollback()
         except Exception:
-            logger.exception("Failed to rollback DB session after unexpected import error")
+            logger.exception(
+                "Failed to rollback DB session after unexpected import error"
+            )
         logger.exception("Unexpected error in Excel import")
         flash("Failed to import Excel file.", "danger")
         return redirect(url_for("admin.consignments_panel"))
 
 
-@admin_bp.route("/admin/consignments/export.xlsx", methods=["GET"], endpoint="consignments_export_excel")
+@admin_bp.route(
+    "/admin/consignments/export.xlsx",
+    methods=["GET"],
+    endpoint="consignments_export_excel",
+)
 @require_admin
 def consignments_export_excel():
     try:
@@ -85,7 +100,11 @@ def consignments_export_excel():
         return json_error("Failed to export Excel.")
 
 
-@admin_bp.route("/admin/consignments/export.pdf", methods=["GET"], endpoint="consignments_export_pdf")
+@admin_bp.route(
+    "/admin/consignments/export.pdf",
+    methods=["GET"],
+    endpoint="consignments_export_pdf",
+)
 @require_admin
 def consignments_export_pdf():
     try:
@@ -104,7 +123,11 @@ def consignments_export_pdf():
         return json_error("Failed to export PDF.")
 
 
-@admin_bp.route("/admin/consignments/import-template.xlsx", methods=["GET"], endpoint="consignments_import_template_excel")
+@admin_bp.route(
+    "/admin/consignments/import-template.xlsx",
+    methods=["GET"],
+    endpoint="consignments_import_template_excel",
+)
 @require_admin
 def consignments_import_template_excel():
     try:

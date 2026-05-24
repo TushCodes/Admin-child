@@ -2,12 +2,12 @@
 
 import logging
 from flask import send_file, session
-from app.utils.response import json_error
+from app.controllers.responses import json_error
 from app import limiter
 from app.admin import admin_bp
 from app.admin.auth import require_admin
 from app.models import Consignment, Lead
-from app.admin.backup import build_backup_payload
+from app.controllers import build_backup_payload
 
 logger = logging.getLogger(__name__)
 
@@ -52,5 +52,7 @@ def generate_backup():
             mimetype="application/json",
         )
     except Exception as e:
-        logger.error("Admin backup generation failed for %s: %s", admin_user, e, exc_info=True)
+        logger.error(
+            "Admin backup generation failed for %s: %s", admin_user, e, exc_info=True
+        )
         return json_error("Failed to generate backup.", 500)

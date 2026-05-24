@@ -1,13 +1,19 @@
 import logging
 from flask import render_template, request
-from app.utils.response import json_error, json_success
+from app.controllers.responses import json_error, json_success
 from sqlalchemy.exc import DatabaseError, OperationalError, ProgrammingError
 
 from app import limiter
 from app.admin import admin_bp
 from app.admin.auth import require_admin
-from app.services.consignment_service import validate_and_normalize_rows, apply_consignment_changes
-from app.services.pod_storage import store_pod_bytes as _store_pod_bytes, delete_pod_file as _delete_pod_file
+from app.services.consignment_service import (
+    validate_and_normalize_rows,
+    apply_consignment_changes,
+)
+from app.services.pod_storage import (
+    store_pod_bytes as _store_pod_bytes,
+    delete_pod_file as _delete_pod_file,
+)
 from app.utils.errors import is_missing_column_error as _is_missing_column_error
 from app.services.logistics import (
     normalize_consignment_number,
@@ -19,9 +25,9 @@ logger = logging.getLogger(__name__)
 
 
 def _get_consignment_handles():
-    from app.admin import consignment_controller
+    from app.controllers.consignment_controller import Consignment, db
 
-    return consignment_controller.Consignment, consignment_controller.db
+    return Consignment, db
 
 
 # `_is_missing_column_error` is imported from `app.utils.errors` to centralize
@@ -33,11 +39,14 @@ def _get_consignment_handles():
 def consignments_panel():
     try:
         # Delegate DB and data-shaping logic to the controller.
-        from app.admin.consignment_controller import get_panel_rows
+        from app.controllers.consignment_controller import get_panel_rows
 
         rows, total, large = get_panel_rows()
         if large:
-            logger.info("consignments_panel: large table detected (total=%d); rendering empty sample and deferring to API", total)
+            logger.info(
+                "consignments_panel: large table detected (total=%d); rendering empty sample and deferring to API",
+                total,
+            )
 
         return render_template(
             "admin/consignments.html",
@@ -80,12 +89,14 @@ def consignments_panel():
         )
 
 
-@admin_bp.route("/admin/consignments/list", methods=["GET"], endpoint="consignments_list_api")
+@admin_bp.route(
+    "/admin/consignments/list", methods=["GET"], endpoint="consignments_list_api"
+)
 @require_admin
 def consignments_list_api():
     try:
         # Delegate DB access + pagination to controller helper
-        from app.admin.consignment_controller import get_list_rows
+        from app.controllers.consignment_controller import get_list_rows
 
         page = request.args.get("page", 1, type=int)
         per_page = request.args.get("per_page", 10, type=int)
@@ -93,7 +104,13 @@ def consignments_list_api():
         sort_by = request.args.get("sort_by", "id", type=str)
         sort_order = request.args.get("sort_order", "asc", type=str)
 
-        rows, paginated = get_list_rows(page=page, per_page=per_page, search=search, sort_by=sort_by, sort_order=sort_order)
+        rows, paginated = get_list_rows(
+            page=page,
+            per_page=per_page,
+            search=search,
+            sort_by=sort_by,
+            sort_order=sort_order,
+        )
 
         return render_template(
             "admin/consignments.html",
@@ -104,10 +121,14 @@ def consignments_list_api():
         try:
             db.session.rollback()
         except Exception:
-            logger.exception("Failed to rollback DB session after programming error in API")
+            logger.exception(
+                "Failed to rollback DB session after programming error in API"
+            )
         if _is_missing_column_error(error):
             logger.exception("Schema mismatch in consignments API")
-            return json_error("Database schema needs an update. Missing consignment fields.", 500)
+            return json_error(
+                "Database schema needs an update. Missing consignment fields.", 500
+            )
 
         logger.exception("Database error in consignments API")
         return json_error("Unable to load data. Please try again.", 500)
@@ -123,7 +144,9 @@ def consignments_list_api():
         return json_error("An unexpected error occurred.", 500)
 
 
-@admin_bp.route("/admin/consignments/save", methods=["POST"], endpoint="consignments_save")
+@admin_bp.route(
+    "/admin/consignments/save", methods=["POST"], endpoint="consignments_save"
+)
 @limiter.limit("25 per minute")
 @require_admin
 def consignments_save():
@@ -148,7 +171,9 @@ def consignments_save():
             try:
                 db.session.rollback()
             except Exception:
-                logger.exception("Failed to rollback DB session after validation errors")
+                logger.exception(
+                    "Failed to rollback DB session after validation errors"
+                )
             return json_error("Validation failed.", 400, errors=errors)
 
         try:
@@ -164,19 +189,25 @@ def consignments_save():
             try:
                 db.session.rollback()
             except Exception:
-                logger.exception("Failed to rollback DB session after value error in save")
+                logger.exception(
+                    "Failed to rollback DB session after value error in save"
+                )
             return json_error(str(error), 400)
 
-        return json_success({
-            "message": "Sheet saved successfully.",
-            "deleted_count": deleted_count,
-            "total": total,
-        })
+        return json_success(
+            {
+                "message": "Sheet saved successfully.",
+                "deleted_count": deleted_count,
+                "total": total,
+            }
+        )
 
     except Exception:
         try:
             db.session.rollback()
         except Exception:
-            logger.exception("Failed to rollback DB session after unexpected error in save")
+            logger.exception(
+                "Failed to rollback DB session after unexpected error in save"
+            )
         logger.exception("Unexpected error in admin save")
         return json_error("An unexpected error occurred. Please try again.", 500)

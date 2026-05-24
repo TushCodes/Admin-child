@@ -3,6 +3,7 @@ from datetime import datetime, UTC
 
 db = SQLAlchemy()
 
+
 class Consignment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     consignment_number = db.Column(db.String(16), unique=True, nullable=False)
@@ -28,5 +29,6 @@ class Lead(db.Model):
     phone = db.Column(db.String(30))
     subject = db.Column(db.String(200))
     message = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False, default=lambda: datetime.now(UTC))
-
+    created_at = db.Column(
+        db.DateTime, nullable=False, default=lambda: datetime.now(UTC)
+    )

@@ -1,3 +1,0 @@
-1. normalize_header - move
-2. consignments_panel - remove
-3. _is_missing_column_error - move

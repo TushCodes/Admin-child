@@ -12,11 +12,7 @@ from app.utils.db import transaction
 logger = logging.getLogger(__name__)
 
 
-main_bp = Blueprint(
-    "main",
-    __name__,
-    template_folder="templates"
-)
+main_bp = Blueprint("main", __name__, template_folder="templates")
 
 
 # ----------------------------
@@ -45,35 +41,35 @@ def about():
 def contact():
     if request.method == "POST":
         try:
-            source = request.form.get('source', '').strip().lower()
-            return_to_homepage = source == 'homepage'
+            source = request.form.get("source", "").strip().lower()
+            return_to_homepage = source == "homepage"
 
             def _redirect_after_submit():
                 if return_to_homepage:
                     return redirect(url_for("main.index") + "#contact")
                 return redirect(url_for("main.contact"))
 
-            name = request.form.get('name', '').strip()
-            email = request.form.get('email', '').strip()
-            phone = request.form.get('phone', '').strip()
-            subject = request.form.get('subject', '').strip()
-            message = request.form.get('message', '').strip()
-            
+            name = request.form.get("name", "").strip()
+            email = request.form.get("email", "").strip()
+            phone = request.form.get("phone", "").strip()
+            subject = request.form.get("subject", "").strip()
+            message = request.form.get("message", "").strip()
+
             # Validate inputs
             if not name or not email or not phone or not message:
                 flash("Please fill in all required fields.", "error")
                 if return_to_homepage:
                     return _redirect_after_submit()
                 return render_template("main/contact.html")
-            
+
             # Validate email format
-            email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+            email_pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
             if not re.match(email_pattern, email):
                 flash("Please enter a valid email address.", "error")
                 if return_to_homepage:
                     return _redirect_after_submit()
                 return render_template("main/contact.html")
-            
+
             try:
                 lead = Lead(
                     name=name,
@@ -87,20 +83,22 @@ def contact():
                 logger.info("Contact lead saved to database for %s", email)
             except Exception as e:
                 logger.error(f"Failed to save contact lead: {e}")
-                flash("There was an issue submitting your message. Please try again.", "error")
+                flash(
+                    "There was an issue submitting your message. Please try again.",
+                    "error",
+                )
                 if return_to_homepage:
                     return _redirect_after_submit()
                 return render_template("main/contact.html")
 
             flash("Message sent successfully! We'll get back to you soon.", "success")
             return _redirect_after_submit()
-            
+
         except Exception as e:
             logger.error(f"Unexpected error in contact form: {e}")
             flash("An unexpected error occurred. Please try again later.", "error")
-            if request.form.get('source', '').strip().lower() == 'homepage':
+            if request.form.get("source", "").strip().lower() == "homepage":
                 return redirect(url_for("main.index") + "#contact")
             return render_template("main/contact.html")
 
     return render_template("main/contact.html")
-

@@ -14,7 +14,9 @@ def serialize_lead_row(lead):
         "phone": lead.phone,
         "subject": lead.subject,
         "message": lead.message,
-        "created_at": lead.created_at.strftime("%Y-%m-%d %H:%M:%S") if getattr(lead, "created_at", None) else "",
+        "created_at": lead.created_at.strftime("%Y-%m-%d %H:%M:%S")
+        if getattr(lead, "created_at", None)
+        else "",
     }
 
 
@@ -29,12 +31,10 @@ def delete_empty_phone_leads(db):
     from app.models import Lead
     from sqlalchemy import func, or_
 
-    deleted_count = (
-        Lead.query.filter(
-            or_(
-                Lead.phone.is_(None),
-                func.trim(Lead.phone) == "",
-            )
-        ).delete(synchronize_session=False)
-    )
+    deleted_count = Lead.query.filter(
+        or_(
+            Lead.phone.is_(None),
+            func.trim(Lead.phone) == "",
+        )
+    ).delete(synchronize_session=False)
     return deleted_count

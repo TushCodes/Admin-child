@@ -12,7 +12,7 @@ import os
 from functools import wraps
 
 from flask import jsonify, redirect, request, session, url_for
-from app.utils.response import json_error
+from app.controllers.responses import json_error
 from werkzeug.security import check_password_hash
 
 ADMIN_USERNAME: str = (os.environ.get("ADMIN_USERNAME") or "admin").strip() or "admin"
@@ -25,16 +25,23 @@ if not ADMIN_PASSWORD_HASH:
     if ADMIN_PASSWORD_PLAIN:
         # Derive hash from provided plain password
         from werkzeug.security import generate_password_hash
+
         ADMIN_PASSWORD_HASH = generate_password_hash(ADMIN_PASSWORD_PLAIN)
     else:
         # In development, provide a safe default to simplify local runs.
-        if os.getenv('FLASK_ENV', '').strip().lower() == 'development':
+        if os.getenv("FLASK_ENV", "").strip().lower() == "development":
             from werkzeug.security import generate_password_hash
-            ADMIN_PASSWORD_HASH = generate_password_hash('admin-pass')
+
+            ADMIN_PASSWORD_HASH = generate_password_hash("admin-pass")
             import logging
-            logging.getLogger(__name__).warning('ADMIN_PASSWORD_HASH not set; using development default password (admin-pass).')
+
+            logging.getLogger(__name__).warning(
+                "ADMIN_PASSWORD_HASH not set; using development default password (admin-pass)."
+            )
         else:
-            raise RuntimeError("ADMIN_PASSWORD_HASH is required and must be set in environment variables.")
+            raise RuntimeError(
+                "ADMIN_PASSWORD_HASH is required and must be set in environment variables."
+            )
 
 ADMIN_SESSION_KEY = "admin_authenticated"
 ADMIN_SESSION_USERNAME_KEY = "admin_username"
