@@ -31,7 +31,7 @@ def init_flask_admin(app):
         app,
         name="Admin Panel",
         template_mode="bootstrap4",
-        index_view=SecureAdminIndexView(url="/admin"),
+        index_view=SecureAdminIndexView(url="/flask-admin"),
     )
 
     admin.add_view(

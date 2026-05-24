@@ -10,6 +10,3 @@ __all__ = [
     "paginate_query",
     "serialize_consignment",
 ]
-from .leads_controller import get_leads, delete_empty_phone_leads
-
-__all__.extend(["get_leads", "delete_empty_phone_leads"])
