@@ -11,7 +11,7 @@ ADMIN_PASSWORD_HASH  Werkzeug-hashed password for the admin user (required).
 import os
 from functools import wraps
 
-from flask import jsonify, redirect, request, session, url_for
+from flask import redirect, request, session, url_for
 from app.controllers.responses import json_error
 from werkzeug.security import check_password_hash
 

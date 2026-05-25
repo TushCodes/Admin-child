@@ -9,7 +9,6 @@ from flask import redirect, send_file, current_app
 from app.controllers.responses import json_error
 from sqlalchemy.exc import DatabaseError, OperationalError
 
-from app.models import db
 from app.track.models import TrackConsignment
 
 logger = logging.getLogger(__name__)

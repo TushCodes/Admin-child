@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, abort
 from app import cache
 from jinja2.exceptions import TemplateNotFound
 import logging
-import os
 
 logger = logging.getLogger(__name__)
 
