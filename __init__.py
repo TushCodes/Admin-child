@@ -20,7 +20,7 @@ from werkzeug.exceptions import HTTPException
 if __name__ != "app":
     sys.modules.setdefault("app", sys.modules[__name__])
 
-from app.models import db
+from app.models import db as models_db
 from app.db.maintenance import ensure_consignment_columns_async
 
 try:
@@ -241,7 +241,7 @@ def create_app():
     app.config["RATELIMIT_HEADERS_ENABLED"] = True
     app.config.from_object("app.config")
 
-    db.init_app(app)
+    models_db.init_app(app)
     limiter.init_app(app)
     init_logging(app)
 
@@ -256,8 +256,8 @@ def create_app():
             logger.exception("Failed to start consignment schema repair")
 
         with app.app_context():
-            db.create_all()
-            seed_development_data(db, app)
+            models_db.create_all()
+            seed_development_data(models_db, app)
     else:
         try:
             if not app.config["SQLALCHEMY_DATABASE_URI"].startswith("sqlite://"):
@@ -308,7 +308,7 @@ def create_app():
     @app.route("/health/db")
     def database_health():
         try:
-            db.session.execute(text("SELECT 1"))
+            models_db.session.execute(text("SELECT 1"))
             return (
                 jsonify(
                     {
