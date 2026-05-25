@@ -30,7 +30,7 @@ def init_flask_admin(app):
     admin = Admin(
         app,
         name="Admin Panel",
-        template_mode="bootstrap4",
+        endpoint="flask_admin",
         index_view=SecureAdminIndexView(url="/flask-admin"),
     )
 

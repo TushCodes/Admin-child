@@ -404,7 +404,10 @@ def create_app():
     app.register_blueprint(track_bp)
     app.register_blueprint(pages_bp)
     app.register_blueprint(admin_bp)
-    init_flask_admin(app)
+    try:
+        init_flask_admin(app)
+    except Exception:
+        logger.exception("Flask-Admin failed to initialize; continuing without admin UI")
     _apply_security_headers(app)
 
     @app.route("/health")
