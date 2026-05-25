@@ -8,7 +8,7 @@ from flask import (
 )
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from .models import db
+import sys
 from cachelib import FileSystemCache
 from functools import wraps
 import hashlib
@@ -17,8 +17,24 @@ import logging
 from sqlalchemy import text
 from werkzeug.exceptions import HTTPException
 from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
-from app.db_maintenance import ensure_consignment_columns_async
-from app.utils.logging import init_app as init_logging
+
+if __name__ != "app":
+    sys.modules.setdefault("app", sys.modules[__name__])
+
+try:
+    from .models import db
+except ImportError:
+    from models import db
+
+try:
+    from app.db_maintenance import ensure_consignment_columns_async
+except ImportError:
+    from db_maintenance import ensure_consignment_columns_async
+
+try:
+    from app.utils.logging import init_app as init_logging
+except ImportError:
+    from utils.logging import init_app as init_logging
 
 # Configure logging
 logging.basicConfig(
@@ -404,6 +420,13 @@ def create_app():
     app.register_blueprint(track_bp)
     app.register_blueprint(pages_bp)
     app.register_blueprint(admin_bp)
+
+    # Debug: log registered blueprint names before initializing Flask-Admin
+    try:
+        logger.info("Registered blueprints before Flask-Admin init: %s", list(app.blueprints.keys()))
+    except Exception:
+        pass
+
     try:
         init_flask_admin(app)
     except Exception:

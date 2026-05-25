@@ -1,5 +1,5 @@
 from flask import redirect, request, url_for
-from flask_admin import Admin, AdminIndexView
+from flask_admin import Admin, AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
 
 from app.admin.auth import is_admin_authenticated
@@ -24,6 +24,10 @@ class SecureAdminIndexView(AdminIndexView):
     def inaccessible_callback(self, name, **kwargs):
         return redirect(url_for("admin.login", next=request.url))
 
+    @expose("/")
+    def index(self):
+        return redirect(url_for("admin.dashboard"))
+
 
 def init_flask_admin(app):
     """Initialize Flask-Admin views bound to SQLAlchemy models."""
@@ -31,8 +35,8 @@ def init_flask_admin(app):
         app,
         name="Admin Panel",
         url="/admin",
-        endpoint="admin",
-        index_view=SecureAdminIndexView(url="/admin"),
+        endpoint="flask_admin",
+        index_view=SecureAdminIndexView(endpoint="flask_admin", url="/admin"),
     )
 
     class ConsignmentAdminView(SecureModelView):
