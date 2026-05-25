@@ -1,11 +1,9 @@
 import logging
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from app import cache
 from app import limiter
 from app.models import db, Lead
-import os
 import re
-from datetime import datetime, UTC
 from app.utils.db import transaction
 
 # Configure logging
