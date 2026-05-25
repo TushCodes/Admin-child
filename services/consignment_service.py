@@ -26,7 +26,6 @@ def validate_and_normalize_rows(
     if not isinstance(rows, list) or not isinstance(deleted_ids, list):
         return None, None, [{"message": "Invalid request payload."}]
 
-    existing_deleted = []
     validated_deleted_ids = set()
     for raw_deleted_id in deleted_ids:
         try:

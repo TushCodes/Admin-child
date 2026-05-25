@@ -1,12 +1,13 @@
-"""Legacy dashboard route shim redirecting to Flask-Admin home."""
+"""Admin dashboard routes."""
 
-from flask import redirect, url_for
+from flask import render_template
 from app.admin import admin_bp
 from app.admin.auth import require_admin
 
 
+@admin_bp.route("/admin", methods=["GET"], endpoint="index")
 @admin_bp.route("/admin/dashboard", methods=["GET"])
 @require_admin
 def dashboard():
-    """Backward-compatible dashboard URL."""
-    return redirect(url_for("admin.index"))
+    """Render the custom admin dashboard."""
+    return render_template("admin/dashboard.html")

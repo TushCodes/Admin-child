@@ -84,7 +84,7 @@ def consignment_pod_upload(consignment_id):
                     _io.BytesIO(file_bytes),
                     {"content-type": upload.mimetype or "application/octet-stream"},
                 )
-                with transaction(db) as session:
+                with transaction(db):
                     consignment.pod_image = f"supabase:{bucket}/{object_path}"
                 return json_success({"pod_image": consignment.pod_image})
             except Exception:
@@ -104,7 +104,7 @@ def consignment_pod_upload(consignment_id):
             dest_path = os.path.join(upload_folder, filename)
             with open(dest_path, "wb") as file_handle:
                 file_handle.write(file_bytes)
-            with transaction(db) as session:
+            with transaction(db):
                 consignment.pod_image = filename
             return json_success({"pod_image": filename})
         except Exception:
@@ -159,7 +159,7 @@ def consignment_pod_delete(consignment_id):
             except Exception:
                 logger.exception("Error while attempting to remove local POD file")
 
-        with transaction(db) as session:
+        with transaction(db):
             consignment.pod_image = None
         return json_success()
     except Exception:

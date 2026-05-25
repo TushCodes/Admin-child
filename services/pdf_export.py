@@ -1,17 +1,16 @@
 import io
 import logging
 import warnings
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import A4, landscape
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 warnings.filterwarnings(
     "ignore",
     category=DeprecationWarning,
     module=r"reportlab\.lib\.rl_safe_eval",
 )
-
-from reportlab.lib import colors
-from reportlab.lib.pagesizes import A4, landscape
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 logger = logging.getLogger(__name__)
 

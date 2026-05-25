@@ -1,5 +1,4 @@
 import os
-import io
 import logging
 import _io
 from flask import current_app
