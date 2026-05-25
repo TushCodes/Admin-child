@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 def login():
     """Render the admin login form."""
     if is_admin_authenticated():
-        return redirect(url_for("admin.index"))
+        return redirect(url_for("admin.dashboard"))
 
     return render_template("admin/login.html", error=None)
 
@@ -34,7 +34,7 @@ def login():
 def login_submit():
     """Process the admin login form."""
     if is_admin_authenticated():
-        return redirect(url_for("admin.index"))
+        return redirect(url_for("admin.dashboard"))
 
     error = None
 
@@ -44,7 +44,7 @@ def login_submit():
     if check_admin_credentials(username, password):
         login_admin(username=username)
         logger.info("Admin login successful for user: %s", username)
-        return redirect(url_for("admin.index"))
+        return redirect(url_for("admin.dashboard"))
 
     logger.warning("Failed admin login attempt for username: %s", username)
     error = "Invalid username or password."
