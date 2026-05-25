@@ -18,30 +18,48 @@
     var fetchOpts = Object.assign({}, opts, { signal: mergedSignal });
     return fetch(url, fetchOpts).then(function (resp) {
       clearTimeout(timer);
-      if (resp.status === 401) {
-        var err = new Error('Authentication required');
-        err.status = 401;
-        throw err;
-      }
-      return resp.text().then(function (text) {
-        try {
-          var json = text ? JSON.parse(text) : {};
-          if (!resp.ok) {
-            var e = new Error(json && (json.error || json.message) ? (json.error || json.message) : 'Request failed');
-            e.response = resp;
-            e.body = json;
-            throw e;
-          }
-          return json;
-        } catch (e) {
-          if (e instanceof SyntaxError) {
+        // If server returned explicit 401, surface as auth error
+        if (resp.status === 401) {
+          var err = new Error('Authentication required');
+          err.status = 401;
+          throw err;
+        }
+
+        return resp.text().then(function (text) {
+          // If the response is HTML (likely a login redirect), treat as auth required
+          var contentType = resp.headers.get('content-type') || '';
+          var isHtml = contentType.indexOf('text/html') !== -1 || /^\s*</.test(text || '');
+          if (isHtml) {
+            // If this appears to be an auth redirect to login, normalize to an auth error
+            var loginUrl = '/admin/login';
+            var redirectedToLogin = (resp.url && resp.url.indexOf(loginUrl) !== -1) || (text && text.indexOf('name="username"') !== -1 && text.indexOf('name="password"') !== -1);
+            if (redirectedToLogin) {
+              return { success: false, status: 401, message: 'Authentication required', body: null };
+            }
+            // Otherwise, it's an unexpected HTML response — surface as invalid JSON
             var se = new Error('Invalid JSON response');
             se.response = resp;
             throw se;
           }
-          throw e;
-        }
-      });
+
+          try {
+            var json = text ? JSON.parse(text) : {};
+            if (!resp.ok) {
+              var e = new Error(json && (json.error || json.message) ? (json.error || json.message) : 'Request failed');
+              e.response = resp;
+              e.body = json;
+              throw e;
+            }
+            return json;
+          } catch (e) {
+            if (e instanceof SyntaxError) {
+              var se = new Error('Invalid JSON response');
+              se.response = resp;
+              throw se;
+            }
+            throw e;
+          }
+        });
     }).catch(function (err) {
       if (err.name === 'AbortError') {
         var ae = new Error('Request timed out');

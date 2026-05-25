@@ -1,6 +1,7 @@
 import logging
 from flask import render_template, request
 from app.controllers.responses import json_error, json_success
+from app.controllers.serializers import serialize_consignment
 
 from app import limiter
 from app.admin import admin_bp
@@ -33,7 +34,10 @@ def _get_consignment_handles():
 def consignments_panel():
     Consignment, _ = _get_consignment_handles()
     consignments = Consignment.query.order_by(Consignment.id.asc()).all()
-    return render_template("admin/consignments.html", consignments=consignments)
+    return render_template(
+        "admin/consignments.html",
+        consignments=[serialize_consignment(row) for row in consignments],
+    )
 
 
 @admin_bp.route(

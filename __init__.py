@@ -524,8 +524,20 @@ def create_app():
         if isinstance(e, HTTPException):
             return e
         logger.error(f"Unhandled exception: {e}", exc_info=True)
-        if request.path.startswith("/api/") or request.accept_mimetypes.accept_json:
+        wants_json = request.path.startswith("/api/") or request.accept_mimetypes.accept_json
+        if wants_json:
+            # In development show the traceback in the JSON response to aid debugging.
+            if os.getenv("FLASK_ENV", "").strip().lower() == "development":
+                import traceback
+
+                tb = traceback.format_exc()
+                return (
+                    jsonify({"error": str(e) or "Exception", "traceback": tb}),
+                    500,
+                )
+
             return jsonify({"error": "An unexpected error occurred"}), 500
+
         return render_template("errors/500.html"), 500
 
     return app

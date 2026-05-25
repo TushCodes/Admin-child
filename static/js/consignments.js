@@ -445,6 +445,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
             var data = await adminAPI.fetchList(listUrl, params);
             if (!data || !data.success) {
+                // If authentication is required, redirect to login so the user can re-authenticate
+                try {
+                    if (data && data.status === 401) {
+                        window.location = '/admin/login';
+                        return;
+                    }
+                } catch (e) {}
                 throw new Error((data && data.error) || "Failed to load data.");
             }
 
