@@ -1,0 +1,32 @@
+{% extends 'flask_admin/master.html' %}
+
+{% block body %}
+<div class="container-fluid">
+  <h2>Admin Dashboard</h2>
+  <div class="row" style="margin-top: 20px;">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h4>Total Consignments</h4>
+          <p class="lead">{{ stats.consignments }}</p>
+          <a class="btn btn-primary" href="{{ stats.consignments_url }}">Open Consignments</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h4>Total Leads</h4>
+          <p class="lead">{{ stats.leads }}</p>
+          <a class="btn btn-primary" href="{{ stats.leads_url }}">Open Leads</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" style="margin-top: 20px;">
+    <div class="col-md-12">
+      <a class="btn btn-secondary" href="{{ stats.backup_url }}">Download Backup</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
