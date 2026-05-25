@@ -34,9 +34,9 @@ def init_flask_admin(app):
     admin = Admin(
         app,
         name="Admin Panel",
-        url="/admin",
+        url="/flask-admin",
         endpoint="flask_admin",
-        index_view=SecureAdminIndexView(endpoint="flask_admin", url="/admin"),
+        index_view=SecureAdminIndexView(url="/flask-admin", endpoint="flask_admin"),
     )
 
     class ConsignmentAdminView(SecureModelView):
