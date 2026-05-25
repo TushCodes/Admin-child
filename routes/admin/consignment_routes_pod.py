@@ -13,7 +13,7 @@ from app.services.pod_storage import (
     get_supabase_client as _get_supabase_client,
     get_pod_url as _get_pod_url,
 )
-from app.utils.db import transaction
+from app.db.session import transaction
 
 logger = logging.getLogger(__name__)
 

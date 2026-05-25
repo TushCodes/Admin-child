@@ -16,20 +16,12 @@ import os
 import logging
 from sqlalchemy import text
 from werkzeug.exceptions import HTTPException
-from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 if __name__ != "app":
     sys.modules.setdefault("app", sys.modules[__name__])
 
-try:
-    from .models import db
-except ImportError:
-    from models import db
-
-try:
-    from app.db_maintenance import ensure_consignment_columns_async
-except ImportError:
-    from db_maintenance import ensure_consignment_columns_async
+from app.models import db
+from app.db.maintenance import ensure_consignment_columns_async
 
 try:
     from app.utils.logging import init_app as init_logging
@@ -76,6 +68,9 @@ def _env_int(name, default):
             "Invalid integer for %s: %s. Using default %s", name, raw, default
         )
         return default
+
+from app.db.config import require_database_uri, build_engine_options
+from app.db.seed import seed_development_data
 
 
 # Simple cache shim exposing `cached(timeout=...)` decorator.
@@ -170,128 +165,6 @@ if _should_load_local_env_files():
     _load_env_file(".env")
 
 
-def _require_database_uri():
-    """Require a PostgreSQL DATABASE_URL for production, allow SQLite in development."""
-    raw_uri = os.getenv("DATABASE_URL", "").strip()
-    if not raw_uri:
-        if os.getenv("FLASK_ENV", "").strip().lower() == "development":
-            return "sqlite:///test.db"
-        raise RuntimeError("DATABASE_URL is required. SQLite is no longer supported.")
-
-    if raw_uri.startswith("sqlite://"):
-        if os.getenv("FLASK_ENV", "").strip().lower() == "development":
-            return raw_uri
-        raise RuntimeError("SQLite is only supported for development testing.")
-
-    raw_uri = _normalize_postgres_uri(raw_uri)
-
-    if not raw_uri.startswith("postgresql://"):
-        raise RuntimeError("DATABASE_URL must be a PostgreSQL URL (postgresql://...).")
-
-    return raw_uri
-
-
-def _normalize_postgres_uri(raw_uri):
-    """Normalize postgres URIs and enforce SSL for Supabase hosts."""
-    # Some platforms expose postgres:// which SQLAlchemy does not accept.
-    if raw_uri.startswith("postgres://"):
-        raw_uri = raw_uri.replace("postgres://", "postgresql://", 1)
-
-    parsed = urlparse(raw_uri)
-    hostname = (parsed.hostname or "").lower()
-
-    if "supabase.com" in hostname:
-        query_params = dict(parse_qsl(parsed.query, keep_blank_values=True))
-        query_params.setdefault("sslmode", "require")
-        parsed = parsed._replace(query=urlencode(query_params))
-        raw_uri = urlunparse(parsed)
-
-    return raw_uri
-
-
-def _seed_development_consignment_data():
-    if os.getenv("FLASK_ENV", "").strip().lower() != "development":
-        return
-
-    from app.models import Consignment
-
-    try:
-        # If the DB already has 100 or more consignments, do nothing.
-        existing_count = Consignment.query.count()
-        if existing_count >= 100:
-            return
-
-        # Build deterministic sample consignments and avoid duplicates.
-        sample_consignment_data = []
-        statuses = ["Pickup Scheduled", "In Transit", "Out for Delivery", "Delivered"]
-        existing_numbers = {
-            row[0]
-            for row in Consignment.query.with_entities(
-                Consignment.consignment_number
-            ).all()
-        }
-
-        for i in range(1, 101):
-            cn = f"DEV{str(i).zfill(4)}"
-            if cn in existing_numbers:
-                continue
-
-            status = statuses[i % len(statuses)]
-            pickup_pincode = str(110000 + (i % 900000))[:6]
-            drop_pincode = str(400000 + (i % 500000))[:6]
-            pickup_address = f"{i} Dev Pickup St, Dev City {i % 10}"
-            drop_address = f"{i} Dev Drop Ave, Dest City {i % 10}"
-            pickup_date = f"2026-05-{(i % 28) + 1:02d}"
-            drop_date = f"2026-06-{(i % 28) + 1:02d}"
-            eta = f"2026-06-{(i % 28) + 1:02d} 12:00"
-
-            sample_consignment_data.append(
-                Consignment(
-                    consignment_number=cn,
-                    status=status,
-                    pickup_address=pickup_address,
-                    pickup_pincode=pickup_pincode,
-                    pickup_date=pickup_date,
-                    drop_address=drop_address,
-                    drop_pincode=drop_pincode,
-                    drop_date=drop_date,
-                    eta=eta,
-                    pickup_tag=f"PICK{i % 5}",
-                    drop_tag=f"DROP{i % 7}",
-                )
-            )
-
-        # Only add as many rows as necessary to reach 100 total.
-        to_add = []
-        remaining = max(0, 100 - existing_count)
-        for item in sample_consignment_data:
-            if remaining <= 0:
-                break
-            to_add.append(item)
-            remaining -= 1
-
-        if to_add:
-            from app.utils.db import transaction
-
-            try:
-                with transaction(db):
-                    db.session.add_all(to_add)
-            except Exception as e:
-                logger.exception("Failed to seed development consignments: %s", e)
-
-        logger.info(
-            "Seeded development consignments; total now %d (added %d)",
-            Consignment.query.count(),
-            len(to_add),
-        )
-    except Exception as e:
-        try:
-            db.session.rollback()
-        except Exception:
-            logger.exception("Failed to rollback DB session during seeding")
-        logger.exception("Failed to seed development consignments: %s", e)
-
-
 def _build_content_security_policy():
     return (
         "default-src 'self'; "
@@ -345,7 +218,7 @@ def create_app():
         logger.exception("Failed to log STARTUP port")
 
     # DATABASE CONFIG
-    db_uri = _require_database_uri()
+    db_uri = require_database_uri()
     app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["SESSION_COOKIE_HTTPONLY"] = True
@@ -360,22 +233,9 @@ def create_app():
         else "http"
     )
 
-    if db_uri.startswith("sqlite://"):
-        app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
-            "pool_pre_ping": False,
-        }
-    else:
-        app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
-            # Supabase/Render-safe defaults; overridable via env vars.
-            "pool_pre_ping": _env_bool("DB_POOL_PRE_PING", True),
-            "pool_recycle": _env_int("DB_POOL_RECYCLE", 180),
-            "pool_size": _env_int("DB_POOL_SIZE", 3),
-            "max_overflow": _env_int("DB_MAX_OVERFLOW", 2),
-            "pool_timeout": _env_int("DB_POOL_TIMEOUT", 30),
-            "connect_args": {
-                "connect_timeout": _env_int("DB_CONNECT_TIMEOUT", 10),
-            },
-        }
+    app.config["SQLALCHEMY_ENGINE_OPTIONS"] = build_engine_options(
+        db_uri, _env_bool, _env_int
+    )
 
     app.config["RATELIMIT_STORAGE_URI"] = _resolve_rate_limit_storage_uri()
     app.config["RATELIMIT_HEADERS_ENABLED"] = True
@@ -397,7 +257,7 @@ def create_app():
 
         with app.app_context():
             db.create_all()
-            _seed_development_consignment_data()
+            seed_development_data(db, app)
     else:
         try:
             if not app.config["SQLALCHEMY_DATABASE_URI"].startswith("sqlite://"):

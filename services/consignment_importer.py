@@ -170,7 +170,7 @@ def import_from_workbook(
         added_count += 1
 
     # Commit all added rows within a single transaction boundary.
-    from app.utils.db import transaction
+    from app.db.session import transaction
 
     with transaction(db):
         # all adds were performed above (either via injected `db.session.add` or repo.add)

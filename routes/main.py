@@ -4,7 +4,7 @@ from app import cache
 from app import limiter
 from app.models import db, Lead
 import re
-from app.utils.db import transaction
+from app.db.session import transaction
 
 # Configure logging
 logger = logging.getLogger(__name__)

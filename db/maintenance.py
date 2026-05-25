@@ -1,3 +1,5 @@
+"""Moved from db_maintenance.py."""
+
 import logging
 import threading
 

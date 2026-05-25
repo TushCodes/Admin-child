@@ -5,7 +5,7 @@ import base64
 import binascii
 
 from app.services import consignment_repo as repo
-from app.utils.db import transaction
+from app.db.session import transaction
 
 logger = logging.getLogger(__name__)
 

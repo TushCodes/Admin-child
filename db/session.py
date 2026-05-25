@@ -1,3 +1,5 @@
+"""Moved from utils/db.py."""
+
 from contextlib import contextmanager
 import logging
 
