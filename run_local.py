@@ -9,6 +9,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 
+# Default to development for local runs before importing the app module.
+# create_app() reads FLASK_ENV during import/bootstrap, so this must be set
+# early to allow SQLite fallback when DATABASE_URL is not configured.
+os.environ.setdefault("FLASK_ENV", "development")
+
 spec = importlib.util.spec_from_file_location("app", str(ROOT / "__init__.py"))
 app_module = importlib.util.module_from_spec(spec)
 # Ensure the module is available as 'app' for absolute imports used in the codebase
@@ -19,9 +24,6 @@ create_app = getattr(app_module, "create_app")
 app = create_app()
 
 if __name__ == "__main__":
-    # Default to development for local runs so SQLite is used when DATABASE_URL
-    # is not set. Override by setting FLASK_ENV or DATABASE_URL in the environment.
-    os.environ.setdefault("FLASK_ENV", "development")
     port = int(os.getenv("PORT", "5000"))
     debug = os.getenv("FLASK_ENV", "").lower() != "production"
     app.run(host="0.0.0.0", port=port, debug=debug)
