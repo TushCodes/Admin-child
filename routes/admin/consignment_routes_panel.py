@@ -1,5 +1,5 @@
 import logging
-from flask import redirect, request, url_for
+from flask import render_template, request
 from app.controllers.responses import json_error, json_success
 
 from app import limiter
@@ -31,7 +31,9 @@ def _get_consignment_handles():
 @admin_bp.route("/admin/consignments", methods=["GET"], endpoint="consignments_panel")
 @require_admin
 def consignments_panel():
-    return redirect(url_for("consignments_admin.index_view"))
+    Consignment, _ = _get_consignment_handles()
+    consignments = Consignment.query.order_by(Consignment.id.asc()).all()
+    return render_template("admin/consignments.html", consignments=consignments)
 
 
 @admin_bp.route(
@@ -39,7 +41,51 @@ def consignments_panel():
 )
 @require_admin
 def consignments_list_api():
-    return redirect(url_for("consignments_admin.index_view"))
+    Consignment, _ = _get_consignment_handles()
+
+    try:
+        page = max(1, int(request.args.get("page", 1)))
+    except (TypeError, ValueError):
+        page = 1
+    try:
+        per_page = max(1, min(100, int(request.args.get("per_page", 10))))
+    except (TypeError, ValueError):
+        per_page = 10
+
+    search = (request.args.get("search") or "").strip()
+    sort_by = (request.args.get("sort_by") or "id").strip()
+    sort_order = (request.args.get("sort_order") or "asc").strip().lower()
+
+    from app.services.consignment_repo import list_paginated
+
+    rows, total, _, _, _ = list_paginated(
+        page=page,
+        per_page=per_page,
+        search=search,
+        sort_by=sort_by,
+        sort_order=sort_order,
+    )
+
+    payload_rows = [
+        {
+            "id": row.id,
+            "consignment_number": row.consignment_number,
+            "status": row.status,
+            "pickup_pincode": row.pickup_pincode,
+            "pickup_address": row.pickup_address,
+            "pickup_tag": row.pickup_tag,
+            "pickup_date": row.pickup_date,
+            "drop_pincode": row.drop_pincode,
+            "drop_address": row.drop_address,
+            "drop_tag": row.drop_tag,
+            "drop_date": row.drop_date,
+            "eta": row.eta,
+            "pod_image": row.pod_image,
+        }
+        for row in rows
+    ]
+
+    return json_success({"rows": payload_rows, "total": total})
 
 
 @admin_bp.route(
