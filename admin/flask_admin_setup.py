@@ -31,33 +31,37 @@ def init_flask_admin(app):
         app,
         name="Admin Panel",
         endpoint="flask_admin",
-        index_view=SecureAdminIndexView(url="/flask-admin"),
+        index_view=SecureAdminIndexView(url="/flask-admin", endpoint="flask_admin"),
     )
 
+    class ConsignmentAdminView(SecureModelView):
+        column_searchable_list = ("consignment_number", "status")
+        column_filters = ("status", "pickup_pincode", "drop_pincode")
+        form_excluded_columns = ("eta_debug_json",)
+
+    class LeadAdminView(SecureModelView):
+        can_create = False
+        can_edit = False
+        column_searchable_list = ("name", "email", "phone", "subject")
+        column_default_sort = ("created_at", True)
+
     admin.add_view(
-        SecureModelView(
+        ConsignmentAdminView(
             Consignment,
             db.session,
             name="Consignments",
             endpoint="consignments_admin",
             category="Operations",
-            column_searchable_list=("consignment_number", "status"),
-            column_filters=("status", "pickup_pincode", "drop_pincode"),
-            form_excluded_columns=("eta_debug_json",),
         )
     )
 
     admin.add_view(
-        SecureModelView(
+        LeadAdminView(
             Lead,
             db.session,
             name="Leads",
             endpoint="leads_admin",
             category="CRM",
-            can_create=False,
-            can_edit=False,
-            column_searchable_list=("name", "email", "phone", "subject"),
-            column_default_sort=("created_at", True),
         )
     )
 
