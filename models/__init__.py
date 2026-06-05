@@ -1,4 +1,4 @@
-"""Moved from models.py and track/models.py."""
+"""Shared SQLAlchemy database object and model exports."""
 
 from app.models.base import db
 from app.models.consignment import Consignment

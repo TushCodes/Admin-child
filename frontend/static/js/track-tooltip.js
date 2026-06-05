@@ -1,3 +1,6 @@
+/**
+ * @file Shows and hides helpful tracking guidance tooltips.
+ */
 document.addEventListener('DOMContentLoaded', function() {
     const statusElement = document.querySelector('.track-status');
     const tooltip = document.getElementById('deliveryTracker');

@@ -1,4 +1,6 @@
-// Admin state helpers attached to window.adminState
+/**
+ * @file Stores shared admin screen state on one safe browser object.
+ */
 (function () {
   function createSet() { return new Set(); }
 

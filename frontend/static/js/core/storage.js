@@ -1,3 +1,6 @@
+/**
+ * @file Safely stores and retrieves small browser values.
+ */
 (function (window) {
     "use strict";
 

@@ -3,6 +3,7 @@
 This module centralizes common controller logic so routes can remain thin
 and focused on HTTP concerns.
 """
+
 from datetime import datetime, UTC
 import io
 import json
@@ -29,6 +30,7 @@ def to_json_safe(value):
 
 
 def serialize_model_row(model_row, excluded_fields=None):
+    """Return one database model row as a plain dictionary for backup files."""
     excluded_fields = set(excluded_fields or [])
     serialized = {}
 

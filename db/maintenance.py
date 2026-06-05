@@ -1,10 +1,9 @@
-"""Moved from db_maintenance.py."""
+"""Database table creation and schema maintenance helpers."""
 
 import logging
 import threading
 
 import psycopg2
-
 
 logger = logging.getLogger(__name__)
 

@@ -1,3 +1,5 @@
+"""Application package marker used when the project is imported as ``app``."""
+
 from flask import (
     Flask,
     send_from_directory,

@@ -1,3 +1,5 @@
+"""PDF export helper for turning consignment rows into a downloadable report."""
+
 import io
 import logging
 import warnings

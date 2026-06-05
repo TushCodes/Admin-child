@@ -1,3 +1,5 @@
+"""Proof-of-delivery file storage helpers for Supabase or local uploads."""
+
 import os
 import logging
 import _io
@@ -7,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_supabase_client():
+    """Return a configured Supabase client, or None when cloud storage is unavailable."""
     url = os.getenv("SUPABASE_URL", "").strip()
     key = os.getenv("SUPABASE_KEY", "").strip()
     if not url or not key:
@@ -54,6 +57,7 @@ def store_pod_bytes(
 
 
 def delete_pod_file(pod_value, instance_path=None):
+    """Remove a POD file from Supabase or local disk when it exists."""
     if not pod_value:
         return
 

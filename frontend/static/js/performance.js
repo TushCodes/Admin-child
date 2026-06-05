@@ -1,4 +1,6 @@
-// Performance helpers: add lazy loading attributes and handle preloads
+/**
+ * @file Adds small performance enhancements such as lazy image loading.
+ */
 document.addEventListener('DOMContentLoaded', function () {
   try {
     // set lazy attributes on images unless explicitly opted out

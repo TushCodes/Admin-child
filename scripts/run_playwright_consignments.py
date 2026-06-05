@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+"""Manual Playwright script for checking the admin consignments workflow locally."""
+
 import asyncio
 import importlib.util
 import os

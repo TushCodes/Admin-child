@@ -3,16 +3,19 @@
 Keep CRUD and query primitives here. Do NOT commit or rollback in this module;
 transaction boundaries live in service layer.
 """
+
 from typing import Optional, Tuple, List, Dict
 from app.models import Consignment, db
 from sqlalchemy import or_
 
 
 def get_by_id(consignment_id: int) -> Optional[Consignment]:
+    """Return one consignment by database id, or None when it does not exist."""
     return db.session.get(Consignment, consignment_id)
 
 
 def get_map_all() -> Dict[int, Consignment]:
+    """Return all consignments in the map shape expected by legacy callers."""
     return {c.id: c for c in Consignment.query.all()}
 
 
@@ -23,6 +26,7 @@ def list_paginated(
     sort_by: str = "id",
     sort_order: str = "asc",
 ) -> Tuple[List[Consignment], int, int, bool, bool]:
+    """Return consignments filtered, sorted, and paginated for list pages."""
     query = Consignment.query
     if search:
         pattern = f"%{search}%"
@@ -57,27 +61,33 @@ def list_paginated(
 
 
 def query_existing_numbers() -> set:
+    """Return all existing consignment numbers as a set for duplicate checks."""
     rows = Consignment.query.with_entities(Consignment.consignment_number).all()
     return {r[0] for r in rows}
 
 
 def add(instance: Consignment):
+    """Stage a consignment object to be saved in the current database session."""
     db.session.add(instance)
 
 
 def delete_by_id(consignment_id: int):
+    """Delete a consignment by id when a matching row exists."""
     inst = get_by_id(consignment_id)
     if inst:
         db.session.delete(inst)
 
 
 def count() -> int:
+    """Return the total number of consignments."""
     return Consignment.query.count()
 
 
 def all_ordered() -> List[Consignment]:
+    """Return all consignments ordered by their database id."""
     return Consignment.query.order_by(Consignment.id.asc()).all()
 
 
 def flush():
+    """Flush pending database changes without committing the transaction."""
     db.session.flush()

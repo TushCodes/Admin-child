@@ -1,3 +1,5 @@
+"""Admin blueprint routes that keep legacy admin URLs working."""
+
 from importlib import import_module
 
 from flask import Blueprint, redirect, url_for, current_app

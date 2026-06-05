@@ -1,4 +1,6 @@
-// Lightweight admin API client attached to window.adminAPI
+/**
+ * @file Provides a shared admin API client with timeout, login, and JSON handling.
+ */
 (function () {
   var DEFAULT_TIMEOUT = 15000;
 

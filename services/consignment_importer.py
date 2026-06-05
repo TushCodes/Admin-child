@@ -1,3 +1,5 @@
+"""Excel import and export helpers for consignment records."""
+
 import io
 import logging
 import re
@@ -102,9 +104,12 @@ def import_from_workbook(
             else ""
         ).strip()
         pickup_pincode = normalize_indian_pincode(
-            row[pickup_pincode_idx]
-            if pickup_pincode_idx is not None and row[pickup_pincode_idx] is not None
-            else "",
+            (
+                row[pickup_pincode_idx]
+                if pickup_pincode_idx is not None
+                and row[pickup_pincode_idx] is not None
+                else ""
+            ),
             "pickup_pincode",
         )
         pickup_tag = str(
@@ -123,9 +128,11 @@ def import_from_workbook(
             else ""
         ).strip()
         drop_pincode = normalize_indian_pincode(
-            row[drop_pincode_idx]
-            if drop_pincode_idx is not None and row[drop_pincode_idx] is not None
-            else "",
+            (
+                row[drop_pincode_idx]
+                if drop_pincode_idx is not None and row[drop_pincode_idx] is not None
+                else ""
+            ),
             "drop_pincode",
         )
         drop_tag = str(
@@ -179,6 +186,7 @@ def import_from_workbook(
 
 
 def generate_import_template_bytes():
+    """Return an Excel template that shows admins the accepted import columns."""
     workbook = Workbook()
     sheet = workbook.active
     sheet.title = "Import Template"
@@ -220,6 +228,7 @@ def generate_import_template_bytes():
 
 
 def export_rows_to_workbook_bytes(rows):
+    """Return an Excel workbook containing the supplied consignment rows."""
     workbook = Workbook()
     sheet = workbook.active
     sheet.title = "Internal Consignments"

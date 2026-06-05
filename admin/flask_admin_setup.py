@@ -1,3 +1,5 @@
+"""Flask-Admin configuration for managing consignments, leads, exports, and POD files."""
+
 import io as _io
 import logging
 import os
@@ -33,6 +35,8 @@ logger = logging.getLogger(__name__)
 
 
 class SecureModelView(ModelView):
+    """Base admin model view that requires an authenticated admin session."""
+
     can_view_details = True
     page_size = 50
 
@@ -44,6 +48,8 @@ class SecureModelView(ModelView):
 
 
 class SecureAdminIndexView(AdminIndexView):
+    """Dashboard view shown after an admin signs in."""
+
     def is_accessible(self):
         return is_admin_authenticated()
 
@@ -63,6 +69,8 @@ class SecureAdminIndexView(AdminIndexView):
 
 
 class ConsignmentAdminView(SecureModelView):
+    """Admin table for listing, editing, importing, and exporting consignments."""
+
     column_list = (
         "id",
         "consignment_number",
@@ -290,9 +298,9 @@ class ConsignmentAdminView(SecureModelView):
                 pod_rel = consignment.pod_image
                 try:
                     pod_path = os.path.normpath(os.path.join(upload_folder, pod_rel))
-                    if pod_path.startswith(os.path.abspath(upload_folder)) and os.path.exists(
-                        pod_path
-                    ):
+                    if pod_path.startswith(
+                        os.path.abspath(upload_folder)
+                    ) and os.path.exists(pod_path):
                         try:
                             os.remove(pod_path)
                         except Exception:
@@ -307,12 +315,13 @@ class ConsignmentAdminView(SecureModelView):
             logger.exception("Failed deleting POD")
             return json_error("Delete failed.", 500)
 
-    @action("set_delivered", "Mark as Delivered", "Mark selected consignments delivered?")
+    @action(
+        "set_delivered", "Mark as Delivered", "Mark selected consignments delivered?"
+    )
     def action_set_delivered(self, ids):
         try:
-            updated = (
-                Consignment.query.filter(Consignment.id.in_(ids))
-                .update({Consignment.status: "Delivered"}, synchronize_session=False)
+            updated = Consignment.query.filter(Consignment.id.in_(ids)).update(
+                {Consignment.status: "Delivered"}, synchronize_session=False
             )
             db.session.commit()
             flash(f"Updated {updated} consignments to Delivered.", "success")
@@ -322,6 +331,8 @@ class ConsignmentAdminView(SecureModelView):
 
 
 class LeadAdminView(SecureModelView):
+    """Admin table for reviewing contact form leads."""
+
     can_create = False
     can_edit = False
     can_delete = True
@@ -335,14 +346,16 @@ class LeadAdminView(SecureModelView):
         "Delete all selected leads with no phone number?",
     )
     def action_reject_blank_phone(self, ids):
-        Lead.query.filter(Lead.id.in_(ids), (Lead.phone.is_(None)) | (Lead.phone == "")).delete(
-            synchronize_session=False
-        )
+        Lead.query.filter(
+            Lead.id.in_(ids), (Lead.phone.is_(None)) | (Lead.phone == "")
+        ).delete(synchronize_session=False)
         db.session.commit()
         flash("Blank-phone leads deleted.")
 
 
 class BackupView(BaseView):
+    """Admin-only download endpoint for a JSON backup of key tables."""
+
     @expose("/", methods=["GET"])
     @expose("/download", methods=["GET"])
     def download(self):

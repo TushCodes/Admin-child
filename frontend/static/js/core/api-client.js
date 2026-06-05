@@ -1,3 +1,6 @@
+/**
+ * @file Wraps fetch calls so frontend features handle JSON and errors consistently.
+ */
 (function (window) {
     "use strict";
 

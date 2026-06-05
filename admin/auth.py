@@ -20,7 +20,6 @@ ADMIN_PASSWORD_PLAIN: str = (os.environ.get("ADMIN_PASSWORD") or "").strip()
 
 if not ADMIN_PASSWORD_HASH:
     if ADMIN_PASSWORD_PLAIN:
-        # Derive hash from provided plain password
         from werkzeug.security import generate_password_hash
 
         ADMIN_PASSWORD_HASH = generate_password_hash(ADMIN_PASSWORD_PLAIN)
@@ -57,7 +56,6 @@ def check_admin_credentials(username: str, password: str) -> bool:
         except Exception:
             pass
 
-    # Fallback to hashed password verification
     try:
         return check_password_hash(ADMIN_PASSWORD_HASH, password)
     except Exception:

@@ -1,3 +1,5 @@
+"""Validation and normalization helpers for logistics data entered by users."""
+
 import re
 from decimal import Decimal, InvalidOperation
 import logging
@@ -16,6 +18,7 @@ ALLOWED_STATUSES = {
 
 
 def normalize_consignment_number(raw_value):
+    """Clean and validate a consignment number entered by a user or spreadsheet."""
     value = (raw_value or "").strip().upper()
     if not CONSIGNMENT_NUMBER_REGEX.fullmatch(value):
         raise ValueError(f"Invalid consignment number: {value or '(empty)'}")
@@ -23,6 +26,7 @@ def normalize_consignment_number(raw_value):
 
 
 def normalize_status(raw_value):
+    """Clean and validate that a shipment status is one of the supported values."""
     value = (raw_value or "").strip()
     if value not in ALLOWED_STATUSES:
         raise ValueError("Invalid status value.")
@@ -30,8 +34,8 @@ def normalize_status(raw_value):
 
 
 def normalize_indian_pincode(raw_value, field_name):
+    """Clean and validate an optional six-digit Indian pincode."""
     value = (raw_value or "").strip()
-    # Allow empty (optional) pincodes
     if value == "":
         return ""
     if not INDIAN_PINCODE_REGEX.fullmatch(value):
@@ -40,6 +44,7 @@ def normalize_indian_pincode(raw_value, field_name):
 
 
 def validate_and_round_coordinate(raw_value, field_name):
+    """Validate a coordinate value and round it to the supported precision."""
     try:
         decimal_value = Decimal(str(raw_value))
     except (InvalidOperation, TypeError, ValueError):

@@ -1,3 +1,6 @@
+/**
+ * @file Runs home-page gallery links, contact messages, and page interactions.
+ */
 document.addEventListener("DOMContentLoaded", function () {
     function isPopupOpen() {
         return !!document.querySelector(".pop-overlay:target");
