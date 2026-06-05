@@ -13,9 +13,7 @@ from app.models import TrackConsignment
 
 logger = logging.getLogger(__name__)
 
-# Use the original package name for template resolution so templates under
-# app/track/templates are discovered (the module was moved to app.routes).
-track_bp = Blueprint("track", "app.track", template_folder="templates")
+track_bp = Blueprint("track", __name__)
 
 CONSIGNMENT_NUMBER_PATTERN = re.compile(r"^[A-Za-z0-9]{1,16}$")
 

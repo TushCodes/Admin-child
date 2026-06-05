@@ -26,6 +26,15 @@ Open <http://127.0.0.1:5000>. The development admin login is:
 - Username: `admin`
 - Password: `admin-pass`
 
+## Frontend layout
+
+All Flask-rendered frontend code now lives under `frontend/`:
+
+- `frontend/templates/` contains page, layout, partial, admin, and error templates.
+- `frontend/static/` contains CSS, JavaScript, images, fonts, and the favicon.
+
+Flask is configured to serve these centralized folders through the standard `render_template(...)` and `url_for('static', ...)` APIs, so templates do not need per-blueprint template folders.
+
 ## Local database
 
 The default local database URL is:

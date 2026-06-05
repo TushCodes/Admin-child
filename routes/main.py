@@ -10,7 +10,7 @@ from app.db.session import request_session, rollback_request_session
 logger = logging.getLogger(__name__)
 
 
-main_bp = Blueprint("main", __name__, template_folder="templates")
+main_bp = Blueprint("main", __name__)
 
 
 # ----------------------------

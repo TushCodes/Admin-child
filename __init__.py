@@ -21,6 +21,7 @@ if __name__ != "app":
     __path__ = [os.path.dirname(__file__)]
     sys.modules.setdefault("app", sys.modules[__name__])
 
+from app.frontend import STATIC_FOLDER, TEMPLATE_FOLDER
 from app.models import db as models_db
 from app.db.maintenance import ensure_consignment_columns_async
 
@@ -164,7 +165,11 @@ if _should_load_local_env_files():
 
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(
+        __name__,
+        template_folder=str(TEMPLATE_FOLDER),
+        static_folder=str(STATIC_FOLDER),
+    )
     # Log effective PORT so platform startup probes can be debugged in deployment logs.
     try:
         effective_port = os.getenv("PORT", "10000")
