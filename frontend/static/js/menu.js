@@ -1,12 +1,12 @@
 /**
- * @file Controls navigation menu opening, closing, and responsive behavior.
+ * @file Controls navigation sidebar opening, closing, and responsive behavior.
  */
 document.addEventListener("DOMContentLoaded", function () {
 	var openBtn = document.getElementById("openMenuModal");
 	var modal = document.getElementById("menuModal");
 	var closeButton = modal ? modal.querySelector(".menu-modal-close") : null;
 
-	function openModal() {
+	function openSidebar() {
 		if (!modal || !openBtn) {
 			return;
 		}
@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		document.body.style.overflow = "hidden";
 	}
 
-	function closeModal() {
+	function closeSidebar() {
 		if (!modal || !openBtn) {
 			return;
 		}
@@ -27,18 +27,18 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 
 	if (openBtn && modal && closeButton) {
-		openBtn.addEventListener("click", openModal);
-		closeButton.addEventListener("click", closeModal);
+		openBtn.addEventListener("click", openSidebar);
+		closeButton.addEventListener("click", closeSidebar);
 
 		modal.addEventListener("keydown", function (event) {
 			if (event.key === "Escape") {
-				closeModal();
+				closeSidebar();
 			}
 		});
 
 		modal.addEventListener("click", function (event) {
 			if (event.target === modal) {
-				closeModal();
+				closeSidebar();
 			}
 		});
 

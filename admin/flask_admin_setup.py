@@ -39,7 +39,9 @@ class SecureModelView(ModelView):
     """Base admin model view that requires an authenticated admin session."""
 
     can_view_details = True
-    page_size = 50
+    can_set_page_size = True
+    page_size = 10
+    page_size_options = (10, 25, 50, 100)
 
     def is_accessible(self):
         return is_admin_authenticated()
@@ -119,7 +121,7 @@ class ConsignmentAdminView(SecureModelView):
     form_excluded_columns = ("eta_debug_json",)
     can_export = True
     export_types = ["csv"]
-    page_size = 50
+    page_size = 10
     list_template = "flask_admin/consignments_list.html"
 
     @expose("/export.xlsx")
