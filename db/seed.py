@@ -28,23 +28,23 @@ def seed_development_data(db, app):
             ).all()
         }
 
-        for i in range(1, 101):
-            cn = f"DEV{str(i).zfill(4)}"
-            if cn in existing_numbers:
+        for index in range(1, 101):
+            consignment_number = f"DEV{str(index).zfill(4)}"
+            if consignment_number in existing_numbers:
                 continue
 
-            status = statuses[i % len(statuses)]
-            pickup_pincode = str(110000 + (i % 900000))[:6]
-            drop_pincode = str(400000 + (i % 500000))[:6]
-            pickup_address = f"{i} Dev Pickup St, Dev City {i % 10}"
-            drop_address = f"{i} Dev Drop Ave, Dest City {i % 10}"
-            pickup_date = f"2026-05-{(i % 28) + 1:02d}"
-            drop_date = f"2026-06-{(i % 28) + 1:02d}"
-            eta = f"2026-06-{(i % 28) + 1:02d} 12:00"
+            status = statuses[index % len(statuses)]
+            pickup_pincode = str(110000 + (index % 900000))[:6]
+            drop_pincode = str(400000 + (index % 500000))[:6]
+            pickup_address = f"{index} Dev Pickup St, Dev City {index % 10}"
+            drop_address = f"{index} Dev Drop Ave, Dest City {index % 10}"
+            pickup_date = f"2026-05-{(index % 28) + 1:02d}"
+            drop_date = f"2026-06-{(index % 28) + 1:02d}"
+            eta = f"2026-06-{(index % 28) + 1:02d} 12:00"
 
             sample_consignment_data.append(
                 Consignment(
-                    consignment_number=cn,
+                    consignment_number=consignment_number,
                     status=status,
                     pickup_address=pickup_address,
                     pickup_pincode=pickup_pincode,
@@ -53,34 +53,34 @@ def seed_development_data(db, app):
                     drop_pincode=drop_pincode,
                     drop_date=drop_date,
                     eta=eta,
-                    pickup_tag=f"PICK{i % 5}",
-                    drop_tag=f"DROP{i % 7}",
+                    pickup_tag=f"PICK{index % 5}",
+                    drop_tag=f"DROP{index % 7}",
                 )
             )
 
-        to_add = []
+        consignments_to_add = []
         remaining = max(0, 100 - existing_count)
         for item in sample_consignment_data:
             if remaining <= 0:
                 break
-            to_add.append(item)
+            consignments_to_add.append(item)
             remaining -= 1
 
-        if to_add:
+        if consignments_to_add:
             try:
                 with transaction(db):
-                    db.session.add_all(to_add)
-            except Exception as e:
-                logger.exception("Failed to seed development consignments: %s", e)
+                    db.session.add_all(consignments_to_add)
+            except Exception as error:
+                logger.exception("Failed to seed development consignments: %s", error)
 
         logger.info(
             "Seeded development consignments; total now %d (added %d)",
             Consignment.query.count(),
-            len(to_add),
+            len(consignments_to_add),
         )
-    except Exception as e:
+    except Exception as error:
         try:
             db.session.rollback()
         except Exception:
             logger.exception("Failed to rollback DB session during seeding")
-        logger.exception("Failed to seed development consignments: %s", e)
+        logger.exception("Failed to seed development consignments: %s", error)

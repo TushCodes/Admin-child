@@ -28,8 +28,8 @@ document.addEventListener('DOMContentLoaded', function () {
       link.href = href;
       document.head.appendChild(link);
     });
-  } catch (e) {
+  } catch (error) {
     // fail gracefully
-    console.warn('performance.js error', e);
+    console.warn('performance.js error', error);
   }
 });

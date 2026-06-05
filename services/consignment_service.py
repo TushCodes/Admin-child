@@ -48,7 +48,7 @@ def validate_and_normalize_rows(
     validated_rows = []
     errors = []
 
-    for idx, row in enumerate(rows):
+    for row_index, row in enumerate(rows):
         row_id = row.get("id")
         try:
             consignment_number = normalize_consignment_number(
@@ -56,14 +56,14 @@ def validate_and_normalize_rows(
             )
         except ValueError as error:
             errors.append(
-                {"index": idx, "field": "consignment_number", "message": str(error)}
+                {"index": row_index, "field": "consignment_number", "message": str(error)}
             )
             consignment_number = None
 
         try:
             status = normalize_status(row.get("status"))
         except ValueError as error:
-            errors.append({"index": idx, "field": "status", "message": str(error)})
+            errors.append({"index": row_index, "field": "status", "message": str(error)})
             status = None
 
         try:
@@ -72,7 +72,7 @@ def validate_and_normalize_rows(
             )
         except ValueError as error:
             errors.append(
-                {"index": idx, "field": "pickup_pincode", "message": str(error)}
+                {"index": row_index, "field": "pickup_pincode", "message": str(error)}
             )
             pickup_pincode = None
 
@@ -82,7 +82,7 @@ def validate_and_normalize_rows(
             )
         except ValueError as error:
             errors.append(
-                {"index": idx, "field": "drop_pincode", "message": str(error)}
+                {"index": row_index, "field": "drop_pincode", "message": str(error)}
             )
             drop_pincode = None
 
@@ -92,7 +92,7 @@ def validate_and_normalize_rows(
             if consignment_number in seen_numbers:
                 errors.append(
                     {
-                        "index": idx,
+                        "index": row_index,
                         "field": "consignment_number",
                         "message": f"Duplicate consignment number in sheet: {consignment_number}",
                     }
@@ -105,7 +105,7 @@ def validate_and_normalize_rows(
             except (TypeError, ValueError):
                 errors.append(
                     {
-                        "index": idx,
+                        "index": row_index,
                         "field": "id",
                         "message": f"Invalid row id: {row_id}",
                     }
@@ -174,7 +174,7 @@ def _decode_pod_data_url(data_url):
 def apply_consignment_changes(
     validated_rows,
     validated_deleted_ids,
-    Consignment,
+    consignment_model,
     db,
     store_pod_bytes_func,
     delete_pod_file_func,
@@ -196,7 +196,7 @@ def apply_consignment_changes(
             if row["id"]:
                 consignment = existing[row["id"]]
             else:
-                consignment = Consignment()
+                consignment = consignment_model()
                 db.session.add(consignment)
 
             previous_pod_image = getattr(consignment, "pod_image", None)

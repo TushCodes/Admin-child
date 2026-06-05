@@ -25,7 +25,7 @@ def generate_consignment_pdf(rows):
     """
     output = io.BytesIO()
     try:
-        doc = SimpleDocTemplate(
+        document = SimpleDocTemplate(
             output,
             pagesize=landscape(A4),
             leftMargin=24,
@@ -78,7 +78,7 @@ def generate_consignment_pdf(rows):
             table,
         ]
 
-        doc.build(content)
+        document.build(content)
         output.seek(0)
         return output
     except Exception:

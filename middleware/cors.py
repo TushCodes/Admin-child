@@ -21,11 +21,11 @@ def _csv_config(name: str, default_values=()):
     return tuple(part.strip() for part in raw.split(",") if part.strip())
 
 
-def _env_bool(name: str, default: bool = False) -> bool:
-    raw = os.getenv(name)
-    if raw is None:
+def _get_env_bool(name: str, default: bool = False) -> bool:
+    raw_value = os.getenv(name)
+    if raw_value is None:
         return default
-    return raw.strip().lower() in {"1", "true", "yes", "on"}
+    return raw_value.strip().lower() in {"1", "true", "yes", "on"}
 
 
 def _allowed_origin(origin: str | None, allowed_origins: tuple[str, ...]) -> str | None:
@@ -52,7 +52,7 @@ def register_cors_middleware(app):
     allowed_methods = os.getenv("CORS_METHODS", DEFAULT_ALLOWED_METHODS)
     allowed_headers = os.getenv("CORS_HEADERS", DEFAULT_ALLOWED_HEADERS)
     max_age = os.getenv("CORS_MAX_AGE", "86400")
-    supports_credentials = _env_bool("CORS_SUPPORTS_CREDENTIALS", True)
+    supports_credentials = _get_env_bool("CORS_SUPPORTS_CREDENTIALS", True)
 
     app.config["CORS_ALLOWED_ORIGINS"] = allowed_origins
 

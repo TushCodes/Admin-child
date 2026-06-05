@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-    const closeBtn = tooltip.querySelector('.tracker-close');
+    const closeButton = tooltip.querySelector('.tracker-close');
     const tooltipOffset = 16;
 
     function positionTooltip() {
@@ -47,27 +47,27 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (statusElement) {
-        statusElement.addEventListener('click', function(e) {
-            e.stopPropagation();
+        statusElement.addEventListener('click', function (event) {
+            event.stopPropagation();
             tooltip.classList.add('active');
             backdrop.classList.add('active');
             requestAnimationFrame(positionTooltip);
         });
     }
 
-    if (closeBtn) {
-        closeBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
+    if (closeButton) {
+        closeButton.addEventListener('click', function (event) {
+            event.stopPropagation();
             tooltip.classList.remove('active');
             backdrop.classList.remove('active');
         });
     }
 
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (event) {
         if (
             tooltip.classList.contains('active') &&
-            !e.target.closest('.track-status-wrapper') &&
-            !e.target.closest('#deliveryTracker')
+            !event.target.closest('.track-status-wrapper') &&
+            !event.target.closest('#deliveryTracker')
         ) {
             tooltip.classList.remove('active');
             backdrop.classList.remove('active');

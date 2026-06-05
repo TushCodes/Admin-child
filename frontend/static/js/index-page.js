@@ -20,15 +20,15 @@ document.addEventListener("DOMContentLoaded", function () {
     toggleBodyScroll(isPopupOpen());
 
     document.querySelectorAll(".pop-overlay").forEach(function (overlay) {
-        overlay.addEventListener("click", function (e) {
-            if (e.target === overlay) {
+        overlay.addEventListener("click", function (event) {
+            if (event.target === overlay) {
                 closeAllPopups();
             }
         });
     });
 
-    document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape" && isPopupOpen()) {
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && isPopupOpen()) {
             closeAllPopups();
         }
     });

@@ -158,7 +158,7 @@ class ConsignmentAdminView(SecureModelView):
         try:
             added_count, skipped_count = import_from_workbook(
                 upload,
-                Consignment=Consignment,
+                consignment_model=Consignment,
                 db=db,
                 normalize_consignment_number=normalize_consignment_number,
                 normalize_status=normalize_status,
@@ -194,7 +194,7 @@ class ConsignmentAdminView(SecureModelView):
                 return json_error("No POD found.", 404)
 
             pod_path = consignment.pod_image
-            url = _get_pod_url(pod_path, ttl=30)
+            url = _get_pod_url(pod_path, signed_url_ttl=30)
             if url:
                 return redirect(url)
 
@@ -229,12 +229,12 @@ class ConsignmentAdminView(SecureModelView):
             filename = f"{uuid.uuid4().hex}_{filename}"
             file_bytes = upload.read()
 
-            supa = _get_supabase_client()
+            client = _get_supabase_client()
             bucket = os.getenv("SUPABASE_BUCKET", "pod-uploads")
-            if supa:
+            if client:
                 try:
                     object_path = f"{consignment_id}/{filename}"
-                    supa.storage.from_(bucket).upload(
+                    client.storage.from_(bucket).upload(
                         object_path,
                         _io.BytesIO(file_bytes),
                         {"content-type": upload.mimetype or "application/octet-stream"},
@@ -256,8 +256,8 @@ class ConsignmentAdminView(SecureModelView):
             try:
                 upload_folder = os.path.join(current_app.instance_path, "uploads")
                 os.makedirs(upload_folder, exist_ok=True)
-                dest_path = os.path.join(upload_folder, filename)
-                with open(dest_path, "wb") as file_handle:
+                destination_path = os.path.join(upload_folder, filename)
+                with open(destination_path, "wb") as file_handle:
                     file_handle.write(file_bytes)
                 with transaction(db):
                     consignment.pod_image = filename
@@ -282,22 +282,24 @@ class ConsignmentAdminView(SecureModelView):
             if not consignment or not getattr(consignment, "pod_image", None):
                 return json_error("No POD to delete.", 404)
 
-            pod_val = consignment.pod_image
-            if isinstance(pod_val, str) and pod_val.startswith("supabase:"):
+            pod_value = consignment.pod_image
+            if isinstance(pod_value, str) and pod_value.startswith("supabase:"):
                 client = _get_supabase_client()
                 if client:
                     try:
-                        _, rest = pod_val.split(":", 1)
-                        bucket, object_path = rest.split("/", 1)
+                        _, storage_path = pod_value.split(":", 1)
+                        bucket, object_path = storage_path.split("/", 1)
                         client.storage.from_(bucket).remove([object_path])
                     except Exception:
                         logger.exception("Failed to remove POD from Supabase")
 
             else:
                 upload_folder = os.path.join(current_app.instance_path, "uploads")
-                pod_rel = consignment.pod_image
+                pod_filename = consignment.pod_image
                 try:
-                    pod_path = os.path.normpath(os.path.join(upload_folder, pod_rel))
+                    pod_path = os.path.normpath(
+                        os.path.join(upload_folder, pod_filename)
+                    )
                     if pod_path.startswith(
                         os.path.abspath(upload_folder)
                     ) and os.path.exists(pod_path):
@@ -318,9 +320,9 @@ class ConsignmentAdminView(SecureModelView):
     @action(
         "set_delivered", "Mark as Delivered", "Mark selected consignments delivered?"
     )
-    def action_set_delivered(self, ids):
+    def action_set_delivered(self, record_ids):
         try:
-            updated = Consignment.query.filter(Consignment.id.in_(ids)).update(
+            updated = Consignment.query.filter(Consignment.id.in_(record_ids)).update(
                 {Consignment.status: "Delivered"}, synchronize_session=False
             )
             db.session.commit()
@@ -345,9 +347,9 @@ class LeadAdminView(SecureModelView):
         "Reject blank-phone leads",
         "Delete all selected leads with no phone number?",
     )
-    def action_reject_blank_phone(self, ids):
+    def action_reject_blank_phone(self, record_ids):
         Lead.query.filter(
-            Lead.id.in_(ids), (Lead.phone.is_(None)) | (Lead.phone == "")
+            Lead.id.in_(record_ids), (Lead.phone.is_(None)) | (Lead.phone == "")
         ).delete(synchronize_session=False)
         db.session.commit()
         flash("Blank-phone leads deleted.")

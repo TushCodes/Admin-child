@@ -31,16 +31,16 @@ def ensure_consignment_columns(dsn, log=None):
 
     active_logger = log or logger
 
-    conn = psycopg2.connect(dsn)
+    connection = psycopg2.connect(dsn)
     try:
-        with conn:
-            with conn.cursor() as cur:
+        with connection:
+            with connection.cursor() as cursor:
                 for statement in CONSIGNMENT_ALTER_STATEMENTS:
                     active_logger.info("Ensuring schema: %s", statement)
-                    cur.execute(statement)
+                    cursor.execute(statement)
         active_logger.info("Consignment schema check complete.")
     finally:
-        conn.close()
+        connection.close()
 
 
 def ensure_consignment_columns_async(dsn, log=None):
@@ -51,16 +51,16 @@ def ensure_consignment_columns_async(dsn, log=None):
     """
     active_logger = log or logger
 
-    def worker():
+    def repair_schema():
         try:
             ensure_consignment_columns(dsn, active_logger)
         except Exception as exc:
             active_logger.error("Consignment schema repair failed: %s", exc)
 
-    worker = threading.Thread(
-        target=worker,
+    repair_thread = threading.Thread(
+        target=repair_schema,
         daemon=True,
         name="consignment-schema-repair",
     )
-    worker.start()
-    return worker
+    repair_thread.start()
+    return repair_thread

@@ -3,15 +3,15 @@
 from playwright.sync_api import sync_playwright
 import time
 
-with sync_playwright() as p:
-    browser = p.chromium.launch(headless=True, args=["--no-sandbox"])
+with sync_playwright() as playwright:
+    browser = playwright.chromium.launch(headless=True, args=["--no-sandbox"])
     context = browser.new_context()
     page = context.new_page()
 
     console_messages = []
 
-    def on_console(msg):
-        console_messages.append((msg.type, msg.text))
+    def on_console(message):
+        console_messages.append((message.type, message.text))
 
     page.on("console", on_console)
 
@@ -38,10 +38,10 @@ with sync_playwright() as p:
     time.sleep(2)
 
     print("CONSOLE:")
-    for m in console_messages:
-        print(m)
+    for console_message in console_messages:
+        print(console_message)
     print("\nNETWORK:")
-    for n in network:
-        print(n)
+    for network_event in network:
+        print(network_event)
 
     browser.close()

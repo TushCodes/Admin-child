@@ -49,14 +49,14 @@ def _resolve_rate_limit_storage_uri():
     return "memory://"
 
 
-def _env_bool(name, default=False):
+def _get_env_bool(name, default=False):
     raw = os.getenv(name)
     if raw is None:
         return default
     return str(raw).strip().lower() in {"1", "true", "yes", "on"}
 
 
-def _env_int(name, default):
+def _get_env_int(name, default):
     raw = os.getenv(name)
     if raw is None:
         return default
@@ -75,7 +75,7 @@ from app.middleware import register_middleware
 
 
 # Simple cache shim exposing `cached(timeout=...)` decorator.
-class CacheShim:
+class SimpleCache:
     def __init__(self, cache_dir="flask_cache", default_timeout=300):
         self._cache = FileSystemCache(cache_dir)
         self.default_timeout = default_timeout
@@ -92,16 +92,16 @@ class CacheShim:
             def wrapped(*args, **kwargs):
                 try:
                     cache_key = self._make_key()
-                    cached_val = self._cache.get(cache_key)
-                    if cached_val is not None:
-                        return cached_val
+                    cached_value = self._cache.get(cache_key)
+                    if cached_value is not None:
+                        return cached_value
 
                     result = func(*args, **kwargs)
                     self._cache.set(cache_key, result, timeout or self.default_timeout)
                     return result
 
-                except Exception as e:
-                    logger.error(f"Cache error: {e}")
+                except Exception as error:
+                    logger.error(f"Cache error: {error}")
                     return func(*args, **kwargs)
 
             return wrapped
@@ -110,7 +110,7 @@ class CacheShim:
 
 
 # cache instance
-cache = CacheShim()
+cache = SimpleCache()
 
 # limiter instance shared across the application
 limiter = Limiter(
@@ -145,20 +145,20 @@ def _load_env_file(path):
 
 def _should_load_local_env_files():
     # Render injects env vars directly; avoid reading local files in production by default.
-    if _env_bool("LOAD_LOCAL_ENV_FILES", False):
+    if _get_env_bool("LOAD_LOCAL_ENV_FILES", False):
         return True
     return os.getenv("FLASK_ENV", "").strip().lower() != "production"
 
 
 def _should_auto_create_tables():
     if os.getenv("FLASK_ENV", "").strip().lower() == "production":
-        if _env_bool("AUTO_CREATE_TABLES", False):
+        if _get_env_bool("AUTO_CREATE_TABLES", False):
             logger.warning(
                 "Ignoring AUTO_CREATE_TABLES in production; manage schema externally."
             )
         return False
 
-    return _env_bool("AUTO_CREATE_TABLES", default=True)
+    return _get_env_bool("AUTO_CREATE_TABLES", default=True)
 
 
 if _should_load_local_env_files():
@@ -180,12 +180,12 @@ def create_app():
         logger.exception("Failed to log STARTUP port")
 
     # DATABASE CONFIG
-    db_uri = require_database_uri()
-    app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
+    database_uri = require_database_uri()
+    app.config["SQLALCHEMY_DATABASE_URI"] = database_uri
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["SESSION_COOKIE_HTTPONLY"] = True
     app.config["SESSION_COOKIE_SAMESITE"] = os.getenv("SESSION_COOKIE_SAMESITE", "Lax")
-    app.config["SESSION_COOKIE_SECURE"] = _env_bool(
+    app.config["SESSION_COOKIE_SECURE"] = _get_env_bool(
         "SESSION_COOKIE_SECURE",
         default=os.getenv("FLASK_ENV", "").strip().lower() == "production",
     )
@@ -197,7 +197,7 @@ def create_app():
     app.config["FRONTEND_API_BASE_URL"] = os.getenv("FRONTEND_API_BASE_URL", "")
 
     app.config["SQLALCHEMY_ENGINE_OPTIONS"] = build_engine_options(
-        db_uri, _env_bool, _env_int
+        database_uri, _get_env_bool, _get_env_int
     )
 
     app.config["RATELIMIT_STORAGE_URI"] = _resolve_rate_limit_storage_uri()
@@ -277,7 +277,7 @@ def create_app():
                 ),
                 200,
             )
-        except Exception as e:
+        except Exception as error:
             logger.error("Database health check failed: %s", e)
             return (
                 jsonify(

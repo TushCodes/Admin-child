@@ -18,8 +18,8 @@
 
     pushLocalRow: function (row) { this.locallyAddedRows.push(row); },
     removeLocalRowById: function (id) {
-      var idx = this.locallyAddedRows.findIndex(function (r) { return r.id === id; });
-      if (idx !== -1) this.locallyAddedRows.splice(idx, 1);
+      var rowIndex = this.locallyAddedRows.findIndex(function (row) { return row.id === id; });
+      if (rowIndex !== -1) this.locallyAddedRows.splice(rowIndex, 1);
     },
     nextLocalId: function () { this.newRowIdCounter += 1; return -(this.newRowIdCounter); },
 
