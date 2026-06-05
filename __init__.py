@@ -73,8 +73,10 @@ def _env_int(name, default):
         )
         return default
 
+
 from app.db.config import require_database_uri, build_engine_options
 from app.db.seed import seed_development_data
+from app.middleware import register_middleware
 
 
 # Simple cache shim exposing `cached(timeout=...)` decorator.
@@ -169,49 +171,6 @@ if _should_load_local_env_files():
     _load_env_file(".env")
 
 
-def _build_content_security_policy():
-    return (
-        "default-src 'self'; "
-        "base-uri 'self'; "
-        "object-src 'none'; "
-        "frame-ancestors 'self'; "
-        "form-action 'self'; "
-        "img-src 'self' data: https:; "
-        "font-src 'self' data: https://fonts.gstatic.com; "
-        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; "
-        "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com; "
-        "connect-src 'self'; "
-        "frame-src 'self' https://www.google.com https://maps.google.com;"
-    )
-
-
-def _apply_security_headers(app):
-    @app.after_request
-    def add_security_headers(response):
-        response.headers.setdefault("X-Content-Type-Options", "nosniff")
-        response.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
-        response.headers.setdefault(
-            "Referrer-Policy", "strict-origin-when-cross-origin"
-        )
-        response.headers.setdefault(
-            "Permissions-Policy",
-            "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
-        )
-        response.headers.setdefault(
-            "Content-Security-Policy", _build_content_security_policy()
-        )
-
-        if (
-            request.is_secure
-            or request.headers.get("X-Forwarded-Proto", "").lower() == "https"
-        ):
-            response.headers.setdefault(
-                "Strict-Transport-Security", "max-age=31536000; includeSubDomains"
-            )
-
-        return response
-
-
 def create_app():
     app = Flask(__name__)
     # Log effective PORT so platform startup probes can be debugged in deployment logs.
@@ -248,6 +207,7 @@ def create_app():
     models_db.init_app(app)
     limiter.init_app(app)
     init_logging(app)
+    register_middleware(app)
 
     auto_create_tables = _should_auto_create_tables()
     if auto_create_tables:
@@ -288,8 +248,9 @@ def create_app():
     try:
         init_flask_admin(app)
     except Exception:
-        logger.exception("Flask-Admin failed to initialize; continuing without admin UI")
-    _apply_security_headers(app)
+        logger.exception(
+            "Flask-Admin failed to initialize; continuing without admin UI"
+        )
 
     @app.route("/health")
     def health():
@@ -382,7 +343,9 @@ def create_app():
         if isinstance(e, HTTPException):
             return e
         logger.error(f"Unhandled exception: {e}", exc_info=True)
-        wants_json = request.path.startswith("/api/") or request.accept_mimetypes.accept_json
+        wants_json = (
+            request.path.startswith("/api/") or request.accept_mimetypes.accept_json
+        )
         if wants_json:
             # In development show the traceback in the JSON response to aid debugging.
             if os.getenv("FLASK_ENV", "").strip().lower() == "development":

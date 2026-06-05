@@ -1,6 +1,5 @@
 import logging
 import sys
-import uuid
 from logging.handlers import RotatingFileHandler
 
 from flask import g, request, has_request_context
@@ -39,8 +38,8 @@ def init_app(app, level=None, logfile=None, max_bytes=10 * 1024 * 1024, backup_c
     - If `logfile` is provided (or `app.config['LOG_FILE']`), a rotating file
       handler will be created in addition to stdout.
 
-    This function also registers a `before_request` handler to populate
-    `g.request_id` from the `X-Request-ID` header (or generate a UUID).
+    Request ids are populated by app.middleware.request_context; this module
+    only reads them so log records can be correlated with responses.
     """
     conf_level = level or app.config.get("LOG_LEVEL", "INFO")
     if isinstance(conf_level, str):
@@ -76,13 +75,3 @@ def init_app(app, level=None, logfile=None, max_bytes=10 * 1024 * 1024, backup_c
     # Mirror handlers onto the Flask app logger and set its level
     app.logger.handlers = root.handlers
     app.logger.setLevel(conf_level)
-
-    @app.before_request
-    def _set_request_id():
-        # Respect an incoming request id header, else generate one for correlation
-        rid = (
-            request.headers.get("X-Request-ID")
-            or request.headers.get("X-RequestID")
-            or str(uuid.uuid4())
-        )
-        g.request_id = rid
