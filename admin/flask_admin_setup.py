@@ -386,7 +386,7 @@ def init_flask_admin(app):
     """Initialize Flask-Admin views bound to SQLAlchemy models."""
     admin = Admin(
         app,
-        name="Admin Command",
+        name="Gram SCS Admin",
         url="/flask-admin",
         endpoint="flask_admin",
         index_view=SecureAdminIndexView(url="/flask-admin", endpoint="flask_admin"),

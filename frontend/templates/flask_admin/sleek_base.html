@@ -8,7 +8,7 @@
       <meta charset="UTF-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="description" content="Standalone admin command center">
+      <meta name="description" content="Gram SCS admin panel">
     {% endblock %}
     {% block head_css %}
       <link href="{{ admin_static.url(filename='bootstrap/bootstrap4/css/bootstrap.min.css', v='4.6.2') }}" rel="stylesheet" {{ admin_csp_nonce_attribute }}>
@@ -28,12 +28,12 @@
     {% block page_body %}
       <div class="admin-orb" aria-hidden="true"></div>
       <main class="admin-shell">
-        <nav class="navbar navbar-expand-lg navbar-dark admin-navbar" role="navigation">
+        <nav class="navbar navbar-expand-lg navbar-light admin-navbar" role="navigation">
           <a class="navbar-brand" href="{{ admin_view.admin.url }}" aria-label="Admin dashboard">
-            <span class="admin-brand-mark">A</span>
+            <span class="admin-brand-mark"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Gram SCS"></span>
             <span class="admin-brand-copy">
               <span class="admin-brand-title">{{ admin_view.admin.name }}</span>
-              <span class="admin-brand-kicker">Standalone Ops</span>
+              <span class="admin-brand-kicker">Admin</span>
             </span>
           </a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#admin-navbar-collapse" aria-controls="admin-navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
