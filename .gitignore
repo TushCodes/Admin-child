@@ -52,3 +52,4 @@ test.db
 # IDE / Editor
 .vscode/
 .idea/
+.venv/

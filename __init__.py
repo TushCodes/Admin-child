@@ -18,6 +18,10 @@ from sqlalchemy import text
 from werkzeug.exceptions import HTTPException
 
 if __name__ != "app":
+    # Pytest may import this repository-level __init__ module by filename.
+    # Mark it as package-like before aliasing it to `app` so absolute imports
+    # such as `app.models` still resolve.
+    __path__ = [os.path.dirname(__file__)]
     sys.modules.setdefault("app", sys.modules[__name__])
 
 from app.models import db as models_db
@@ -270,9 +274,9 @@ def create_app():
         logger.info("AUTO_CREATE_TABLES disabled. Skipping db.create_all() at startup.")
         logger.info("Consignment schema repair runs asynchronously in production.")
 
-    from app.main.routes import main_bp
-    from app.track.routes import track_bp
-    from app.pages.routes import pages_bp
+    from app.routes.main import main_bp
+    from app.routes.track import track_bp
+    from app.routes.pages import pages_bp
     from app.admin import admin_bp
     from app.admin.flask_admin_setup import init_flask_admin
 
@@ -280,12 +284,6 @@ def create_app():
     app.register_blueprint(track_bp)
     app.register_blueprint(pages_bp)
     app.register_blueprint(admin_bp)
-
-    # Debug: log registered blueprint names before initializing Flask-Admin
-    try:
-        logger.info("Registered blueprints before Flask-Admin init: %s", list(app.blueprints.keys()))
-    except Exception:
-        pass
 
     try:
         init_flask_admin(app)

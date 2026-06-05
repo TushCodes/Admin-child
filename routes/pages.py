@@ -5,7 +5,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-pages_bp = Blueprint("pages", __name__, template_folder="templates")
+pages_bp = Blueprint("pages", "app.pages", template_folder="templates")
 
 
 @pages_bp.route("/<page>")

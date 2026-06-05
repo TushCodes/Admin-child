@@ -9,7 +9,7 @@ def require_database_uri():
     raw_uri = os.getenv("DATABASE_URL", "").strip()
     if not raw_uri:
         if os.getenv("FLASK_ENV", "").strip().lower() == "development":
-            return "sqlite:///test.db"
+            return "postgresql://admin_child:admin_child@127.0.0.1:5432/admin_child"
         raise RuntimeError("DATABASE_URL is required. SQLite is no longer supported.")
 
     if raw_uri.startswith("sqlite://"):
