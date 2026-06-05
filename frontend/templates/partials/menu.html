@@ -14,7 +14,7 @@
         </a>
 
         <!-- Menu Button (always visible) -->
-        <button id="openMenuModal" class="mobile-menu-toggle" aria-haspopup="dialog" aria-controls="menuModal"
+        <button id="openMenuModal" class="mobile-menu-toggle" aria-haspopup="true" aria-controls="menuModal"
           aria-expanded="false">
           <span class="menu-icon"></span>
           <span class="menu-icon-text">Menu</span>
@@ -23,7 +23,7 @@
     </div>
   </div>
 
-  <!-- Modal Menu -->
+  <!-- Sidebar Menu -->
   <div id="menuModal" class="menu-modal" role="dialog" aria-modal="true" aria-labelledby="menuModalTitle" tabindex="-1">
     <div class="menu-modal-content">
       <div class="menu-modal-header">
@@ -94,7 +94,6 @@
         </div>
       </div>
     </div>
-  </div>
   </div>
 </nav>
 <script src="{{ url_for('static', filename='js/menu.js') }}"></script>
