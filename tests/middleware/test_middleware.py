@@ -1,29 +1,8 @@
-import importlib.util
-import os
-import sys
-from pathlib import Path
-
 from flask import request
 
-ROOT = Path(__file__).resolve().parents[1]
 
-
-def _load_app(tmp_path):
-    os.environ.setdefault("FLASK_ENV", "development")
-    os.environ["DATABASE_URL"] = f"sqlite:///{tmp_path / 'middleware.db'}"
-    os.environ.setdefault("RATELIMIT_STORAGE_URI", "memory://")
-
-    spec = importlib.util.spec_from_file_location("app", str(ROOT / "__init__.py"))
-    module = importlib.util.module_from_spec(spec)
-    sys.modules["app"] = module
-    spec.loader.exec_module(module)
-    return module.create_app()
-
-
-def test_request_and_security_headers_are_applied(tmp_path):
-    app = _load_app(tmp_path)
-
-    response = app.test_client().get("/health", headers={"X-Request-ID": "req-123"})
+def test_request_and_security_headers_are_applied(client):
+    response = client.get("/health", headers={"X-Request-ID": "req-123"})
 
     assert response.status_code == 200
     assert response.headers["X-Request-ID"] == "req-123"
@@ -33,21 +12,15 @@ def test_request_and_security_headers_are_applied(tmp_path):
     assert "default-src 'self'" in response.headers["Content-Security-Policy"]
 
 
-def test_admin_middleware_redirects_html_requests_to_login(tmp_path):
-    app = _load_app(tmp_path)
-
-    response = app.test_client().get("/admin/dashboard")
+def test_admin_middleware_redirects_html_requests_to_login(client):
+    response = client.get("/admin/dashboard")
 
     assert response.status_code == 302
     assert "/admin/login" in response.headers["Location"]
 
 
-def test_admin_middleware_returns_json_for_json_requests(tmp_path):
-    app = _load_app(tmp_path)
-
-    response = app.test_client().get(
-        "/flask-admin/", headers={"Accept": "application/json"}
-    )
+def test_admin_middleware_returns_json_for_json_requests(client):
+    response = client.get("/flask-admin/", headers={"Accept": "application/json"})
 
     assert response.status_code == 401
     assert response.get_json() == {
@@ -56,10 +29,7 @@ def test_admin_middleware_returns_json_for_json_requests(tmp_path):
     }
 
 
-def test_error_handlers_use_shared_json_negotiation(tmp_path):
-    app = _load_app(tmp_path)
-    client = app.test_client()
-
+def test_error_handlers_use_shared_json_negotiation(client):
     json_response = client.get("/missing", headers={"Accept": "application/json"})
     html_response = client.get("/missing", headers={"Accept": "text/html"})
 
@@ -69,8 +39,7 @@ def test_error_handlers_use_shared_json_negotiation(tmp_path):
     assert html_response.mimetype == "text/html"
 
 
-def test_wants_json_response_helper_negotiates_common_request_types(tmp_path):
-    app = _load_app(tmp_path)
+def test_wants_json_response_helper_negotiates_common_request_types(app):
     from app.utils.content_negotiation import wants_json_response
 
     with app.test_request_context("/api/example", headers={"Accept": "text/html"}):
@@ -93,10 +62,8 @@ def test_wants_json_response_helper_negotiates_common_request_types(tmp_path):
         assert wants_json_response(request) is True
 
 
-def test_cors_middleware_allows_configured_frontend_origin(tmp_path):
-    app = _load_app(tmp_path)
-
-    response = app.test_client().options(
+def test_cors_middleware_allows_configured_frontend_origin(client):
+    response = client.options(
         "/contact",
         headers={
             "Origin": "http://localhost:3000",
@@ -110,10 +77,7 @@ def test_cors_middleware_allows_configured_frontend_origin(tmp_path):
     assert "POST" in response.headers["Access-Control-Allow-Methods"]
 
 
-def test_database_middleware_commits_contact_writes(tmp_path):
-    app = _load_app(tmp_path)
-    client = app.test_client()
-
+def test_database_middleware_commits_contact_writes(app, client):
     response = client.post(
         "/contact",
         data={
