@@ -67,10 +67,10 @@ def main():
     with run_app_server() as base_url:
         url, text = asyncio.run(_login_and_collect_dashboard_text(base_url))
 
-    ok = True
+    success = True
     if not url.endswith("/admin/dashboard"):
         print("FAIL: URL did not end with /admin/dashboard", url)
-        ok = False
+        success = False
 
     checks = [
         "Welcome back!",
@@ -80,12 +80,12 @@ def main():
         "Gram SCS Admin",
     ]
 
-    for c in checks:
-        if c not in text:
-            print(f"FAIL: missing text: {c}")
-            ok = False
+    for expected_text in checks:
+        if expected_text not in text:
+            print(f"FAIL: missing text: {expected_text}")
+            success = False
 
-    if ok:
+    if success:
         print("PASS: admin dashboard test succeeded")
         sys.exit(0)
     else:

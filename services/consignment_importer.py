@@ -14,7 +14,7 @@ def _normalize_header(value):
 
 def import_from_workbook(
     file_obj,
-    Consignment=None,
+    consignment_model=None,
     db=None,
     normalize_consignment_number=None,
     normalize_status=None,
@@ -23,10 +23,10 @@ def import_from_workbook(
     """Import consignments from an uploaded workbook file-like object.
 
     Returns (added_count, skipped_count).
-    Accepts optional `Consignment` and `db` to allow caller to pass patched objects for testing.
+    Accepts optional `consignment_model` and `db` to allow caller to pass patched objects for testing.
     """
-    if Consignment is None:
-        from app.models import Consignment as Consignment
+    if consignment_model is None:
+        from app.models import Consignment as consignment_model
     if db is None:
         from app.models import db as db
 
@@ -39,14 +39,18 @@ def import_from_workbook(
         or normalize_indian_pincode is None
     ):
         from app.services.logistics import (
-            normalize_consignment_number as _ncn,
-            normalize_status as _ns,
-            normalize_indian_pincode as _nip,
+            normalize_consignment_number as default_normalize_consignment_number,
+            normalize_status as default_normalize_status,
+            normalize_indian_pincode as default_normalize_indian_pincode,
         )
 
-        normalize_consignment_number = normalize_consignment_number or _ncn
-        normalize_status = normalize_status or _ns
-        normalize_indian_pincode = normalize_indian_pincode or _nip
+        normalize_consignment_number = (
+            normalize_consignment_number or default_normalize_consignment_number
+        )
+        normalize_status = normalize_status or default_normalize_status
+        normalize_indian_pincode = (
+            normalize_indian_pincode or default_normalize_indian_pincode
+        )
 
     workbook = load_workbook(file_obj, data_only=True)
     sheet = workbook.active
@@ -56,30 +60,30 @@ def import_from_workbook(
         raise ValueError("Excel file is empty.")
 
     normalized_headers = [_normalize_header(cell) for cell in header_cells]
-    header_index = {name: idx for idx, name in enumerate(normalized_headers) if name}
+    header_index = {name: index for index, name in enumerate(normalized_headers) if name}
 
-    consignment_idx = header_index.get("consignment_number")
-    status_idx = header_index.get("status")
-    pickup_address_idx = header_index.get("pickup_address")
-    pickup_pincode_idx = header_index.get("pickup_pincode")
-    pickup_tag_idx = header_index.get("pickup_tag")
-    pickup_date_idx = header_index.get("pickup_date")
-    drop_address_idx = header_index.get("drop_address")
-    drop_pincode_idx = header_index.get("drop_pincode")
-    drop_tag_idx = header_index.get("drop_tag")
-    drop_date_idx = header_index.get("drop_date")
-    eta_idx = header_index.get("eta")
+    consignment_index = header_index.get("consignment_number")
+    status_index = header_index.get("status")
+    pickup_address_index = header_index.get("pickup_address")
+    pickup_pincode_index = header_index.get("pickup_pincode")
+    pickup_tag_index = header_index.get("pickup_tag")
+    pickup_date_index = header_index.get("pickup_date")
+    drop_address_index = header_index.get("drop_address")
+    drop_pincode_index = header_index.get("drop_pincode")
+    drop_tag_index = header_index.get("drop_tag")
+    drop_date_index = header_index.get("drop_date")
+    eta_index = header_index.get("eta")
 
-    if None in (consignment_idx, status_idx):
+    if None in (consignment_index, status_index):
         raise ValueError("Required headers: consignment_number, status")
 
     # Prefer the injected Consignment (useful for tests that patch the model)
-    if Consignment is not None:
+    if consignment_model is not None:
         try:
             existing_numbers = {
-                c[0]
-                for c in Consignment.query.with_entities(
-                    Consignment.consignment_number
+                consignment_number_row[0]
+                for consignment_number_row in consignment_model.query.with_entities(
+                    consignment_model.consignment_number
                 ).all()
             }
         except Exception:
@@ -96,64 +100,64 @@ def import_from_workbook(
         if not row or all(value is None or str(value).strip() == "" for value in row):
             continue
 
-        consignment_number = normalize_consignment_number(row[consignment_idx])
-        status = normalize_status(row[status_idx])
+        consignment_number = normalize_consignment_number(row[consignment_index])
+        status = normalize_status(row[status_index])
         pickup_address = str(
-            row[pickup_address_idx]
-            if pickup_address_idx is not None and row[pickup_address_idx] is not None
+            row[pickup_address_index]
+            if pickup_address_index is not None and row[pickup_address_index] is not None
             else ""
         ).strip()
         pickup_pincode = normalize_indian_pincode(
             (
-                row[pickup_pincode_idx]
-                if pickup_pincode_idx is not None
-                and row[pickup_pincode_idx] is not None
+                row[pickup_pincode_index]
+                if pickup_pincode_index is not None
+                and row[pickup_pincode_index] is not None
                 else ""
             ),
             "pickup_pincode",
         )
         pickup_tag = str(
-            row[pickup_tag_idx]
-            if pickup_tag_idx is not None and row[pickup_tag_idx] is not None
+            row[pickup_tag_index]
+            if pickup_tag_index is not None and row[pickup_tag_index] is not None
             else ""
         ).strip()
         pickup_date = str(
-            row[pickup_date_idx]
-            if pickup_date_idx is not None and row[pickup_date_idx] is not None
+            row[pickup_date_index]
+            if pickup_date_index is not None and row[pickup_date_index] is not None
             else ""
         ).strip()
         drop_address = str(
-            row[drop_address_idx]
-            if drop_address_idx is not None and row[drop_address_idx] is not None
+            row[drop_address_index]
+            if drop_address_index is not None and row[drop_address_index] is not None
             else ""
         ).strip()
         drop_pincode = normalize_indian_pincode(
             (
-                row[drop_pincode_idx]
-                if drop_pincode_idx is not None and row[drop_pincode_idx] is not None
+                row[drop_pincode_index]
+                if drop_pincode_index is not None and row[drop_pincode_index] is not None
                 else ""
             ),
             "drop_pincode",
         )
         drop_tag = str(
-            row[drop_tag_idx]
-            if drop_tag_idx is not None and row[drop_tag_idx] is not None
+            row[drop_tag_index]
+            if drop_tag_index is not None and row[drop_tag_index] is not None
             else ""
         ).strip()
         drop_date = str(
-            row[drop_date_idx]
-            if drop_date_idx is not None and row[drop_date_idx] is not None
+            row[drop_date_index]
+            if drop_date_index is not None and row[drop_date_index] is not None
             else ""
         ).strip()
         eta = str(
-            row[eta_idx] if eta_idx is not None and row[eta_idx] is not None else ""
+            row[eta_index] if eta_index is not None and row[eta_index] is not None else ""
         ).strip()
 
         if consignment_number in existing_numbers or consignment_number in file_seen:
             skipped_count += 1
             continue
 
-        consignment = Consignment(
+        consignment = consignment_model(
             consignment_number=consignment_number,
             status=status,
             pickup_address=pickup_address,

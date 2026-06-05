@@ -89,23 +89,23 @@ def consignment_pod(consignment_number):
             pod_path.startswith("http://") or pod_path.startswith("https://")
         ):
             try:
-                resp = requests.get(pod_path, stream=True, timeout=15)
-                resp.raise_for_status()
-                content_bytes = resp.content
-                ctype = resp.headers.get("content-type", None)
+                response = requests.get(pod_path, stream=True, timeout=15)
+                response.raise_for_status()
+                content_bytes = response.content
+                content_type = response.headers.get("content-type", None)
                 filename = f"{number}_pod.jpg"
 
                 # Try to convert to JPEG to ensure consistent .jpg download
                 try:
                     from PIL import Image
 
-                    img = Image.open(io.BytesIO(content_bytes))
-                    out = io.BytesIO()
-                    rgb = img.convert("RGB")
-                    rgb.save(out, format="JPEG", quality=85)
-                    out.seek(0)
+                    image = Image.open(io.BytesIO(content_bytes))
+                    output = io.BytesIO()
+                    rgb_image = image.convert("RGB")
+                    rgb_image.save(output, format="JPEG", quality=85)
+                    output.seek(0)
                     return send_file(
-                        out,
+                        output,
                         as_attachment=True,
                         download_name=filename,
                         mimetype="image/jpeg",
@@ -117,7 +117,7 @@ def consignment_pod(consignment_number):
                         content,
                         as_attachment=True,
                         download_name=filename,
-                        mimetype=ctype,
+                        mimetype=content_type,
                     )
             except Exception:
                 return json_error("Failed to retrieve external POD.", 502)
@@ -127,8 +127,8 @@ def consignment_pod(consignment_number):
             try:
                 from app.services.pod_storage import get_pod_url as _get_pod_url
 
-                ttl = int(os.getenv("SUPABASE_SIGNED_URL_TTL", "30"))
-                url = _get_pod_url(pod_path, ttl=ttl)
+                signed_url_ttl = int(os.getenv("SUPABASE_SIGNED_URL_TTL", "30"))
+                url = _get_pod_url(pod_path, signed_url_ttl=signed_url_ttl)
                 if not url:
                     return json_error("Unable to generate POD URL.", 500)
                 return redirect(url)
@@ -149,14 +149,14 @@ def consignment_pod(consignment_number):
         try:
             from PIL import Image
 
-            with open(safe_path, "rb") as fh:
-                img = Image.open(fh)
-                out = io.BytesIO()
-                rgb = img.convert("RGB")
-                rgb.save(out, format="JPEG", quality=85)
-                out.seek(0)
+            with open(safe_path, "rb") as file_handle:
+                image = Image.open(file_handle)
+                output = io.BytesIO()
+                rgb_image = image.convert("RGB")
+                rgb_image.save(output, format="JPEG", quality=85)
+                output.seek(0)
                 return send_file(
-                    out,
+                    output,
                     as_attachment=True,
                     download_name=f"{number}_pod.jpg",
                     mimetype="image/jpeg",

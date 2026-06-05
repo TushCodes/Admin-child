@@ -4,7 +4,7 @@
 document.addEventListener("DOMContentLoaded", function () {
 	var openBtn = document.getElementById("openMenuModal");
 	var modal = document.getElementById("menuModal");
-	var closeBtn = modal ? modal.querySelector(".menu-modal-close") : null;
+	var closeButton = modal ? modal.querySelector(".menu-modal-close") : null;
 
 	function openModal() {
 		if (!modal || !openBtn) {
@@ -26,24 +26,24 @@ document.addEventListener("DOMContentLoaded", function () {
 		document.body.style.overflow = "";
 	}
 
-	if (openBtn && modal && closeBtn) {
+	if (openBtn && modal && closeButton) {
 		openBtn.addEventListener("click", openModal);
-		closeBtn.addEventListener("click", closeModal);
+		closeButton.addEventListener("click", closeModal);
 
-		modal.addEventListener("keydown", function (e) {
-			if (e.key === "Escape") {
+		modal.addEventListener("keydown", function (event) {
+			if (event.key === "Escape") {
 				closeModal();
 			}
 		});
 
-		modal.addEventListener("click", function (e) {
-			if (e.target === modal) {
+		modal.addEventListener("click", function (event) {
+			if (event.target === modal) {
 				closeModal();
 			}
 		});
 
-		modal.addEventListener("keydown", function (e) {
-			if (e.key !== "Tab") {
+		modal.addEventListener("keydown", function (event) {
+			if (event.key !== "Tab") {
 				return;
 			}
 
@@ -55,11 +55,11 @@ document.addEventListener("DOMContentLoaded", function () {
 			var first = focusable[0];
 			var last = focusable[focusable.length - 1];
 
-			if (e.shiftKey && document.activeElement === first) {
-				e.preventDefault();
+			if (event.shiftKey && document.activeElement === first) {
+				event.preventDefault();
 				last.focus();
-			} else if (!e.shiftKey && document.activeElement === last) {
-				e.preventDefault();
+			} else if (!event.shiftKey && document.activeElement === last) {
+				event.preventDefault();
 				first.focus();
 			}
 		});
@@ -80,8 +80,8 @@ document.addEventListener("DOMContentLoaded", function () {
 			});
 		}
 
-		toggle.addEventListener("click", function (e) {
-			e.preventDefault();
+		toggle.addEventListener("click", function (event) {
+			event.preventDefault();
 			var dropdownOnClick = this.closest(".dropdown");
 			if (dropdownOnClick) {
 				dropdownOnClick.classList.toggle("show");

@@ -2,27 +2,27 @@
  * @file Reveals page elements as they enter the visitor viewport.
  */
 (function(){
-  function onReady(fn){
-    if(document.readyState !== 'loading') return fn();
-    document.addEventListener('DOMContentLoaded', fn);
+  function onReady(callback){
+    if(document.readyState !== 'loading') return callback();
+    document.addEventListener('DOMContentLoaded', callback);
   }
 
   onReady(function(){
-    const revealEls = document.querySelectorAll('.reveal');
-    if(!revealEls.length) return;
+    const revealElements = document.querySelectorAll('.reveal');
+    if(!revealElements.length) return;
 
-    const io = new IntersectionObserver((entries) => {
+    const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if(entry.isIntersecting){
           entry.target.classList.add('in-view');
-          io.unobserve(entry.target);
+          observer.unobserve(entry.target);
         }
       });
     }, { threshold: 0.2, rootMargin: '0px 0px -10% 0px' });
 
-    revealEls.forEach(el => {
+    revealElements.forEach(element => {
       // Respect existing inline transition delays or utility classes
-      io.observe(el);
+      observer.observe(element);
     });
   });
 })();

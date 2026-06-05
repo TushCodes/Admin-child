@@ -3,7 +3,7 @@
  */
 document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll("form").forEach(function (form) {
-        form.addEventListener("submit", function (e) {
+        form.addEventListener("submit", function (event) {
             var hasError = false;
             form.querySelectorAll("[required]").forEach(function (field) {
                 if (!field.value.trim()) {
@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
             if (hasError) {
-                e.preventDefault();
+                event.preventDefault();
             }
         });
     });
@@ -36,21 +36,21 @@ document.addEventListener("DOMContentLoaded", function () {
         order: "whatsapp,sms,call,email"
     };
 
-    var proto = document.location.protocol;
+    var protocol = document.location.protocol;
     var host = "whatshelp.io";
-    var url = proto + "//static." + host;
-    var s = document.createElement("script");
-    s.type = "text/javascript";
-    s.async = true;
-    s.src = url + "/widget-send-button/js/init.js";
-    s.onload = function () {
+    var url = protocol + "//static." + host;
+    var widgetScript = document.createElement("script");
+    widgetScript.type = "text/javascript";
+    widgetScript.async = true;
+    widgetScript.src = url + "/widget-send-button/js/init.js";
+    widgetScript.onload = function () {
         if (typeof WhWidgetSendButton !== "undefined") {
-            WhWidgetSendButton.init(host, proto, options);
+            WhWidgetSendButton.init(host, protocol, options);
         }
     };
 
-    var x = document.getElementsByTagName("script")[0];
-    if (x && x.parentNode) {
-        x.parentNode.insertBefore(s, x);
+    var firstScript = document.getElementsByTagName("script")[0];
+    if (firstScript && firstScript.parentNode) {
+        firstScript.parentNode.insertBefore(widgetScript, firstScript);
     }
 })();

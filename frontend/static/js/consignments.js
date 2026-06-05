@@ -6,20 +6,20 @@ document.addEventListener("DOMContentLoaded", function () {
     var saveButton = document.getElementById("save-btn");
     var addRowButton = document.getElementById("add-row-btn");
     var editModal = new bootstrap.Modal(document.getElementById("editConsignmentModal"));
-    var modalSaveBtn = document.getElementById("modal-save-btn");
+    var modalSaveButton = document.getElementById("modal-save-btn");
     var modalPodFile = document.getElementById("modal-pod-file");
     var modalPodPreview = document.getElementById("modal-pod-preview-container");
-    var modalPodRemoveBtn = document.getElementById("modal-pod-remove");
+    var modalPodRemoveButton = document.getElementById("modal-pod-remove");
     var modalPodView = document.getElementById("modal-pod-view");
-    var podViewerModalEl = document.getElementById("podViewerModal");
-    var podViewerModal = podViewerModalEl ? new bootstrap.Modal(podViewerModalEl) : null;
+    var podViewerModalElement = document.getElementById("podViewerModal");
+    var podViewerModal = podViewerModalElement ? new bootstrap.Modal(podViewerModalElement) : null;
     var podViewerContent = document.getElementById("pod-viewer-content");
     var searchInput = document.getElementById("search-input");
     var perPageSelect = document.getElementById("per-page-select");
-    var clearFiltersBtn = document.getElementById("clear-filters-btn");
-    var prevPageBtn = document.getElementById("prev-page-btn");
-    var nextPageBtn = document.getElementById("next-page-btn");
-    var pageNumbersContainer = document.getElementById("page-numbers-container");
+    var clearFiltersButton = document.getElementById("clear-filters-btn");
+    var prevPageButton = document.getElementById("prev-page-btn");
+    var nextPageButton = document.getElementById("next-page-btn");
+    var paginationContainer = document.getElementById("page-numbers-container");
 
     if (!tableBody || !saveButton || !addRowButton) {
         return;
@@ -41,14 +41,14 @@ document.addEventListener("DOMContentLoaded", function () {
     var statusTimeoutId = null;
 
     function showStatus(message, type) {
-        var el = document.getElementById("status-msg");
-        if (!el) {
+        var statusElement = document.getElementById("status-msg");
+        if (!statusElement) {
             return;
         }
-        el.innerHTML = message;
-        el.className = "alert alert-" + type + " shadow-sm border-0";
-        el.classList.remove("d-none");
-        el.scrollIntoView({ behavior: "smooth", block: "center" });
+        statusElement.innerHTML = message;
+        statusElement.className = "alert alert-" + type + " shadow-sm border-0";
+        statusElement.classList.remove("d-none");
+        statusElement.scrollIntoView({ behavior: "smooth", block: "center" });
         // Auto-dismiss status messages after 10 seconds
         try {
             if (statusTimeoutId) {
@@ -56,10 +56,10 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             statusTimeoutId = setTimeout(function () {
                 try {
-                    el.classList.add('d-none');
-                } catch (e) {}
+                    statusElement.classList.add('d-none');
+                } catch (error) {}
             }, 10000);
-        } catch (e) {}
+        } catch (error) {}
     }
 
     function escapeHtml(text) {
@@ -72,15 +72,15 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function populateModal(row) {
-        var consInput = document.getElementById("modal-consignment-number");
-        consInput.value = row.consignment_number || "";
+        var consignmentInput = document.getElementById("modal-consignment-number");
+        consignmentInput.value = row.consignment_number || "";
         // Ensure the input is editable (some scripts may toggle readOnly)
         try {
-            consInput.readOnly = false;
-        } catch (e) {
+            consignmentInput.readOnly = false;
+        } catch (error) {
             // ignore
         }
-        consInput.focus();
+        consignmentInput.focus();
         document.getElementById("modal-status").value = row.status || "";
         document.getElementById("modal-pickup-address").value = row.pickup_address || "";
         document.getElementById("modal-pickup-pincode").value = row.pickup_pincode || "";
@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 modalPodView.dataset.id = '';
                 modalPodView.dataset.pod = '';
             }
-        } catch (e) {
+        } catch (error) {
             // ignore if modal controls missing
         }
     }
@@ -159,88 +159,88 @@ document.addEventListener("DOMContentLoaded", function () {
         };
     }
 
-    function getRowDataFromTr(tr) {
+    function getRowDataFromElement(rowElement) {
         try {
-            return buildRowData(JSON.parse(tr.dataset.row || "{}"), tr.dataset.id ? Number(tr.dataset.id) : null);
+            return buildRowData(JSON.parse(rowElement.dataset.row || "{}"), rowElement.dataset.id ? Number(rowElement.dataset.id) : null);
         } catch (error) {
-            return buildRowData({}, tr.dataset.id ? Number(tr.dataset.id) : null);
+            return buildRowData({}, rowElement.dataset.id ? Number(rowElement.dataset.id) : null);
         }
     }
 
     function addRow(row, isLocal) {
         var source = buildRowData(row || {});
-        var tr = document.createElement("tr");
-        tr.dataset.id = source.id || "";
-        tr.dataset.consignmentNumber = source.consignment_number || "";
-        tr.dataset.row = JSON.stringify(source);
-        tr.dataset.isLocal = isLocal ? "true" : "false";
+        var rowElement = document.createElement("tr");
+        rowElement.dataset.id = source.id || "";
+        rowElement.dataset.consignmentNumber = source.consignment_number || "";
+        rowElement.dataset.row = JSON.stringify(source);
+        rowElement.dataset.isLocal = isLocal ? "true" : "false";
 
-        var consignmentNum = escapeHtml(source.consignment_number || "");
+        var consignmentNumberText = escapeHtml(source.consignment_number || "");
         var status = escapeHtml(source.status || "");
         var pickupTag = escapeHtml(source.pickup_tag || "");
-        var dropPin = escapeHtml(source.drop_pincode || "");
+        var dropPincodeText = escapeHtml(source.drop_pincode || "");
         var pickupDate = escapeHtml(source.pickup_date || "");
-        var dropEta = escapeHtml(source.drop_date || source.eta || "");
+        var dropEtaText = escapeHtml(source.drop_date || source.eta || "");
 
-        var rowClass = isLocal ? 'table-info' : '';
+        var rowCssClass = isLocal ? 'table-info' : '';
 
-        var podCellHtml = "<span class=\"text-muted small\">—</span>";
+        var podCellMarkup = "<span class=\"text-muted small\">—</span>";
         if (source.pod_image) {
-            podCellHtml = '<button type="button" class="btn btn-sm btn-outline-secondary view-pod">View</button>';
+            podCellMarkup = '<button type="button" class="btn btn-sm btn-outline-secondary view-pod">View</button>';
         } else if (source.pod_file_name) {
-            podCellHtml = '<button type="button" class="btn btn-sm btn-outline-secondary view-pod">View</button>';
+            podCellMarkup = '<button type="button" class="btn btn-sm btn-outline-secondary view-pod">View</button>';
         }
 
-        tr.innerHTML =
-            "<td>" + consignmentNum + "</td>" +
+        rowElement.innerHTML =
+            "<td>" + consignmentNumberText + "</td>" +
             "<td>" + status + "</td>" +
             "<td>" + pickupTag + "</td>" +
-            "<td>" + dropPin + "</td>" +
+            "<td>" + dropPincodeText + "</td>" +
             "<td>" + pickupDate + "</td>" +
-            "<td>" + dropEta + "</td>" +
-            "<td class=\"text-center\">" + podCellHtml + "</td>" +
+            "<td>" + dropEtaText + "</td>" +
+            "<td class=\"text-center\">" + podCellMarkup + "</td>" +
             "<td class=\"text-center\"><button type=\"button\" class=\"btn btn-sm btn-outline-primary edit-row\" title=\"Edit\"><i class=\"fa fa-pencil\"></i></button></td>" +
             "<td class=\"text-center\"><button type=\"button\" class=\"btn btn-sm btn-outline-danger delete-row\" title=\"Delete\"><i class=\"fa fa-times\"></i></button></td>";
 
-        if (rowClass) {
-            tr.className = rowClass;
+        if (rowCssClass) {
+            rowElement.className = rowCssClass;
         }
 
-        var editButton = tr.querySelector(".edit-row");
+        var editButton = rowElement.querySelector(".edit-row");
         if (editButton) {
             editButton.addEventListener("click", function () {
                 isCreatingRow = false;
-                currentEditingRow = tr;
-                populateModal(getRowDataFromTr(tr));
+                currentEditingRow = rowElement;
+                populateModal(getRowDataFromElement(rowElement));
                 editModal.show();
             });
         }
 
-        var deleteButton = tr.querySelector(".delete-row");
+        var deleteButton = rowElement.querySelector(".delete-row");
         if (deleteButton) {
             deleteButton.addEventListener("click", function () {
-                var existingId = tr.dataset.id ? Number(tr.dataset.id) : null;
+                var existingId = rowElement.dataset.id ? Number(rowElement.dataset.id) : null;
                 if (existingId && existingId > 0) {
                     adminState.addDeleted(existingId);
                 }
                 // Remove from local tracking
                 adminState.removeLocalRowById(existingId);
-                tr.remove();
+                rowElement.remove();
             });
         }
 
-        tableBody.appendChild(tr);
+        tableBody.appendChild(rowElement);
 
         // attach view-pod listener if present
-        var viewBtn = tr.querySelector('.view-pod');
-        if (viewBtn) {
-            viewBtn.addEventListener('click', function () {
-                openPodViewer(getRowDataFromTr(tr));
+        var viewButton = rowElement.querySelector('.view-pod');
+        if (viewButton) {
+            viewButton.addEventListener('click', function () {
+                openPodViewer(getRowDataFromElement(rowElement));
             });
         }
     }
 
-    function updateRowFromModal(tr, source) {
+    function updateRowFromModal(rowElement, source) {
         var consignmentNumber = document.getElementById("modal-consignment-number").value.trim();
         var status = document.getElementById("modal-status").value.trim();
         var pickupPincode = document.getElementById("modal-pickup-pincode").value.trim();
@@ -274,36 +274,36 @@ document.addEventListener("DOMContentLoaded", function () {
         source.pod_file_type = stagedPodUpload ? stagedPodUpload.type : (source.pod_file_type || null);
         source.pod_file_data = stagedPodUpload ? stagedPodUpload.dataUrl : (source.pod_file_data || null);
 
-        if (tr) {
-            tr.cells[0].textContent = source.consignment_number || "";
-            tr.dataset.consignmentNumber = source.consignment_number || "";
-            tr.cells[1].textContent = source.status || "";
-            tr.dataset.row = JSON.stringify(source);
-            tr.cells[2].textContent = source.pickup_tag || "";
-            tr.cells[3].textContent = source.drop_pincode || "";
-            tr.cells[4].textContent = source.pickup_date || "";
-            tr.cells[5].textContent = source.drop_date || source.eta || "";
+        if (rowElement) {
+            rowElement.cells[0].textContent = source.consignment_number || "";
+            rowElement.dataset.consignmentNumber = source.consignment_number || "";
+            rowElement.cells[1].textContent = source.status || "";
+            rowElement.dataset.row = JSON.stringify(source);
+            rowElement.cells[2].textContent = source.pickup_tag || "";
+            rowElement.cells[3].textContent = source.drop_pincode || "";
+            rowElement.cells[4].textContent = source.pickup_date || "";
+            rowElement.cells[5].textContent = source.drop_date || source.eta || "";
 
             // update POD cell (cell index 6)
             try {
-                var podCell = tr.cells[6];
+                var podCell = rowElement.cells[6];
                 if (podCell) {
                     if (source.pod_image || source.pod_file_data) {
                         podCell.innerHTML = '<button type="button" class="btn btn-sm btn-outline-secondary view-pod">View</button>';
-                        var vp = podCell.querySelector('.view-pod');
-                        if (vp) {
-                            vp.addEventListener('click', function () {
-                                openPodViewer(getRowDataFromTr(tr));
+                        var viewButton = podCell.querySelector('.view-pod');
+                        if (viewButton) {
+                            viewButton.addEventListener('click', function () {
+                                openPodViewer(getRowDataFromElement(rowElement));
                             });
                         }
                     } else {
                         podCell.innerHTML = '<span class="text-muted small">—</span>';
                     }
                 }
-            } catch (e) {}
+            } catch (error) {}
 
             // Track modification
-            var rowId = tr.dataset.id ? Number(tr.dataset.id) : null;
+            var rowId = rowElement.dataset.id ? Number(rowElement.dataset.id) : null;
             if (rowId && rowId > 0) {
                 adminState.addModified(rowId);
             }
@@ -316,8 +316,8 @@ document.addEventListener("DOMContentLoaded", function () {
         var rows = [];
         var tableRows = document.querySelectorAll("#sheet-body tr");
 
-        tableRows.forEach(function (tr) {
-            var rowData = getRowDataFromTr(tr);
+        tableRows.forEach(function (rowElement) {
+            var rowData = getRowDataFromElement(rowElement);
             if (rowData.consignment_number && rowData.consignment_number.trim()) {
                 rows.push(rowData);
             }
@@ -336,11 +336,11 @@ document.addEventListener("DOMContentLoaded", function () {
         // Include staged local rows that may not be present in DOM (user hasn't navigated to last page)
         try {
             var staged = (adminState && adminState.locallyAddedRows) ? adminState.locallyAddedRows : [];
-            staged.forEach(function (s) {
-                var exists = rawRows.some(function (r) { return r.id === s.id; });
-                if (!exists) rawRows.push(s);
+            staged.forEach(function (stagedRow) {
+                var exists = rawRows.some(function (row) { return row.id === stagedRow.id; });
+                if (!exists) rawRows.push(stagedRow);
             });
-        } catch (e) {}
+        } catch (error) {}
         if (!rawRows.length && adminState.deletedIds.size === 0) {
             showStatus("No changes to save.", "warning");
             return;
@@ -361,34 +361,34 @@ document.addEventListener("DOMContentLoaded", function () {
             // Handle structured per-row validation errors from the server
             if (data && Array.isArray(data.errors) && data.errors.length) {
                 // Clear any previous row error markers
-                document.querySelectorAll('#sheet-body tr .row-error').forEach(function (el) { el.remove(); });
-                var trs = Array.from(document.querySelectorAll('#sheet-body tr'));
-                var firstTr = null;
-                data.errors.forEach(function (err) {
-                    var idx = err.index || 0;
-                    var msg = err.message || 'Invalid value';
-                    var tr = trs[idx];
-                    if (!tr) return;
-                    firstTr = firstTr || tr;
-                    tr.classList.add('table-danger');
+                document.querySelectorAll('#sheet-body tr .row-error').forEach(function (element) { element.remove(); });
+                var rowElements = Array.from(document.querySelectorAll('#sheet-body tr'));
+                var firstRowElement = null;
+                data.errors.forEach(function (rowError) {
+                    var rowIndex = rowError.index || 0;
+                    var message = rowError.message || 'Invalid value';
+                    var rowElement = rowElements[rowIndex];
+                    if (!rowElement) return;
+                    firstRowElement = firstRowElement || rowElement;
+                    rowElement.classList.add('table-danger');
                     // insert or update an inline error element
-                    var existing = tr.querySelector('.row-error');
+                    var existing = rowElement.querySelector('.row-error');
                     if (existing) {
-                        existing.textContent = msg;
+                        existing.textContent = message;
                     } else {
-                        var td = document.createElement('td');
-                        td.colSpan = tr.cells.length;
-                        td.className = 'row-error text-danger small';
-                        td.textContent = msg;
-                        var erTr = document.createElement('tr');
-                        erTr.className = 'row-error-row';
-                        erTr.appendChild(td);
-                        tr.parentNode.insertBefore(erTr, tr.nextSibling);
+                        var cell = document.createElement('td');
+                        cell.colSpan = rowElement.cells.length;
+                        cell.className = 'row-error text-danger small';
+                        cell.textContent = message;
+                        var errorRowElement = document.createElement('tr');
+                        errorRowElement.className = 'row-error-row';
+                        errorRowElement.appendChild(cell);
+                        rowElement.parentNode.insertBefore(errorRowElement, rowElement.nextSibling);
                     }
                 });
 
-                if (firstTr) {
-                    firstTr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                if (firstRowElement) {
+                    firstRowElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
 
                 throw new Error('Validation errors. Please fix highlighted rows.');
@@ -410,7 +410,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         : (totalRows + (adminState.locallyAddedRows ? adminState.locallyAddedRows.length : 0) - (data.deleted_count || 0));
                     var lastPage = Math.max(1, Math.ceil(totalAfter / currentPerPage));
                     loadPage(lastPage, currentSearch, currentPerPage, currentSortBy, currentSortOrder);
-                } catch (e) {
+                } catch (error) {
                     loadPage(1, currentSearch, currentPerPage, currentSortBy, currentSortOrder);
                 }
             }, 1200);
@@ -441,10 +441,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // clear any inline validation rows before loading new data
             try {
-                document.querySelectorAll('#sheet-body .row-error').forEach(function (el) { el.remove(); });
-                document.querySelectorAll('.row-error-row').forEach(function (el) { el.remove(); });
-                document.querySelectorAll('#sheet-body tr.table-danger').forEach(function (tr) { tr.classList.remove('table-danger'); });
-            } catch (e) {}
+                document.querySelectorAll('#sheet-body .row-error').forEach(function (element) { element.remove(); });
+                document.querySelectorAll('.row-error-row').forEach(function (element) { element.remove(); });
+                document.querySelectorAll('#sheet-body tr.table-danger').forEach(function (rowElement) { rowElement.classList.remove('table-danger'); });
+            } catch (error) {}
 
             var data = await adminAPI.fetchList(listUrl, params);
             if (!data || !data.success) {
@@ -454,7 +454,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         window.location = '/admin/login';
                         return;
                     }
-                } catch (e) {}
+                } catch (error) {}
                 throw new Error((data && data.error) || "Failed to load data.");
             }
 
@@ -486,7 +486,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         // show staged rows on last page but without 'table-info' highlight
                         addRow(row, false);
                     });
-                } catch (e) {
+                } catch (error) {
                     // ignore DOM append errors
                 }
             }
@@ -509,67 +509,67 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("showing-end").textContent = showingEnd;
         document.getElementById("total-count").textContent = totalRows;
 
-        prevPageBtn.disabled = currentPage <= 1;
-        nextPageBtn.disabled = currentPage >= totalPages;
+        prevPageButton.disabled = currentPage <= 1;
+        nextPageButton.disabled = currentPage >= totalPages;
 
         // Generate page numbers
-        pageNumbersContainer.innerHTML = "";
+        paginationContainer.innerHTML = "";
         var startPage = Math.max(1, currentPage - 2);
         var endPage = Math.min(totalPages, currentPage + 2);
 
         if (startPage > 1) {
-            var firstPageBtn = document.createElement("button");
-            firstPageBtn.type = "button";
-            firstPageBtn.className = "btn btn-outline-secondary btn-sm page-number";
-            firstPageBtn.textContent = "1";
-            firstPageBtn.addEventListener("click", function () {
+            var firstPageButton = document.createElement("button");
+            firstPageButton.type = "button";
+            firstPageButton.className = "btn btn-outline-secondary btn-sm page-number";
+            firstPageButton.textContent = "1";
+            firstPageButton.addEventListener("click", function () {
                 loadPage(1, currentSearch, currentPerPage, currentSortBy, currentSortOrder);
             });
-            pageNumbersContainer.appendChild(firstPageBtn);
+            paginationContainer.appendChild(firstPageButton);
 
             if (startPage > 2) {
                 var ellipsis = document.createElement("span");
                 ellipsis.className = "page-number";
                 ellipsis.textContent = "...";
-                pageNumbersContainer.appendChild(ellipsis);
+                paginationContainer.appendChild(ellipsis);
             }
         }
 
-        for (var i = startPage; i <= endPage; i++) {
-            var pageBtn = document.createElement("button");
-            pageBtn.type = "button";
-            pageBtn.className = "btn btn-sm page-number";
-            if (i === currentPage) {
-                pageBtn.className += " btn-primary";
-                pageBtn.disabled = true;
+        for (var pageNumber = startPage; pageNumber <= endPage; pageNumber++) {
+            var pageButton = document.createElement("button");
+            pageButton.type = "button";
+            pageButton.className = "btn btn-sm page-number";
+            if (pageNumber === currentPage) {
+                pageButton.className += " btn-primary";
+                pageButton.disabled = true;
             } else {
-                pageBtn.className += " btn-outline-secondary";
+                pageButton.className += " btn-outline-secondary";
             }
-            pageBtn.textContent = i;
-            pageBtn.addEventListener("click", function (page) {
+            pageButton.textContent = pageNumber;
+            pageButton.addEventListener("click", function (page) {
                 return function () {
                     loadPage(page, currentSearch, currentPerPage, currentSortBy, currentSortOrder);
                 };
-            }(i));
-            pageNumbersContainer.appendChild(pageBtn);
+            }(pageNumber));
+            paginationContainer.appendChild(pageButton);
         }
 
         if (endPage < totalPages) {
             if (endPage < totalPages - 1) {
-                var ellipsis2 = document.createElement("span");
-                ellipsis2.className = "page-number";
-                ellipsis2.textContent = "...";
-                pageNumbersContainer.appendChild(ellipsis2);
+                var trailingEllipsis = document.createElement("span");
+                trailingEllipsis.className = "page-number";
+                trailingEllipsis.textContent = "...";
+                paginationContainer.appendChild(trailingEllipsis);
             }
 
-            var lastPageBtn = document.createElement("button");
-            lastPageBtn.type = "button";
-            lastPageBtn.className = "btn btn-outline-secondary btn-sm page-number";
-            lastPageBtn.textContent = totalPages;
-            lastPageBtn.addEventListener("click", function () {
+            var lastPageButton = document.createElement("button");
+            lastPageButton.type = "button";
+            lastPageButton.className = "btn btn-outline-secondary btn-sm page-number";
+            lastPageButton.textContent = totalPages;
+            lastPageButton.addEventListener("click", function () {
                 loadPage(totalPages, currentSearch, currentPerPage, currentSortBy, currentSortOrder);
             });
-            pageNumbersContainer.appendChild(lastPageBtn);
+            paginationContainer.appendChild(lastPageButton);
         }
     }
 
@@ -598,7 +598,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Event Listeners
-    modalSaveBtn.addEventListener("click", function () {
+    modalSaveButton.addEventListener("click", function () {
         if (isCreatingRow) {
             var newId = adminState.nextLocalId();
             var newSource = buildRowData({}, newId);
@@ -608,7 +608,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // Clear any staged POD upload buffer from the modal
                 stagedPodUpload = null;
-                try { if (modalPodFile) modalPodFile.value = ""; } catch (e) {}
+                try { if (modalPodFile) modalPodFile.value = ""; } catch (error) {}
 
                 // Update totals and pagination UI, but do not navigate or re-load pages
                 totalRows = (typeof totalRows === "number" ? totalRows : 0) + 1;
@@ -626,7 +626,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         if (currentEditingRow) {
-            var source = getRowDataFromTr(currentEditingRow);
+            var source = getRowDataFromElement(currentEditingRow);
             if (updateRowFromModal(currentEditingRow, source)) {
                 editModal.hide();
                 currentEditingRow = null;
@@ -676,8 +676,8 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    if (modalPodRemoveBtn) {
-        modalPodRemoveBtn.addEventListener('click', async function () {
+    if (modalPodRemoveButton) {
+        modalPodRemoveButton.addEventListener('click', async function () {
             if (!currentEditingRow) {
                 modalPodPreview.innerHTML = '<em class="text-muted">No POD uploaded.</em>';
                 modalPodView.style.display = 'none';
@@ -685,7 +685,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             // Read the current row data to determine whether the POD exists on the server
-            var rowData = getRowDataFromTr(currentEditingRow) || {};
+            var rowData = getRowDataFromElement(currentEditingRow) || {};
 
             // If the row only has a staged upload (client-side) but no persisted `pod_image`,
             // clear the staged preview locally instead of calling the DELETE endpoint.
@@ -697,7 +697,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     rowData.pod_file_name = null;
                     rowData.pod_file_type = null;
                     currentEditingRow.dataset.row = JSON.stringify(rowData);
-                } catch (e) {}
+                } catch (error) {}
                 modalPodFile.value = '';
                 modalPodPreview.innerHTML = '<em class="text-muted">No POD uploaded.</em>';
                 modalPodView.style.display = 'none';
@@ -721,23 +721,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // Update UI
                 try {
-                    var tr = currentEditingRow;
-                    var rowData = getRowDataFromTr(tr);
+                    var rowElement = currentEditingRow;
+                    var rowData = getRowDataFromElement(rowElement);
                     rowData.pod_image = null;
                     rowData.pod_file_name = null;
                     rowData.pod_file_type = null;
                     rowData.pod_file_data = null;
-                    tr.dataset.row = JSON.stringify(rowData);
-                    var podCell = tr.cells[6];
+                    rowElement.dataset.row = JSON.stringify(rowData);
+                    var podCell = rowElement.cells[6];
                     if (podCell) podCell.innerHTML = '<span class="text-muted small">—</span>';
                     modalPodPreview.innerHTML = '<em class="text-muted">No POD uploaded.</em>';
                     modalPodView.style.display = 'none';
-                    try { modalPodView.dataset.id = ''; modalPodView.dataset.pod = ''; } catch (e) {}
+                    try { modalPodView.dataset.id = ''; modalPodView.dataset.pod = ''; } catch (error) {}
                     showStatus('POD removed.', 'success');
-                } catch (e) {}
+                } catch (error) {}
 
-            } catch (err) {
-                showStatus('Failed to remove POD: ' + (err.message || ''), 'danger');
+            } catch (rowError) {
+                showStatus('Failed to remove POD: ' + (rowError.message || ''), 'danger');
             }
         });
     }
@@ -745,7 +745,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Open POD viewer when modal's 'View POD' button clicked
     if (modalPodView) {
         modalPodView.addEventListener('click', function () {
-            openPodViewer(currentEditingRow ? getRowDataFromTr(currentEditingRow) : null);
+            openPodViewer(currentEditingRow ? getRowDataFromElement(currentEditingRow) : null);
         });
     }
 
@@ -781,7 +781,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Clear filters
-    clearFiltersBtn.addEventListener("click", function () {
+    clearFiltersButton.addEventListener("click", function () {
         searchInput.value = "";
         perPageSelect.value = "10";
         currentPerPage = 10;
@@ -790,13 +790,13 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Pagination buttons
-    prevPageBtn.addEventListener("click", function () {
+    prevPageButton.addEventListener("click", function () {
         if (currentPage > 1) {
             loadPage(currentPage - 1, currentSearch, currentPerPage, currentSortBy, currentSortOrder);
         }
     });
 
-    nextPageBtn.addEventListener("click", function () {
+    nextPageButton.addEventListener("click", function () {
         if (currentPage < totalPages) {
             loadPage(currentPage + 1, currentSearch, currentPerPage, currentSortBy, currentSortOrder);
         }
@@ -830,12 +830,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     totalPages = Math.max(1, Math.ceil(totalRows / currentPerPage));
                     currentPage = 1;
                     // Ensure the per-page select reflects the active value
-                    try { if (perPageSelect) perPageSelect.value = String(currentPerPage); } catch (e) {}
+                    try { if (perPageSelect) perPageSelect.value = String(currentPerPage); } catch (error) {}
                     updatePaginationUI();
                     updateSortHeaders();
                     return;
                 }
-            } catch (e) {
+            } catch (error) {
                 // Fall through to API load on parse error
             }
         }
@@ -852,9 +852,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 try {
                     if (a.dataset && a.dataset.autodismiss === 'false') return;
                     a.classList.add('d-none');
-                } catch (e) {}
+                } catch (error) {}
             });
         }, 10000);
-    } catch (e) {}
+    } catch (error) {}
 });
 

@@ -10,9 +10,9 @@ logger = logging.getLogger(__name__)
 
 def get_supabase_client():
     """Return a configured Supabase client, or None when cloud storage is unavailable."""
-    url = os.getenv("SUPABASE_URL", "").strip()
-    key = os.getenv("SUPABASE_KEY", "").strip()
-    if not url or not key:
+    supabase_url = os.getenv("SUPABASE_URL", "").strip()
+    supabase_key = os.getenv("SUPABASE_KEY", "").strip()
+    if not supabase_url or not supabase_key:
         return None
     try:
         from supabase import create_client
@@ -21,7 +21,7 @@ def get_supabase_client():
         return None
 
     try:
-        return create_client(url, key)
+        return create_client(supabase_url, supabase_key)
     except Exception:
         logger.exception("Failed to create Supabase client")
         return None
@@ -35,11 +35,11 @@ def store_pod_bytes(
     Returns a marker string for supabase uploads ("supabase:bucket/path") or
     a local filename.
     """
-    supa = get_supabase_client()
-    if supa:
+    client = get_supabase_client()
+    if client:
         bucket = bucket_name or os.getenv("SUPABASE_BUCKET", "pod-uploads")
         object_path = f"consignments/{filename}"
-        supa.storage.from_(bucket).upload(
+        client.storage.from_(bucket).upload(
             object_path,
             _io.BytesIO(file_bytes),
             {"content-type": content_type or "application/octet-stream"},
@@ -50,8 +50,8 @@ def store_pod_bytes(
         (instance_path or current_app.instance_path), "uploads"
     )
     os.makedirs(upload_folder, exist_ok=True)
-    dest_path = os.path.join(upload_folder, filename)
-    with open(dest_path, "wb") as file_handle:
+    destination_path = os.path.join(upload_folder, filename)
+    with open(destination_path, "wb") as file_handle:
         file_handle.write(file_bytes)
     return filename
 
@@ -66,8 +66,8 @@ def delete_pod_file(pod_value, instance_path=None):
         if not client:
             return
         try:
-            _, rest = pod_value.split(":", 1)
-            bucket, object_path = rest.split("/", 1)
+            _, storage_path = pod_value.split(":", 1)
+            bucket, object_path = storage_path.split("/", 1)
             client.storage.from_(bucket).remove([object_path])
         except Exception:
             logger.exception("Failed to remove POD from Supabase")
@@ -84,7 +84,7 @@ def delete_pod_file(pod_value, instance_path=None):
             logger.exception("Failed to remove POD file from disk")
 
 
-def get_pod_url(pod_value, ttl=None):
+def get_pod_url(pod_value, signed_url_ttl=None):
     """Return a URL for the given pod_value when possible.
 
     - If `pod_value` is an absolute http(s) URL, return it unchanged.
@@ -103,27 +103,37 @@ def get_pod_url(pod_value, ttl=None):
         if not client:
             return None
         try:
-            _, rest = pod_value.split(":", 1)
-            bucket, object_path = rest.split("/", 1)
-            if ttl is None:
-                ttl = int(os.getenv("SUPABASE_SIGNED_URL_TTL", "30"))
-            signed = client.storage.from_(bucket).create_signed_url(object_path, ttl)
-            url = None
-            if isinstance(signed, dict):
-                url = (
-                    signed.get("signedURL")
-                    or signed.get("signed_url")
-                    or signed.get("signedUrl")
+            _, storage_path = pod_value.split(":", 1)
+            bucket, object_path = storage_path.split("/", 1)
+            if signed_url_ttl is None:
+                signed_url_ttl = int(os.getenv("SUPABASE_SIGNED_URL_TTL", "30"))
+            signed_response = client.storage.from_(bucket).create_signed_url(
+                object_path, signed_url_ttl
+            )
+            pod_url = None
+            if isinstance(signed_response, dict):
+                pod_url = (
+                    signed_response.get("signedURL")
+                    or signed_response.get("signed_url")
+                    or signed_response.get("signedUrl")
                 )
-            if not url:
-                pub = client.storage.from_(bucket).get_public_url(object_path)
-                url = pub.get("publicURL") or pub.get("publicUrl")
-            return url
+            if not pod_url:
+                public_response = client.storage.from_(bucket).get_public_url(
+                    object_path
+                )
+                pod_url = public_response.get("publicURL") or public_response.get(
+                    "publicUrl"
+                )
+            return pod_url
         except Exception:
             logger.exception("Error generating Supabase POD URL")
             try:
-                pub = client.storage.from_(bucket).get_public_url(object_path)
-                return pub.get("publicURL") or pub.get("publicUrl")
+                public_response = client.storage.from_(bucket).get_public_url(
+                    object_path
+                )
+                return public_response.get("publicURL") or public_response.get(
+                    "publicUrl"
+                )
             except Exception:
                 return None
 

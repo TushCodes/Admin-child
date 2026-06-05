@@ -16,7 +16,7 @@ def get_by_id(consignment_id: int) -> Optional[Consignment]:
 
 def get_map_all() -> Dict[int, Consignment]:
     """Return all consignments in the map shape expected by legacy callers."""
-    return {c.id: c for c in Consignment.query.all()}
+    return {consignment.id: consignment for consignment in Consignment.query.all()}
 
 
 def list_paginated(
@@ -63,7 +63,7 @@ def list_paginated(
 def query_existing_numbers() -> set:
     """Return all existing consignment numbers as a set for duplicate checks."""
     rows = Consignment.query.with_entities(Consignment.consignment_number).all()
-    return {r[0] for r in rows}
+    return {record[0] for record in rows}
 
 
 def add(instance: Consignment):
@@ -73,9 +73,9 @@ def add(instance: Consignment):
 
 def delete_by_id(consignment_id: int):
     """Delete a consignment by id when a matching row exists."""
-    inst = get_by_id(consignment_id)
-    if inst:
-        db.session.delete(inst)
+    consignment = get_by_id(consignment_id)
+    if consignment:
+        db.session.delete(consignment)
 
 
 def count() -> int:

@@ -15,28 +15,28 @@ def register_error_handlers(app):
     """Register global error handlers for HTML and JSON clients."""
 
     @app.errorhandler(404)
-    def page_not_found(e):
+    def page_not_found(error):
         logger.warning("404 error: %s", request.url)
         if wants_json_response(request):
             return jsonify({"error": "Resource not found"}), 404
         return render_template("errors/404.html"), 404
 
     @app.errorhandler(500)
-    def internal_server_error(e):
-        logger.error("500 error: %s", e)
+    def internal_server_error(error):
+        logger.error("500 error: %s", error)
         if wants_json_response(request):
             return jsonify({"error": "Internal server error"}), 500
         return render_template("errors/500.html"), 500
 
     @app.errorhandler(403)
-    def forbidden(e):
+    def forbidden(error):
         logger.warning("403 error: %s", request.url)
         if wants_json_response(request):
             return jsonify({"error": "Access forbidden"}), 403
         return render_template("errors/403.html"), 403
 
     @app.errorhandler(429)
-    def rate_limited(e):
+    def rate_limited(error):
         logger.warning(
             "Rate limit exceeded for %s %s from %s",
             request.method,
@@ -53,11 +53,11 @@ def register_error_handlers(app):
         return Response(message, status=429, mimetype="text/plain")
 
     @app.errorhandler(Exception)
-    def handle_exception(e):
-        if isinstance(e, HTTPException):
-            return e
+    def handle_exception(error):
+        if isinstance(error, HTTPException):
+            return error
 
-        logger.error("Unhandled exception: %s", e, exc_info=True)
+        logger.error("Unhandled exception: %s", error, exc_info=True)
         if wants_json_response(request):
             if os.getenv("FLASK_ENV", "").strip().lower() == "development":
                 import traceback
@@ -65,7 +65,7 @@ def register_error_handlers(app):
                 return (
                     jsonify(
                         {
-                            "error": str(e) or "Exception",
+                            "error": str(error) or "Exception",
                             "traceback": traceback.format_exc(),
                         }
                     ),

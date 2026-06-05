@@ -5,24 +5,24 @@ from __future__ import annotations
 from flask import request as current_request
 
 
-def wants_json_response(req=None) -> bool:
-    """Return True when *req* should receive a JSON response.
+def wants_json_response(http_request=None) -> bool:
+    """Return True when *http_request* should receive a JSON response.
 
     The helper centralizes the app's existing JSON-vs-HTML decisions for
     middleware and error handlers. API paths and JSON request bodies always get
     JSON responses; otherwise JSON is selected only when the Accept header
     explicitly prefers JSON over HTML.
     """
-    req = req or current_request
+    http_request = http_request or current_request
 
-    if req.path.startswith("/api/"):
+    if http_request.path.startswith("/api/"):
         return True
 
-    content_type = req.content_type or ""
-    if req.is_json or content_type.startswith("application/json"):
+    content_type = http_request.content_type or ""
+    if http_request.is_json or content_type.startswith("application/json"):
         return True
 
-    accept = req.accept_mimetypes
+    accept = http_request.accept_mimetypes
     if not accept:
         return False
 
