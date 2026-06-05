@@ -1,3 +1,5 @@
+"""Business operations for creating, updating, listing, and deleting consignments."""
+
 import logging
 import uuid
 from werkzeug.utils import secure_filename

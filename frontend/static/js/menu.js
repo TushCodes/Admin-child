@@ -1,3 +1,6 @@
+/**
+ * @file Controls navigation menu opening, closing, and responsive behavior.
+ */
 document.addEventListener("DOMContentLoaded", function () {
 	var openBtn = document.getElementById("openMenuModal");
 	var modal = document.getElementById("menuModal");

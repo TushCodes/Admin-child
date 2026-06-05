@@ -1,4 +1,4 @@
-"""Moved from utils/db.py."""
+"""Database session and transaction lifecycle helpers."""
 
 from contextlib import contextmanager
 import logging

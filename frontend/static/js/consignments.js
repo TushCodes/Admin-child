@@ -1,3 +1,6 @@
+/**
+ * @file Runs the interactive admin consignment table, edits, POD preview, and save flow.
+ */
 document.addEventListener("DOMContentLoaded", function () {
     var tableBody = document.getElementById("sheet-body");
     var saveButton = document.getElementById("save-btn");

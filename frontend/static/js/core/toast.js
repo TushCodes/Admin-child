@@ -1,3 +1,6 @@
+/**
+ * @file Shows temporary success and error messages on the page.
+ */
 (function (window, document) {
     "use strict";
 

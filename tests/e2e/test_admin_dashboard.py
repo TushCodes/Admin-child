@@ -1,3 +1,5 @@
+"""End-to-end tests for the admin dashboard user flow."""
+
 import asyncio
 
 from tests.support.admin_dashboard import login_and_collect_dashboard_text

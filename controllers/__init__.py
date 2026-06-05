@@ -1,3 +1,5 @@
+"""Convenience exports for controller helpers used by routes and admin views."""
+
 from .backup import build_backup_payload
 from .responses import json_error, json_success
 from .pagination import paginate_query

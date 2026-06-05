@@ -1,4 +1,6 @@
-// Shared IntersectionObserver-based reveal utility
+/**
+ * @file Reveals page elements as they enter the visitor viewport.
+ */
 (function(){
   function onReady(fn){
     if(document.readyState !== 'loading') return fn();

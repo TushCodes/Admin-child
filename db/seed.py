@@ -1,4 +1,4 @@
-"""Moved from __init__.py."""
+"""Development database seed data helpers."""
 
 import logging
 import os
@@ -6,21 +6,19 @@ import os
 from app.models import Consignment
 from app.db.session import transaction
 
-
 logger = logging.getLogger(__name__)
 
 
 def seed_development_data(db, app):
+    """Create predictable sample consignments for a fresh development database."""
     if os.getenv("FLASK_ENV", "").strip().lower() != "development":
         return
 
     try:
-        # If the DB already has 100 or more consignments, do nothing.
         existing_count = Consignment.query.count()
         if existing_count >= 100:
             return
 
-        # Build deterministic sample consignments and avoid duplicates.
         sample_consignment_data = []
         statuses = ["Pickup Scheduled", "In Transit", "Out for Delivery", "Delivered"]
         existing_numbers = {
@@ -60,7 +58,6 @@ def seed_development_data(db, app):
                 )
             )
 
-        # Only add as many rows as necessary to reach 100 total.
         to_add = []
         remaining = max(0, 100 - existing_count)
         for item in sample_consignment_data:

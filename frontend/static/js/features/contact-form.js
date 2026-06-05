@@ -1,3 +1,6 @@
+/**
+ * @file Adds browser-side feedback and submission behavior to contact forms.
+ */
 (function (window, document) {
     "use strict";
 

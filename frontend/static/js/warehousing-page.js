@@ -1,3 +1,6 @@
+/**
+ * @file Runs warehousing-page interactions and chat widget setup.
+ */
 document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll("form").forEach(function (form) {
         form.addEventListener("submit", function (e) {

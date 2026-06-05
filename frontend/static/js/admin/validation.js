@@ -1,4 +1,6 @@
-// Lightweight validation utilities attached to window.adminValidation
+/**
+ * @file Validates admin form fields before code sends data to the server.
+ */
 (function () {
   function validatePincode(value) {
     var raw = (value || '').trim();

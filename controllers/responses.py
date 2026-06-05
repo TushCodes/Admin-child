@@ -1,3 +1,5 @@
+"""Small helpers for returning consistent JSON success and error responses."""
+
 from flask import jsonify
 
 

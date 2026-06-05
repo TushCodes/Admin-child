@@ -1,3 +1,5 @@
+"""Dynamic route for rendering service and information pages by template name."""
+
 from flask import Blueprint, render_template, abort
 from app import cache
 from jinja2.exceptions import TemplateNotFound
@@ -11,7 +13,7 @@ pages_bp = Blueprint("pages", __name__)
 @pages_bp.route("/<page>")
 @cache.cached(timeout=300)
 def show_page(page):
-    # Sanitize page name to prevent path traversal
+    """Render a named page template after rejecting unsafe path input."""
     if not page or "/" in page or "\\" in page or ".." in page:
         logger.warning(f"Invalid page name attempted: {page}")
         abort(404)

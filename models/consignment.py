@@ -1,9 +1,11 @@
-"""Moved from models.py."""
+"""Database model for consignments managed by admins."""
 
 from app.models.base import db
 
 
 class Consignment(db.Model):
+    """Shipment record managed by admins and shown on the tracking page."""
+
     id = db.Column(db.Integer, primary_key=True)
     consignment_number = db.Column(db.String(16), unique=True, nullable=False)
     status = db.Column(db.String(200))

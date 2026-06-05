@@ -1,3 +1,5 @@
+"""Tests covering security, CORS, database, and error middleware behavior."""
+
 from flask import request
 
 

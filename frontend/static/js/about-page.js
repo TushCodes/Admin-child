@@ -1,3 +1,6 @@
+/**
+ * @file Coordinates about-page gallery links, contact messages, and chat widget setup.
+ */
 document.addEventListener("DOMContentLoaded", function () {
     function isPopupOpen() {
         return window.location.hash.startsWith("#gal");

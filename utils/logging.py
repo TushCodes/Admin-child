@@ -1,3 +1,5 @@
+"""Logging helpers that attach request identifiers to log records."""
+
 import logging
 
 from flask import g, has_request_context, request

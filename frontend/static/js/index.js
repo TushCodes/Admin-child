@@ -1,4 +1,6 @@
-// Frontend bootstrap. Feature logic lives in static/js/core and static/js/features.
+/**
+ * @file Bootstraps shared frontend modules after the page loads.
+ */
 document.addEventListener("DOMContentLoaded", function () {
     if (window.App && window.App.contactForm) {
         window.App.contactForm.init();

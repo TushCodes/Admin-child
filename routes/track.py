@@ -1,3 +1,5 @@
+"""Public shipment tracking routes and proof-of-delivery download handling."""
+
 import logging
 import re
 import io
@@ -20,6 +22,7 @@ CONSIGNMENT_NUMBER_PATTERN = re.compile(r"^[A-Za-z0-9]{1,16}$")
 
 @track_bp.route("/track", methods=["GET", "POST"])
 def track_page():
+    """Show the tracking form and display a matching consignment when found."""
     consignment = None
     error_message = None
 

@@ -1,4 +1,4 @@
-"""Moved from __init__.py."""
+"""Database URL validation and SQLAlchemy engine configuration helpers."""
 
 import os
 from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
@@ -44,6 +44,7 @@ def normalize_postgres_uri(raw_uri):
 
 
 def build_engine_options(db_uri, env_bool_fn, env_int_fn):
+    """Return SQLAlchemy engine settings appropriate for SQLite or PostgreSQL."""
     if db_uri.startswith("sqlite://"):
         return {
             "pool_pre_ping": False,

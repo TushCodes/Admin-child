@@ -1,4 +1,4 @@
-"""Moved from models.py."""
+"""Database model for contact form leads."""
 
 from datetime import datetime, UTC
 
@@ -6,6 +6,8 @@ from app.models.base import db
 
 
 class Lead(db.Model):
+    """Contact form submission saved for admin follow-up."""
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120), nullable=False, index=True)

@@ -1,3 +1,6 @@
+/**
+ * @file Supports public consignment tracking interactions.
+ */
 document.addEventListener("DOMContentLoaded", function () {
     var mapElement = document.getElementById("map");
 
