@@ -7,6 +7,7 @@ import uuid
 
 from flask import current_app, flash, redirect, request, send_file, url_for
 from flask_admin import Admin, AdminIndexView, BaseView, expose
+from flask_admin.theme import Bootstrap4Theme
 from flask_admin.actions import action
 from flask_admin.contrib.sqla import ModelView
 from werkzeug.utils import secure_filename
@@ -385,10 +386,14 @@ def init_flask_admin(app):
     """Initialize Flask-Admin views bound to SQLAlchemy models."""
     admin = Admin(
         app,
-        name="Admin Panel",
+        name="Admin Command",
         url="/flask-admin",
         endpoint="flask_admin",
         index_view=SecureAdminIndexView(url="/flask-admin", endpoint="flask_admin"),
+        theme=Bootstrap4Theme(
+            base_template="flask_admin/sleek_base.html",
+            fluid=True,
+        ),
     )
 
     admin.add_view(

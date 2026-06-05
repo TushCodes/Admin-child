@@ -4,7 +4,12 @@ from importlib import import_module
 
 from flask import Blueprint, redirect, url_for, current_app
 
-admin_bp = Blueprint("admin", __name__)
+admin_bp = Blueprint(
+    "admin",
+    __name__,
+    static_folder="static",
+    static_url_path="/admin-assets",
+)
 
 
 def _register_route_modules():
