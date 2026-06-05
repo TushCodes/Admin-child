@@ -4,257 +4,256 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin Login – Gram SCS</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}" />
+  <title>Admin Command Login</title>
+  <link rel="stylesheet" href="{{ url_for('admin.static', filename='css/admin.css') }}" />
   <style>
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --bg-1: #081318;
-      --bg-2: #10262e;
-      --ink: #eaf4ef;
-      --muted: #b6c7c0;
-      --highlight: #89d136;
-      --highlight-dark: #6ab522;
-      --danger: #d14f52;
-      --glass: rgba(255, 255, 255, 0.07);
-      --border: rgba(255, 255, 255, 0.14);
-    }
-
-    html,
-    body {
+    body.admin-login-page {
       min-height: 100vh;
-      font-family: 'Space Grotesk', sans-serif;
-      color: var(--ink);
-      background:
-        radial-gradient(circle at 12% 10%, rgba(137, 209, 54, 0.15) 0%, transparent 42%),
-        radial-gradient(circle at 90% 85%, rgba(255, 166, 60, 0.14) 0%, transparent 42%),
-        linear-gradient(140deg, var(--bg-1), var(--bg-2));
-    }
-
-    body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
-    }
-
-    /* ── back link ── */
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      text-decoration: none;
-      font-size: 0.875rem;
-      font-weight: 600;
-      letter-spacing: 0.03em;
-      color: var(--muted);
-      margin-bottom: 2rem;
-      transition: color 0.2s;
-    }
-
-    .back-link:hover {
-      color: var(--ink);
-    }
-
-    .back-link svg {
-      width: 16px;
-      height: 16px;
-    }
-
-    /* ── card ── */
-    .login-shell {
-      width: 100%;
-      max-width: 440px;
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      background: var(--glass);
-      backdrop-filter: blur(12px);
-      box-shadow: 0 28px 55px rgba(0, 0, 0, 0.30);
+      display: grid;
+      place-items: center;
+      padding: 1rem;
       overflow: hidden;
     }
 
-    .login-header {
-      text-align: center;
-      padding: 2.2rem 2rem 1.5rem;
-      border-bottom: 1px solid var(--border);
+    .login-grid {
+      position: relative;
+      width: min(100%, 1040px);
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(360px, 0.9fr);
+      gap: 1rem;
+      z-index: 1;
     }
 
-    .login-header img {
-      height: 52px;
-      margin-bottom: 1rem;
-      filter: drop-shadow(0 2px 8px rgba(137, 209, 54, 0.25));
+    .login-panel,
+    .login-copy {
+      border: 1px solid var(--admin-border);
+      border-radius: 32px;
+      background: rgba(15, 23, 42, 0.72);
+      box-shadow: var(--admin-shadow);
+      backdrop-filter: blur(22px);
     }
 
-    .login-header h1 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1.15;
-      margin-bottom: 0.3rem;
+    .login-copy {
+      position: relative;
+      min-height: 560px;
+      padding: clamp(1.5rem, 4vw, 3rem);
+      overflow: hidden;
     }
 
-    .login-header p {
-      font-size: 0.88rem;
-      color: var(--muted);
-      letter-spacing: 0.02em;
+    .login-copy::after {
+      content: "";
+      position: absolute;
+      right: -8rem;
+      bottom: -8rem;
+      width: 24rem;
+      height: 24rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(167, 139, 250, 0.32), rgba(34, 211, 238, 0.22));
+      filter: blur(12px);
     }
 
-    /* ── form body ── */
-    .login-body {
-      padding: 1.8rem 2rem 2.2rem;
-    }
-
-    /* ── error alert ── */
-    .login-alert {
-      margin-bottom: 1.2rem;
-      border: 1px solid rgba(209, 79, 82, 0.45);
-      background: rgba(209, 79, 82, 0.12);
-      color: #ffd9d9;
-      border-radius: 10px;
-      padding: 0.75rem 1rem;
-      font-size: 0.9rem;
-      display: flex;
-      align-items: flex-start;
-      gap: 0.5rem;
-    }
-
-    /* ── form controls ── */
-    .field {
-      margin-bottom: 1.2rem;
-    }
-
-    .field label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      color: var(--muted);
+    .login-copy-kicker {
+      color: #67e8f9;
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      margin-bottom: 0.45rem;
     }
 
-    .field input {
-      width: 100%;
-      border: 1px solid var(--border);
+    .login-copy h1 {
+      max-width: 540px;
+      margin: 1rem 0;
+      font-size: clamp(2.7rem, 7vw, 5.6rem);
+      font-weight: 950;
+      line-height: 0.88;
+      letter-spacing: -0.075em;
+    }
+
+    .login-copy p {
+      max-width: 470px;
+      color: rgba(226, 232, 240, 0.76);
+      font-size: 1.04rem;
+      line-height: 1.7;
+    }
+
+    .login-badges {
+      display: flex;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+      margin-top: 1.8rem;
+    }
+
+    .login-badge {
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 999px;
+      padding: 0.52rem 0.8rem;
+      color: rgba(248, 250, 252, 0.82);
       background: rgba(255, 255, 255, 0.06);
-      border-radius: 12px;
-      color: var(--ink);
-      min-height: 50px;
-      padding: 0.78rem 1rem;
-      font-size: 0.98rem;
-      font-family: inherit;
-      letter-spacing: 0.02em;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+      font-size: 0.82rem;
+      font-weight: 800;
     }
 
-    .field input::placeholder {
-      color: rgba(234, 244, 239, 0.45);
+    .login-panel {
+      padding: clamp(1.25rem, 3vw, 2rem);
+      align-self: center;
     }
 
-    .field input:focus {
-      border-color: rgba(137, 209, 54, 0.9);
-      box-shadow: 0 0 0 3px rgba(137, 209, 54, 0.22);
-      background: rgba(255, 255, 255, 0.10);
+    .login-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      margin-bottom: 2rem;
     }
 
-    /* ── submit button ── */
-    .login-btn {
+    .login-brand-mark {
+      display: grid;
+      width: 52px;
+      height: 52px;
+      place-items: center;
+      border-radius: 18px;
+      color: #07111f;
+      font-weight: 950;
+      background: linear-gradient(135deg, var(--admin-accent), var(--admin-accent-2));
+      box-shadow: 0 16px 35px rgba(34, 211, 238, 0.26);
+    }
+
+    .login-brand-title {
       display: block;
-      width: 100%;
-      margin-top: 1.6rem;
-      border: none;
-      min-height: 52px;
-      border-radius: 12px;
-      padding: 0.8rem 1.2rem;
-      font-size: 1rem;
+      font-size: 1.06rem;
+      font-weight: 900;
+    }
+
+    .login-brand-subtitle {
+      display: block;
+      margin-top: 0.2rem;
+      color: var(--admin-muted);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .login-alert {
+      display: flex;
+      gap: 0.6rem;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(251, 113, 133, 0.34);
+      border-radius: 18px;
+      padding: 0.85rem 1rem;
+      color: #ffe4e6;
+      background: rgba(127, 29, 29, 0.42);
       font-weight: 700;
-      font-family: inherit;
-      letter-spacing: 0.03em;
+    }
+
+    .login-field { margin-bottom: 1rem; }
+
+    .login-field label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: rgba(226, 232, 240, 0.82);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .login-field input {
+      width: 100%;
+      min-height: 56px;
+      padding: 0.95rem 1rem;
+      font: inherit;
+    }
+
+    .login-btn {
+      width: 100%;
+      min-height: 58px;
+      margin-top: 0.75rem;
+      border: 0;
+      border-radius: 18px;
+      color: #07111f;
       cursor: pointer;
-      color: #14200f;
-      background: linear-gradient(140deg, var(--highlight), #c5ee89);
-      box-shadow: 0 10px 24px rgba(137, 209, 54, 0.28);
-      transition: transform 0.15s, box-shadow 0.15s;
+      background: linear-gradient(135deg, var(--admin-accent), var(--admin-accent-2));
+      font: inherit;
+      font-weight: 950;
+      box-shadow: 0 18px 38px rgba(34, 211, 238, 0.24);
+      transition: transform 0.18s ease, filter 0.18s ease;
     }
 
     .login-btn:hover,
     .login-btn:focus {
       transform: translateY(-2px);
-      box-shadow: 0 14px 30px rgba(137, 209, 54, 0.38);
+      filter: saturate(1.12);
       outline: none;
     }
 
-    .login-btn:active {
-      transform: translateY(0);
+    .login-footnote {
+      margin-top: 1.2rem;
+      color: var(--admin-muted);
+      font-size: 0.82rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 860px) {
+      body.admin-login-page { overflow: auto; }
+      .login-grid { grid-template-columns: 1fr; }
+      .login-copy { min-height: auto; }
+      .login-copy h1 { font-size: clamp(2.5rem, 14vw, 4rem); }
     }
   </style>
 </head>
 
-<body>
-  <a href="{{ url_for('main.index') }}" class="back-link">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-      <path fill-rule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clip-rule="evenodd" />
-    </svg>
-    Back to Home
-  </a>
+<body class="admin-surface admin-login-page">
+  <div class="admin-orb" aria-hidden="true"></div>
+  <main class="login-grid">
+    <section class="login-copy" aria-label="Admin command center overview">
+      <div class="login-copy-kicker">Private operations console</div>
+      <h1>Sleek, isolated, and built for admin velocity.</h1>
+      <p>
+        Sign into a dedicated admin experience that uses its own assets and styling, keeping back-office workflows cleanly separated from the public project UI.
+      </p>
+      <div class="login-badges" aria-label="Admin capabilities">
+        <span class="login-badge">Consignments</span>
+        <span class="login-badge">Lead review</span>
+        <span class="login-badge">Backups</span>
+      </div>
+    </section>
 
-  <div class="login-shell">
-    <div class="login-header">
-      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Gram SCS Logo" />
-      <h1>Admin Login</h1>
-      <p>Gram SCS IT Department</p>
-    </div>
+    <section class="login-panel" aria-label="Admin login form">
+      <div class="login-brand">
+        <span class="login-brand-mark">A</span>
+        <span>
+          <span class="login-brand-title">Admin Command</span>
+          <span class="login-brand-subtitle">Standalone access</span>
+        </span>
+      </div>
 
-    <div class="login-body">
       {% if error %}
       <div class="login-alert" role="alert">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" style="width:18px;height:18px;flex-shrink:0;margin-top:1px">
-          <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495ZM10 5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 10 5Zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd"/>
-        </svg>
-        {{ error }}
+        <span aria-hidden="true">✕</span>
+        <span>{{ error }}</span>
       </div>
       {% endif %}
 
-      <form method="POST" action="{{ url_for('admin.login') }}" autocomplete="off" novalidate>
-        <div class="field">
+      <form method="post" action="{{ url_for('admin.login_submit') }}" novalidate>
+        <div class="login-field">
           <label for="username">Username</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            required
-            autofocus
-            autocomplete="username"
-            placeholder="Enter username"
-          />
+          <input id="username" name="username" type="text" autocomplete="username" placeholder="admin" required autofocus />
         </div>
-        <div class="field">
+
+        <div class="login-field">
           <label for="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            required
-            autocomplete="current-password"
-            placeholder="Enter password"
-          />
+          <input id="password" name="password" type="password" autocomplete="current-password" placeholder="••••••••" required />
         </div>
-        <button type="submit" class="login-btn">Sign In</button>
+
+        <button class="login-btn" type="submit">Enter command center</button>
       </form>
-    </div>
-  </div>
+
+      <p class="login-footnote">
+        Protected by the admin middleware gate and session-based credential validation.
+      </p>
+    </section>
+  </main>
 </body>
 
 </html>
