@@ -52,3 +52,16 @@ def test_admin_middleware_returns_json_for_json_requests(tmp_path):
         "success": False,
         "message": "Authentication required",
     }
+
+
+def test_error_handlers_use_shared_json_negotiation(tmp_path):
+    app = _load_app(tmp_path)
+    client = app.test_client()
+
+    json_response = client.get("/missing", headers={"Accept": "application/json"})
+    html_response = client.get("/missing", headers={"Accept": "text/html"})
+
+    assert json_response.status_code == 404
+    assert json_response.get_json() == {"error": "Resource not found"}
+    assert html_response.status_code == 404
+    assert html_response.mimetype == "text/html"

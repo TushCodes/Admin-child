@@ -9,10 +9,7 @@ ADMIN_PASSWORD_HASH  Werkzeug-hashed password for the admin user (required).
 """
 
 import os
-from functools import wraps
-
-from flask import redirect, request, session, url_for
-from app.controllers.responses import json_error
+from flask import session
 from werkzeug.security import check_password_hash
 
 ADMIN_USERNAME: str = (os.environ.get("ADMIN_USERNAME") or "admin").strip() or "admin"
@@ -83,24 +80,3 @@ def logout_admin() -> None:
 def is_admin_authenticated() -> bool:
     """Return True when current session is authenticated as admin."""
     return bool(session.get(ADMIN_SESSION_KEY))
-
-
-def require_admin(f):
-    """View decorator that enforces admin session authentication."""
-
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        if is_admin_authenticated():
-            return f(*args, **kwargs)
-
-        wants_json = (
-            request.path.startswith("/api/")
-            or "application/json" in (request.accept_mimetypes.best or "")
-            or (request.content_type or "").startswith("application/json")
-        )
-        if wants_json:
-            return json_error("Authentication required", 401)
-
-        return redirect(url_for("admin.login"))
-
-    return decorated
