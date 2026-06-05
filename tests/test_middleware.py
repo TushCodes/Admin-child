@@ -3,6 +3,8 @@ import os
 import sys
 from pathlib import Path
 
+from flask import request
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -65,3 +67,27 @@ def test_error_handlers_use_shared_json_negotiation(tmp_path):
     assert json_response.get_json() == {"error": "Resource not found"}
     assert html_response.status_code == 404
     assert html_response.mimetype == "text/html"
+
+
+def test_wants_json_response_helper_negotiates_common_request_types(tmp_path):
+    app = _load_app(tmp_path)
+    from app.utils.content_negotiation import wants_json_response
+
+    with app.test_request_context("/api/example", headers={"Accept": "text/html"}):
+        assert wants_json_response(request) is True
+
+    with app.test_request_context(
+        "/admin/dashboard", headers={"Accept": "application/json"}
+    ):
+        assert wants_json_response(request) is True
+
+    with app.test_request_context("/admin/dashboard", headers={"Accept": "text/html"}):
+        assert wants_json_response(request) is False
+
+    with app.test_request_context(
+        "/admin/dashboard",
+        method="POST",
+        data='{"ok": true}',
+        content_type="application/json",
+    ):
+        assert wants_json_response(request) is True

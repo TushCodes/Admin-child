@@ -1,14 +1,5 @@
-"""HTTP response negotiation helpers shared by middleware and handlers."""
+"""Backward-compatible import path for response negotiation helpers."""
 
-from flask import request
+from app.utils.content_negotiation import wants_json_response
 
-
-def wants_json_response() -> bool:
-    """Return True when the current request should receive a JSON response."""
-    return (
-        request.path.startswith("/api/")
-        or request.accept_mimetypes.accept_json
-        or "application/json" in (request.accept_mimetypes.best or "")
-        or (request.content_type or "").startswith("application/json")
-        or request.is_json
-    )
+__all__ = ["wants_json_response"]
