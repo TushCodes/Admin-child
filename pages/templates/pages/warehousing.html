@@ -84,7 +84,14 @@
 {% endblock %}
 
 {% block scripts_extra %}
-<script src="{{ url_for('static', filename='js/index.js') }}"></script>
+<script>
+      window.APP_CONFIG = window.APP_CONFIG || { apiBaseUrl: "{{ config.get('FRONTEND_API_BASE_URL', '') }}" };
+    </script>
+    <script src="{{ url_for('static', filename='js/core/api-client.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/core/toast.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/core/storage.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/features/contact-form.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 <script src="{{ url_for('static', filename='js/warehousing-page.js') }}"></script>
 
 {% endblock %}

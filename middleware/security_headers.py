@@ -1,10 +1,15 @@
 """HTTP security header middleware."""
 
-from flask import request
+from flask import current_app, request
 
 
 def build_content_security_policy() -> str:
     """Build the application's baseline Content Security Policy."""
+    allowed_origins = current_app.config.get("CORS_ALLOWED_ORIGINS", ())
+    connect_sources = ["'self'"]
+    connect_sources.extend(origin for origin in allowed_origins if origin != "*")
+    connect_src = " ".join(connect_sources)
+
     return (
         "default-src 'self'; "
         "base-uri 'self'; "
@@ -15,7 +20,7 @@ def build_content_security_policy() -> str:
         "font-src 'self' data: https://fonts.gstatic.com; "
         "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; "
         "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com; "
-        "connect-src 'self'; "
+        f"connect-src {connect_src}; "
         "frame-src 'self' https://www.google.com https://maps.google.com;"
     )
 

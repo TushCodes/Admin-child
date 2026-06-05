@@ -91,3 +91,42 @@ def test_wants_json_response_helper_negotiates_common_request_types(tmp_path):
         content_type="application/json",
     ):
         assert wants_json_response(request) is True
+
+
+def test_cors_middleware_allows_configured_frontend_origin(tmp_path):
+    app = _load_app(tmp_path)
+
+    response = app.test_client().options(
+        "/contact",
+        headers={
+            "Origin": "http://localhost:3000",
+            "Access-Control-Request-Method": "POST",
+        },
+    )
+
+    assert response.status_code == 204
+    assert response.headers["Access-Control-Allow-Origin"] == "http://localhost:3000"
+    assert response.headers["Access-Control-Allow-Credentials"] == "true"
+    assert "POST" in response.headers["Access-Control-Allow-Methods"]
+
+
+def test_database_middleware_commits_contact_writes(tmp_path):
+    app = _load_app(tmp_path)
+    client = app.test_client()
+
+    response = client.post(
+        "/contact",
+        data={
+            "name": "Middleware User",
+            "email": "middleware@example.com",
+            "phone": "+1 555 0100",
+            "subject": "Middleware",
+            "message": "Please save through middleware.",
+        },
+    )
+
+    assert response.status_code == 302
+    from app.models import Lead
+
+    with app.app_context():
+        assert Lead.query.filter_by(email="middleware@example.com").count() == 1

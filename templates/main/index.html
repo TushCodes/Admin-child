@@ -436,6 +436,13 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
+    <script>
+      window.APP_CONFIG = window.APP_CONFIG || { apiBaseUrl: "{{ config.get('FRONTEND_API_BASE_URL', '') }}" };
+    </script>
+    <script src="{{ url_for('static', filename='js/core/api-client.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/core/toast.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/core/storage.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/features/contact-form.js') }}"></script>
     <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 
     <div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 1060;"></div>

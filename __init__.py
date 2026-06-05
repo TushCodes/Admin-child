@@ -187,6 +187,7 @@ def create_app():
         if os.getenv("FLASK_ENV", "").strip().lower() == "production"
         else "http"
     )
+    app.config["FRONTEND_API_BASE_URL"] = os.getenv("FRONTEND_API_BASE_URL", "")
 
     app.config["SQLALCHEMY_ENGINE_OPTIONS"] = build_engine_options(
         db_uri, _env_bool, _env_int
