@@ -4,12 +4,9 @@
 
 {% block body %}
 <div class="dashboard-hero">
-  <div class="dashboard-kicker">Secure admin workspace</div>
-  <h1 class="dashboard-title">Control room for operations, leads, and backups.</h1>
-  <p class="dashboard-subtitle">
-    Gram SCS Admin · Welcome back! A dedicated command center with isolated admin assets, focused workflows, and no dependency on public-site styling.
-  </p>
-  <p class="dashboard-compat">Quick links: Consignment Sheet · Leads Panel · Database Backup</p>
+  <div class="dashboard-kicker">Gram SCS Admin</div>
+  <h1 class="dashboard-title">Welcome back!</h1>
+  <p class="dashboard-subtitle">Manage shipments, leads, and backups from one clean workspace.</p>
 </div>
 
 <div class="dashboard-grid">
@@ -17,7 +14,7 @@
     <div class="metric-label">Consignment Sheet</div>
     <div class="metric-value">{{ stats.consignments }}</div>
     <a class="metric-action" href="{{ stats.consignments_url }}">
-      Open sheet <span aria-hidden="true">→</span>
+      Open <span aria-hidden="true">→</span>
     </a>
   </article>
 
@@ -25,7 +22,7 @@
     <div class="metric-label">Leads Panel</div>
     <div class="metric-value">{{ stats.leads }}</div>
     <a class="metric-action" href="{{ stats.leads_url }}">
-      Review CRM <span aria-hidden="true">→</span>
+      Open <span aria-hidden="true">→</span>
     </a>
   </article>
 
@@ -33,7 +30,7 @@
     <div class="metric-label">Database Backup</div>
     <div class="metric-value">JSON</div>
     <a class="metric-action" href="{{ stats.backup_url }}">
-      Download backup <span aria-hidden="true">→</span>
+      Download <span aria-hidden="true">→</span>
     </a>
   </article>
 </div>

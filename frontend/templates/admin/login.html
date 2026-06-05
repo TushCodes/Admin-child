@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin Command Login</title>
+  <title>Gram SCS Admin Login</title>
   <link rel="stylesheet" href="{{ url_for('admin.static', filename='css/admin.css') }}" />
   <style>
     body.admin-login-page {
@@ -12,115 +12,51 @@
       display: grid;
       place-items: center;
       padding: 1rem;
-      overflow: hidden;
     }
 
-    .login-grid {
-      position: relative;
-      width: min(100%, 1040px);
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(360px, 0.9fr);
-      gap: 1rem;
-      z-index: 1;
-    }
-
-    .login-panel,
-    .login-copy {
+    .login-shell {
+      width: min(100%, 420px);
       border: 1px solid var(--admin-border);
-      border-radius: 32px;
-      background: rgba(15, 23, 42, 0.72);
+      border-radius: 16px;
+      background: #fff;
       box-shadow: var(--admin-shadow);
-      backdrop-filter: blur(22px);
-    }
-
-    .login-copy {
-      position: relative;
-      min-height: 560px;
-      padding: clamp(1.5rem, 4vw, 3rem);
       overflow: hidden;
     }
 
-    .login-copy::after {
-      content: "";
-      position: absolute;
-      right: -8rem;
-      bottom: -8rem;
-      width: 24rem;
-      height: 24rem;
-      border-radius: 999px;
-      background: linear-gradient(135deg, rgba(167, 139, 250, 0.32), rgba(34, 211, 238, 0.22));
-      filter: blur(12px);
-    }
-
-    .login-copy-kicker {
-      color: #67e8f9;
-      font-size: 0.78rem;
-      font-weight: 900;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-    }
-
-    .login-copy h1 {
-      max-width: 540px;
-      margin: 1rem 0;
-      font-size: clamp(2.7rem, 7vw, 5.6rem);
-      font-weight: 950;
-      line-height: 0.88;
-      letter-spacing: -0.075em;
-    }
-
-    .login-copy p {
-      max-width: 470px;
-      color: rgba(226, 232, 240, 0.76);
-      font-size: 1.04rem;
-      line-height: 1.7;
-    }
-
-    .login-badges {
-      display: flex;
-      gap: 0.65rem;
-      flex-wrap: wrap;
-      margin-top: 1.8rem;
-    }
-
-    .login-badge {
-      border: 1px solid rgba(148, 163, 184, 0.18);
-      border-radius: 999px;
-      padding: 0.52rem 0.8rem;
-      color: rgba(248, 250, 252, 0.82);
-      background: rgba(255, 255, 255, 0.06);
-      font-size: 0.82rem;
-      font-weight: 800;
-    }
-
-    .login-panel {
-      padding: clamp(1.25rem, 3vw, 2rem);
-      align-self: center;
+    .login-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--admin-border);
+      background: var(--admin-panel-soft);
     }
 
     .login-brand {
       display: flex;
       align-items: center;
       gap: 0.85rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1.25rem;
     }
 
     .login-brand-mark {
       display: grid;
-      width: 52px;
-      height: 52px;
+      width: 48px;
+      height: 48px;
       place-items: center;
-      border-radius: 18px;
-      color: #07111f;
-      font-weight: 950;
-      background: linear-gradient(135deg, var(--admin-accent), var(--admin-accent-2));
-      box-shadow: 0 16px 35px rgba(34, 211, 238, 0.26);
+      border: 1px solid var(--admin-border);
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .login-brand-mark img {
+      display: block;
+      max-width: 34px;
+      max-height: 34px;
     }
 
     .login-brand-title {
       display: block;
-      font-size: 1.06rem;
-      font-weight: 900;
+      color: var(--admin-dark);
+      font-size: 1.05rem;
+      font-weight: 850;
     }
 
     .login-brand-subtitle {
@@ -129,8 +65,26 @@
       color: var(--admin-muted);
       font-size: 0.76rem;
       font-weight: 800;
-      letter-spacing: 0.14em;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
+    }
+
+    .login-header h1 {
+      margin: 0;
+      color: var(--admin-dark);
+      font-size: clamp(2rem, 8vw, 2.75rem);
+      font-weight: 850;
+      line-height: 1.05;
+    }
+
+    .login-header p {
+      margin: 0.65rem 0 0;
+      color: var(--admin-muted);
+      line-height: 1.7;
+    }
+
+    .login-panel {
+      padding: 1.5rem;
     }
 
     .login-alert {
@@ -138,11 +92,11 @@
       gap: 0.6rem;
       align-items: flex-start;
       margin-bottom: 1rem;
-      border: 1px solid rgba(251, 113, 133, 0.34);
-      border-radius: 18px;
+      border: 1px solid rgba(220, 53, 69, 0.24);
+      border-radius: 12px;
       padding: 0.85rem 1rem;
-      color: #ffe4e6;
-      background: rgba(127, 29, 29, 0.42);
+      color: var(--admin-danger);
+      background: rgba(220, 53, 69, 0.08);
       font-weight: 700;
     }
 
@@ -151,83 +105,56 @@
     .login-field label {
       display: block;
       margin-bottom: 0.5rem;
-      color: rgba(226, 232, 240, 0.82);
+      color: var(--admin-dark);
       font-size: 0.78rem;
       font-weight: 900;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
     }
 
     .login-field input {
       width: 100%;
-      min-height: 56px;
-      padding: 0.95rem 1rem;
+      min-height: 52px;
+      padding: 0.85rem 0.95rem;
       font: inherit;
     }
 
     .login-btn {
       width: 100%;
-      min-height: 58px;
-      margin-top: 0.75rem;
+      min-height: 54px;
+      margin-top: 0.5rem;
       border: 0;
-      border-radius: 18px;
-      color: #07111f;
+      border-radius: 8px;
+      color: #fff;
       cursor: pointer;
-      background: linear-gradient(135deg, var(--admin-accent), var(--admin-accent-2));
+      background: var(--admin-accent);
       font: inherit;
-      font-weight: 950;
-      box-shadow: 0 18px 38px rgba(34, 211, 238, 0.24);
-      transition: transform 0.18s ease, filter 0.18s ease;
+      font-weight: 850;
     }
 
     .login-btn:hover,
     .login-btn:focus {
-      transform: translateY(-2px);
-      filter: saturate(1.12);
+      background: var(--admin-accent-dark);
       outline: none;
-    }
-
-    .login-footnote {
-      margin-top: 1.2rem;
-      color: var(--admin-muted);
-      font-size: 0.82rem;
-      line-height: 1.6;
-    }
-
-    @media (max-width: 860px) {
-      body.admin-login-page { overflow: auto; }
-      .login-grid { grid-template-columns: 1fr; }
-      .login-copy { min-height: auto; }
-      .login-copy h1 { font-size: clamp(2.5rem, 14vw, 4rem); }
     }
   </style>
 </head>
 
 <body class="admin-surface admin-login-page">
-  <div class="admin-orb" aria-hidden="true"></div>
-  <main class="login-grid">
-    <section class="login-copy" aria-label="Admin command center overview">
-      <div class="login-copy-kicker">Private operations console</div>
-      <h1>Sleek, isolated, and built for admin velocity.</h1>
-      <p>
-        Sign into a dedicated admin experience that uses its own assets and styling, keeping back-office workflows cleanly separated from the public project UI.
-      </p>
-      <div class="login-badges" aria-label="Admin capabilities">
-        <span class="login-badge">Consignments</span>
-        <span class="login-badge">Lead review</span>
-        <span class="login-badge">Backups</span>
+  <main class="login-shell" aria-label="Admin login">
+    <section class="login-header">
+      <div class="login-brand">
+        <span class="login-brand-mark"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="Gram SCS"></span>
+        <span>
+          <span class="login-brand-title">Gram SCS</span>
+          <span class="login-brand-subtitle">Admin</span>
+        </span>
       </div>
+      <h1>Admin Login</h1>
+      <p>Sign in to manage shipments and leads.</p>
     </section>
 
     <section class="login-panel" aria-label="Admin login form">
-      <div class="login-brand">
-        <span class="login-brand-mark">A</span>
-        <span>
-          <span class="login-brand-title">Admin Command</span>
-          <span class="login-brand-subtitle">Standalone access</span>
-        </span>
-      </div>
-
       {% if error %}
       <div class="login-alert" role="alert">
         <span aria-hidden="true">✕</span>
@@ -246,12 +173,8 @@
           <input id="password" name="password" type="password" autocomplete="current-password" placeholder="••••••••" required />
         </div>
 
-        <button class="login-btn" type="submit">Enter command center</button>
+        <button class="login-btn" type="submit">Sign in</button>
       </form>
-
-      <p class="login-footnote">
-        Protected by the admin middleware gate and session-based credential validation.
-      </p>
     </section>
   </main>
 </body>
