@@ -7,6 +7,7 @@ provides one standard gate for admin URL spaces before requests reach handlers.
 from flask import redirect, request, url_for
 
 from app.controllers.responses import json_error
+from app.middleware.response_negotiation import wants_json_response
 
 ADMIN_AUTH_EXEMPT_PATHS = ("/admin/login",)
 ADMIN_AUTH_PREFIXES = ("/admin", "/flask-admin")
@@ -26,15 +27,6 @@ def _is_exempt_path(path: str) -> bool:
     )
 
 
-def _wants_json_response() -> bool:
-    return (
-        request.path.startswith("/api/")
-        or "application/json" in (request.accept_mimetypes.best or "")
-        or (request.content_type or "").startswith("application/json")
-        or request.is_json
-    )
-
-
 def register_admin_auth_middleware(app):
     """Register middleware that protects admin endpoints consistently."""
 
@@ -49,7 +41,7 @@ def register_admin_auth_middleware(app):
         if is_admin_authenticated():
             return None
 
-        if _wants_json_response():
+        if wants_json_response():
             return json_error("Authentication required", 401)
 
         return redirect(url_for("admin.login", next=request.url))

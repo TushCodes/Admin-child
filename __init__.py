@@ -2,9 +2,7 @@ from flask import (
     Flask,
     send_from_directory,
     request,
-    render_template,
     jsonify,
-    Response,
 )
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
@@ -15,7 +13,6 @@ import hashlib
 import os
 import logging
 from sqlalchemy import text
-from werkzeug.exceptions import HTTPException
 
 if __name__ != "app":
     # Pytest may import this repository-level __init__ module by filename.
@@ -26,11 +23,6 @@ if __name__ != "app":
 
 from app.models import db as models_db
 from app.db.maintenance import ensure_consignment_columns_async
-
-try:
-    from app.utils.logging import init_app as init_logging
-except ImportError:
-    from utils.logging import init_app as init_logging
 
 # Configure logging
 logging.basicConfig(
@@ -206,7 +198,6 @@ def create_app():
 
     models_db.init_app(app)
     limiter.init_app(app)
-    init_logging(app)
     register_middleware(app)
 
     auto_create_tables = _should_auto_create_tables()
@@ -294,71 +285,5 @@ def create_app():
     @app.route("/favicon.ico")
     def favicon():
         return send_from_directory(app.static_folder, "favicon.ico")
-
-    # Global error handlers
-    @app.errorhandler(404)
-    def page_not_found(e):
-        logger.warning(f"404 error: {request.url}")
-        if request.path.startswith("/api/") or request.accept_mimetypes.accept_json:
-            return jsonify({"error": "Resource not found"}), 404
-        return render_template("errors/404.html"), 404
-
-    @app.errorhandler(500)
-    def internal_server_error(e):
-        logger.error(f"500 error: {e}")
-        if request.path.startswith("/api/") or request.accept_mimetypes.accept_json:
-            return jsonify({"error": "Internal server error"}), 500
-        return render_template("errors/500.html"), 500
-
-    @app.errorhandler(403)
-    def forbidden(e):
-        logger.warning(f"403 error: {request.url}")
-        if request.path.startswith("/api/") or request.accept_mimetypes.accept_json:
-            return jsonify({"error": "Access forbidden"}), 403
-        return render_template("errors/403.html"), 403
-
-    @app.errorhandler(429)
-    def rate_limited(e):
-        logger.warning(
-            "Rate limit exceeded for %s %s from %s",
-            request.method,
-            request.path,
-            request.headers.get("X-Forwarded-For", request.remote_addr),
-        )
-
-        message = "Too many requests. Please try again later."
-        if (
-            request.path.startswith("/api/")
-            or request.accept_mimetypes.accept_json
-            or request.is_json
-        ):
-            response = jsonify({"error": message})
-            response.status_code = 429
-            return response
-
-        return Response(message, status=429, mimetype="text/plain")
-
-    @app.errorhandler(Exception)
-    def handle_exception(e):
-        if isinstance(e, HTTPException):
-            return e
-        logger.error(f"Unhandled exception: {e}", exc_info=True)
-        wants_json = (
-            request.path.startswith("/api/") or request.accept_mimetypes.accept_json
-        )
-        if wants_json:
-            # In development show the traceback in the JSON response to aid debugging.
-            if os.getenv("FLASK_ENV", "").strip().lower() == "development":
-                import traceback
-
-                tb = traceback.format_exc()
-                return (
-                    jsonify({"error": str(e) or "Exception", "traceback": tb}),
-                    500,
-                )
-
-            return jsonify({"error": "An unexpected error occurred"}), 500
-
-        return render_template("errors/500.html"), 500
 
     return app
