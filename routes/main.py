@@ -2,9 +2,9 @@ import logging
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from app import cache
 from app import limiter
-from app.models import db, Lead
+from app.models import Lead
 import re
-from app.db.session import transaction
+from app.db.session import request_session, rollback_request_session
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -76,10 +76,10 @@ def contact():
                     subject=subject,
                     message=message,
                 )
-                with transaction(db) as session:
-                    session.add(lead)
+                request_session().add(lead)
                 logger.info("Contact lead saved to database for %s", email)
             except Exception as e:
+                rollback_request_session()
                 logger.error(f"Failed to save contact lead: {e}")
                 flash(
                     "There was an issue submitting your message. Please try again.",
