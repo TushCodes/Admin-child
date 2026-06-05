@@ -937,23 +937,23 @@ section + section {
     bottom: -8px;
 }
 
-/* Modal menu styling */        
+/* Sidebar menu styling */        
 .menu-modal {
     position: fixed;
     top: 0;
-    left: 0;
+    right: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.9);
     z-index: var(--z-index-modal);
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: stretch;
+    justify-content: flex-end;
     opacity: 0;
     visibility: hidden;
-    transition: all var(--transition-medium);
-    padding: 1rem;
-    overflow-y: auto;
+    transition: opacity var(--transition-medium), visibility var(--transition-medium);
+    padding: 0;
+    overflow: hidden;
 }
 
 .menu-modal.active {
@@ -963,20 +963,20 @@ section + section {
 
 .menu-modal-content {
     background-color: white;
-    border-radius: var(--border-radius-lg);
-    width: 100%;
-    max-width: 1000px;
-    max-height: calc(100vh - 2rem);
+    border-radius: var(--border-radius-lg) 0 0 var(--border-radius-lg);
+    width: min(92vw, 460px);
+    height: 100%;
+    max-height: 100vh;
     overflow-y: auto;
-    transform: scale(0.9);
-    transition: all var(--transition-medium);
+    transform: translateX(100%);
+    transition: transform var(--transition-medium);
     box-shadow: var(--shadow-lg);
     position: relative;
-    margin: auto;
+    margin-left: auto;
 }
 
 .menu-modal.active .menu-modal-content {
-    transform: scale(1);
+    transform: translateX(0);
 }
 
 .menu-modal-header {
@@ -985,6 +985,10 @@ section + section {
     align-items: center;
     padding: 1.5rem 2rem;
     border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1;
 }
 
 .menu-modal-title {
@@ -1040,10 +1044,10 @@ section + section {
 .menu-modal-sections {
     padding: 2rem;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 2rem;
-    margin: 0 auto;
-    max-width: 1200px;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin: 0;
+    max-width: none;
 }
 
 .menu-section {
@@ -1090,7 +1094,7 @@ section + section {
     transform: translateX(5px);
 }
 
-/* Admin Portal button in the menu modal */
+/* Admin Portal button in the sidebar menu */
 .menu-section--admin .menu-admin-btn {
     display: inline-flex;
     align-items: center;
