@@ -7,7 +7,7 @@ from logging.handlers import RotatingFileHandler
 from app.utils.logging import RequestIdFilter
 
 
-def register_observability_middleware(
+def register_observability(
     app, level=None, logfile=None, max_bytes=10 * 1024 * 1024, backup_count=5
 ):
     """Register request-aware logging setup for the application."""
@@ -45,3 +45,8 @@ def register_observability_middleware(
     # Mirror handlers onto the Flask app logger and set its level.
     app.logger.handlers = root.handlers
     app.logger.setLevel(conf_level)
+
+
+def register_observability_middleware(*args, **kwargs):
+    """Backward-compatible alias for register_observability()."""
+    return register_observability(*args, **kwargs)

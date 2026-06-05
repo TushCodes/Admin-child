@@ -30,9 +30,9 @@ class RequestIdFilter(logging.Filter):
 
 def init_app(app, level=None, logfile=None, max_bytes=10 * 1024 * 1024, backup_count=5):
     """Backward-compatible wrapper for middleware observability registration."""
-    from app.middleware.observability import register_observability_middleware
+    from app.middleware.observability import register_observability
 
-    register_observability_middleware(
+    register_observability(
         app,
         level=level,
         logfile=logfile,
