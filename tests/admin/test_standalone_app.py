@@ -14,17 +14,8 @@ def test_standalone_admin_app_registers_admin_routes(tmp_path, monkeypatch):
     client = app.test_client()
 
     root_response = client.get("/")
-    assert root_response.status_code == 200
-    assert b"Gram SCS" in root_response.data
-    assert b"Enter Admin Panel" in root_response.data
-
-    missing_response = client.get("/not-a-real-page")
-    assert missing_response.status_code == 200
-    assert b"not-a-real-page" in missing_response.data
-
-    admin_root_response = client.get("/admin")
-    assert admin_root_response.status_code == 302
-    assert admin_root_response.headers["Location"] == "/admin/login"
+    assert root_response.status_code == 302
+    assert root_response.headers["Location"] == "/admin/dashboard"
 
     login_response = client.get("/admin/login")
     assert login_response.status_code == 200

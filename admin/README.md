@@ -12,7 +12,6 @@ python app.py
 
 Open:
 
-- `http://127.0.0.1:5001/` for the landing page
 - `http://127.0.0.1:5001/admin/login`
 - `http://127.0.0.1:5001/admin/dashboard`
 - `http://127.0.0.1:5001/flask-admin/`

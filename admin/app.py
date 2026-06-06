@@ -8,13 +8,11 @@ import os
 from pathlib import Path
 import sys
 
-from flask import Flask, jsonify, redirect, render_template, request, send_from_directory, url_for
+from flask import Flask, jsonify, redirect, send_from_directory, url_for
 from sqlalchemy import text
 
-# Support `cd admin && python app.py` and `cd admin && flask --app app ...`.
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+if __package__ in {None, ""}:  # Support `cd admin && python app.py`.
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from admin import STATIC_FOLDER, TEMPLATE_FOLDER, admin_bp
 from admin.db.config import build_engine_options, require_database_uri
@@ -157,12 +155,7 @@ def create_app():
 
     @app.route("/")
     def index():
-        return render_template("admin/landing.html")
-
-    @app.route("/admin")
-    @app.route("/admin/")
-    def admin_index():
-        return redirect(url_for("admin.login"))
+        return redirect(url_for("admin.dashboard"))
 
     @app.route("/health")
     def health():
@@ -180,12 +173,6 @@ def create_app():
     @app.route("/favicon.ico")
     def favicon():
         return send_from_directory(app.static_folder, "favicon.ico")
-
-    @app.errorhandler(404)
-    def not_found(_error):
-        if request.path.startswith("/admin/api/"):
-            return jsonify({"success": False, "message": "Resource not found."}), 404
-        return render_template("admin/landing.html", requested_path=request.path), 200
 
     return app
 

@@ -7,6 +7,8 @@ from flask import (
     jsonify,
 )
 from jinja2 import ChoiceLoader, FileSystemLoader
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 import sys
 from cachelib import FileSystemCache
 from functools import wraps
@@ -26,7 +28,6 @@ if __name__ != "app":
 from app.frontend import STATIC_FOLDER, TEMPLATE_FOLDER
 from app.admin import TEMPLATE_FOLDER as ADMIN_TEMPLATE_FOLDER
 from app.admin.models import db as models_db
-from app.admin.extensions import limiter
 from app.admin.db.maintenance import ensure_consignment_columns_async
 
 # Configure logging
@@ -236,11 +237,12 @@ def create_app():
     from app.routes.main import main_bp
     from app.routes.track import track_bp
     from app.routes.pages import pages_bp
-    from app.admin import admin_bp
+    from app.admin import admin_bp, register_admin_routes
     from app.admin.flask_admin_setup import init_flask_admin
     import_module("app.admin.routes.admin.auth_routes")
     import_module("app.admin.api.dashboard")
 
+    register_admin_routes()
     app.register_blueprint(main_bp)
     app.register_blueprint(track_bp)
     app.register_blueprint(pages_bp)

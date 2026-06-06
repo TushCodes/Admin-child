@@ -2,7 +2,7 @@
 
 from datetime import datetime, UTC
 
-from .base import db
+from app.admin.models.base import db
 
 
 class Lead(db.Model):

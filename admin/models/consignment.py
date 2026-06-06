@@ -1,6 +1,6 @@
 """Database model for consignments managed by admins."""
 
-from .base import db
+from app.admin.models.base import db
 
 
 class Consignment(db.Model):
