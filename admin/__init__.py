@@ -69,3 +69,10 @@ def dashboard():
 def consignments():
     """Redirect legacy consignment links to the Flask-Admin consignment view."""
     return redirect(url_for("consignments_admin.index_view"))
+
+
+def create_app(*args, **kwargs):
+    """Create the standalone admin app when Flask is pointed at `admin`."""
+    from .app import create_app as create_standalone_app
+
+    return create_standalone_app(*args, **kwargs)
