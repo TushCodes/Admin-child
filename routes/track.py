@@ -4,8 +4,11 @@ import logging
 import re
 from flask import Blueprint, render_template, request
 from app.controllers.responses import json_error
-from app.services.dashboard_api import DashboardAPIError, fetch_consignment
-from app.services.pod_storage import send_pod_file_response
+from app.services.dashboard_api import (
+    DashboardAPIError,
+    fetch_consignment,
+    fetch_consignment_pod_response,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -76,22 +79,12 @@ def consignment_pod(consignment_number):
             return json_error("Consignment number required.", 400)
 
         try:
-            consignment = fetch_consignment(number)
+            return fetch_consignment_pod_response(number)
         except DashboardAPIError as error:
             if error.status_code == 404:
                 return json_error("No POD found.", 404)
             logger.error("Dashboard API error while serving POD %s: %s", number, error)
             return json_error("Unable to load POD data.", 503)
-
-        if not consignment or not getattr(consignment, "pod_image", None):
-            return json_error("No POD found.", 404)
-
-        try:
-            return send_pod_file_response(consignment.pod_image)
-        except ValueError:
-            return json_error("Invalid POD path.", 400)
-        except FileNotFoundError:
-            return json_error("POD file missing.", 404)
     except Exception:
         logger.exception("Failed to serve POD for consignment %s", consignment_number)
         return json_error("Failed to serve POD.", 500)

@@ -6,8 +6,8 @@ from werkzeug.utils import secure_filename
 import base64
 import binascii
 
-from app.services import consignment_repo as repo
-from app.db.session import transaction
+from app.admin.services import consignment_repo as repo
+from app.admin.db.session import transaction
 
 logger = logging.getLogger(__name__)
 

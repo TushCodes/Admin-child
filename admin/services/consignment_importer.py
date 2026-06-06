@@ -26,19 +26,19 @@ def import_from_workbook(
     Accepts optional `consignment_model` and `db` to allow caller to pass patched objects for testing.
     """
     if consignment_model is None:
-        from app.models import Consignment as consignment_model
+        from app.admin.models import Consignment as consignment_model
     if db is None:
-        from app.models import db as db
+        from app.admin.models import db as db
 
     # use repository helpers where possible
-    from app.services import consignment_repo as repo
+    from app.admin.services import consignment_repo as repo
 
     if (
         normalize_consignment_number is None
         or normalize_status is None
         or normalize_indian_pincode is None
     ):
-        from app.services.logistics import (
+        from app.admin.services.logistics import (
             normalize_consignment_number as default_normalize_consignment_number,
             normalize_status as default_normalize_status,
             normalize_indian_pincode as default_normalize_indian_pincode,
@@ -181,7 +181,7 @@ def import_from_workbook(
         added_count += 1
 
     # Commit all added rows within a single transaction boundary.
-    from app.db.session import transaction
+    from app.admin.db.session import transaction
 
     with transaction(db):
         # all adds were performed above (either via injected `db.session.add` or repo.add)

@@ -1,6 +1,6 @@
 """Application middleware registration."""
 
-from app.middleware.admin_auth import register_admin_auth_middleware
+from app.admin.middleware.admin_auth import register_admin_auth_middleware
 from app.middleware.cors import register_cors_middleware
 from app.middleware.database import register_database_middleware
 from app.middleware.error_handling import register_error_handlers
