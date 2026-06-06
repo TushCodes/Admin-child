@@ -4,7 +4,7 @@ The Flask-Admin views still expose their own access checks, but this middleware
 provides one standard gate for admin URL spaces before requests reach handlers.
 """
 
-from flask import redirect, request, url_for
+from flask import current_app, redirect, request, url_for
 
 from app.controllers.responses import json_error
 from app.utils.content_negotiation import wants_json_response
@@ -39,6 +39,21 @@ def register_admin_auth_middleware(app):
         from app.admin.auth import is_admin_authenticated
 
         if is_admin_authenticated():
+            return None
+
+        internal_token = (
+            current_app.config.get("ADMIN_DASHBOARD_API_TOKEN")
+            or current_app.config.get("SECRET_KEY")
+            or ""
+        )
+        supplied_token = request.headers.get("X-Internal-Dashboard-API", "")
+        is_dashboard_api_path = path.startswith("/admin/api/")
+        if (
+            is_dashboard_api_path
+            and internal_token
+            and supplied_token
+            and supplied_token == internal_token
+        ):
             return None
 
         if wants_json_response(request):

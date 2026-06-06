@@ -18,3 +18,17 @@ def serialize_consignment(consignment):
         "eta": getattr(consignment, "eta", None),
         "pod_image": getattr(consignment, "pod_image", None),
     }
+
+
+def serialize_lead(lead):
+    """Return a lightweight dict representation of a Lead row."""
+    created_at = getattr(lead, "created_at", None)
+    return {
+        "id": lead.id,
+        "name": lead.name,
+        "email": lead.email,
+        "phone": lead.phone,
+        "subject": getattr(lead, "subject", None),
+        "message": lead.message,
+        "created_at": created_at.isoformat() if created_at else None,
+    }
