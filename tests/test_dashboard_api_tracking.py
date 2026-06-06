@@ -13,7 +13,7 @@ def test_dashboard_data_api_requires_authentication(client):
 
 
 def test_dashboard_data_api_returns_admin_dashboard_records(app, client):
-    from app.models import Consignment, Lead, db
+    from app.admin.models import Consignment, Lead, db
 
     with app.app_context():
         db.session.add(
@@ -53,7 +53,7 @@ def test_dashboard_data_api_returns_admin_dashboard_records(app, client):
 
 
 def test_track_page_fetches_consignment_through_dashboard_api(app, client):
-    from app.models import Consignment, db
+    from app.admin.models import Consignment, db
 
     with app.app_context():
         db.session.add(
@@ -78,7 +78,7 @@ def test_track_page_fetches_consignment_through_dashboard_api(app, client):
 
 
 def test_track_pod_uses_dashboard_api_for_consignment_data(app, client):
-    from app.models import Consignment, db
+    from app.admin.models import Consignment, db
 
     upload_folder = Path(app.instance_path) / "uploads"
     upload_folder.mkdir(parents=True, exist_ok=True)

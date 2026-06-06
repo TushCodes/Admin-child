@@ -4,9 +4,9 @@ import logging
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from app import cache
 from app import limiter
-from app.models import Lead
+from app.admin.models import Lead
 import re
-from app.db.session import request_session, rollback_request_session
+from app.admin.db.session import request_session, rollback_request_session
 
 logger = logging.getLogger(__name__)
 

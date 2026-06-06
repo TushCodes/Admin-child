@@ -11,21 +11,21 @@ from flask_admin.contrib.sqla import ModelView
 from werkzeug.utils import secure_filename
 
 from app.admin.auth import is_admin_authenticated
-from app.controllers import build_backup_payload
+from app.admin.controllers import build_backup_payload
 from app.controllers.responses import json_error, json_success
-from app.db.session import transaction
-from app.models import Consignment, Lead, db
-from app.services.consignment_importer import (
+from app.admin.db.session import transaction
+from app.admin.models import Consignment, Lead, db
+from app.admin.services.consignment_importer import (
     export_rows_to_workbook_bytes,
     import_from_workbook,
 )
-from app.services.logistics import (
+from app.admin.services.logistics import (
     normalize_consignment_number,
     normalize_indian_pincode,
     normalize_status,
 )
-from app.services.pdf_export import generate_consignment_pdf
-from app.services.pod_storage import (
+from app.admin.services.pdf_export import generate_consignment_pdf
+from app.admin.services.pod_storage import (
     delete_pod_file,
     send_pod_file_response,
     store_pod_bytes,

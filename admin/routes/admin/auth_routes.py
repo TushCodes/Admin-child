@@ -1,8 +1,4 @@
-"""Canonical admin authentication routes (moved from app.admin).
-
-This file contains the real implementations; the legacy path
-``app.admin.auth_routes`` will be a shim that re-exports these.
-"""
+"""Admin authentication routes for login and logout."""
 
 import logging
 

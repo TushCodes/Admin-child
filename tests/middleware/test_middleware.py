@@ -92,7 +92,7 @@ def test_database_middleware_commits_contact_writes(app, client):
     )
 
     assert response.status_code == 302
-    from app.models import Lead
+    from app.admin.models import Lead
 
     with app.app_context():
         assert Lead.query.filter_by(email="middleware@example.com").count() == 1

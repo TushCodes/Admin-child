@@ -4,7 +4,7 @@ import logging
 
 from flask import g, has_request_context
 
-from app.models import db
+from app.admin.models import db
 
 logger = logging.getLogger(__name__)
 
