@@ -30,6 +30,9 @@ def import_from_workbook(
     if db is None:
         from app.admin.models import db as db
 
+    # use repository helpers where possible
+    from app.admin.services import consignment_repo as repo
+
     if (
         normalize_consignment_number is None
         or normalize_status is None
@@ -74,12 +77,21 @@ def import_from_workbook(
     if None in (consignment_index, status_index):
         raise ValueError("Required headers: consignment_number, status")
 
-    existing_numbers = {
-        consignment_number_row[0]
-        for consignment_number_row in consignment_model.query.with_entities(
-            consignment_model.consignment_number
-        ).all()
-    }
+    # Prefer the injected Consignment (useful for tests that patch the model)
+    if consignment_model is not None:
+        try:
+            existing_numbers = {
+                consignment_number_row[0]
+                for consignment_number_row in consignment_model.query.with_entities(
+                    consignment_model.consignment_number
+                ).all()
+            }
+        except Exception:
+            # If the injected Consignment cannot be queried (tests may not patch repo),
+            # fall back to repository helper which uses the real model.
+            existing_numbers = repo.query_existing_numbers()
+    else:
+        existing_numbers = repo.query_existing_numbers()
     file_seen = set()
     added_count = 0
     skipped_count = 0
@@ -159,7 +171,11 @@ def import_from_workbook(
             eta=eta,
         )
 
-        db.session.add(consignment)
+        # Prefer the caller-provided `db` for session operations (tests may inject a fake db).
+        if db is not None:
+            db.session.add(consignment)
+        else:
+            repo.add(consignment)
         file_seen.add(consignment_number)
         existing_numbers.add(consignment_number)
         added_count += 1
@@ -168,7 +184,7 @@ def import_from_workbook(
     from app.admin.db.session import transaction
 
     with transaction(db):
-        # all adds were performed above; this context commits or rolls back once.
+        # all adds were performed above (either via injected `db.session.add` or repo.add)
         pass
     return added_count, skipped_count
 
