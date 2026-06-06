@@ -11,7 +11,9 @@ from flask import redirect, render_template, request, url_for
 from app import limiter
 from app.admin import admin_bp
 from app.admin.auth import (
-    check_admin_credentials,
+    AdminAuthenticationError,
+    authenticate_admin,
+    get_admin_auth_provider,
     is_admin_authenticated,
     login_admin,
     logout_admin,
@@ -41,13 +43,28 @@ def login_submit():
     username = (request.form.get("username") or "").strip()
     password = request.form.get("password") or ""
 
-    if check_admin_credentials(username, password):
-        login_admin(username=username)
-        logger.info("Admin login successful for user: %s", username)
+    try:
+        auth_result = authenticate_admin(username, password)
+    except AdminAuthenticationError:
+        logger.exception("Admin authentication is not configured correctly")
+        error = "Admin authentication is not configured. Please check Supabase settings."
+        return render_template("admin/login.html", error=error)
+
+    if auth_result:
+        login_admin(auth_result=auth_result)
+        logger.info(
+            "Admin login successful for user: %s via %s",
+            auth_result.username,
+            auth_result.provider,
+        )
         return redirect(url_for("admin.dashboard"))
 
-    logger.warning("Failed admin login attempt for username: %s", username)
-    error = "Invalid username or password."
+    logger.warning(
+        "Failed admin login attempt for username: %s via %s",
+        username,
+        get_admin_auth_provider(),
+    )
+    error = "Invalid email or password."
 
     return render_template("admin/login.html", error=error)
 

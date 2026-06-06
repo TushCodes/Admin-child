@@ -21,9 +21,17 @@ source .venv/bin/activate
 python run_local.py
 ```
 
-Open <http://127.0.0.1:5000>. The development admin login is:
+Open <http://127.0.0.1:5000>. Admin login now supports Supabase Auth. To verify the production-style flow locally, add these values to `.env.local` and sign in with a Supabase Auth user's email/password:
 
-- Username: `admin`
+```text
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_AUTH_KEY=your-supabase-anon-key
+ADMIN_AUTH_PROVIDER=supabase
+```
+
+Without Supabase variables, local development falls back to:
+
+- Email/username: `admin`
 - Password: `admin-pass`
 
 ## Frontend layout

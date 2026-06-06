@@ -151,7 +151,7 @@
         </span>
       </div>
       <h1>Admin Login</h1>
-      <p>Sign in to manage shipments and leads.</p>
+      <p>Sign in with your Supabase admin account to manage shipments and leads.</p>
     </section>
 
     <section class="login-panel" aria-label="Admin login form">
@@ -164,8 +164,8 @@
 
       <form method="post" action="{{ url_for('admin.login_submit') }}" novalidate>
         <div class="login-field">
-          <label for="username">Username</label>
-          <input id="username" name="username" type="text" autocomplete="username" placeholder="admin" required autofocus />
+          <label for="username">Email</label>
+          <input id="username" name="username" type="text" inputmode="email" autocomplete="username" placeholder="admin@example.com" required autofocus />
         </div>
 
         <div class="login-field">
