@@ -15,6 +15,7 @@ admin_bp = Blueprint(
 def _register_route_modules():
     """Import route modules for blueprint registration side effects."""
     import_module("app.routes.admin.auth_routes")
+    import_module("app.routes.admin.data_api")
 
 
 _register_route_modules()

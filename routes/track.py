@@ -4,9 +4,7 @@ import logging
 import re
 from flask import Blueprint, render_template, request
 from app.controllers.responses import json_error
-from sqlalchemy.exc import DatabaseError, OperationalError
-
-from app.models import TrackConsignment
+from app.services.dashboard_api import DashboardAPIError, fetch_consignment
 from app.services.pod_storage import send_pod_file_response
 
 logger = logging.getLogger(__name__)
@@ -34,9 +32,7 @@ def track_page():
         else:
             logger.info("Track lookup received for consignment %s", number)
             try:
-                consignment = TrackConsignment.query.filter_by(
-                    consignment_number=number
-                ).first()
+                consignment = fetch_consignment(number)
 
                 if consignment:
                     logger.info("Shipment found for consignment %s", number)
@@ -45,9 +41,19 @@ def track_page():
                     error_message = (
                         "Consignment not found. Please check the number and try again."
                     )
-            except (OperationalError, DatabaseError) as error:
-                logger.error("Database error while tracking %s: %s", number, error)
-                error_message = "Unable to connect to database. Please try again later."
+            except DashboardAPIError as error:
+                if error.status_code == 404:
+                    logger.info("Shipment not found for consignment %s", number)
+                    error_message = (
+                        "Consignment not found. Please check the number and try again."
+                    )
+                else:
+                    logger.error(
+                        "Dashboard API error while tracking %s: %s", number, error
+                    )
+                    error_message = (
+                        "Unable to load tracking data. Please try again later."
+                    )
             except Exception:
                 logger.exception("Unexpected error while tracking %s", number)
                 error_message = "An unexpected error occurred. Please try again."
@@ -69,9 +75,14 @@ def consignment_pod(consignment_number):
         if not number:
             return json_error("Consignment number required.", 400)
 
-        consignment = TrackConsignment.query.filter_by(
-            consignment_number=number
-        ).first()
+        try:
+            consignment = fetch_consignment(number)
+        except DashboardAPIError as error:
+            if error.status_code == 404:
+                return json_error("No POD found.", 404)
+            logger.error("Dashboard API error while serving POD %s: %s", number, error)
+            return json_error("Unable to load POD data.", 503)
+
         if not consignment or not getattr(consignment, "pod_image", None):
             return json_error("No POD found.", 404)
 
