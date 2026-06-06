@@ -1,7 +1,7 @@
 """Database model used by public consignment tracking."""
 
-from app.models.base import db
-from app.models.consignment import Consignment
+from .base import db
+from .consignment import Consignment
 
 
 class TrackConsignment(db.Model):

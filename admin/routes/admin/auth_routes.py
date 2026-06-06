@@ -1,16 +1,12 @@
-"""Canonical admin authentication routes (moved from app.admin).
-
-This file contains the real implementations; the legacy path
-``app.admin.auth_routes`` will be a shim that re-exports these.
-"""
+"""Admin authentication routes for login and logout."""
 
 import logging
 
 from flask import redirect, render_template, request, url_for
 
-from app import limiter
-from app.admin import admin_bp
-from app.admin.auth import (
+from ...extensions import limiter
+from ... import admin_bp
+from ...auth import (
     AdminAuthenticationError,
     authenticate_admin,
     get_admin_auth_provider,

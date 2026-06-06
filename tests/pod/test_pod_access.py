@@ -4,7 +4,7 @@ from pathlib import Path
 
 
 def test_pod_url_helper_does_not_create_signed_urls(monkeypatch):
-    from app.services import pod_storage
+    from app.admin.services import pod_storage
 
     class StorageBucket:
         def create_signed_url(self, *_args, **_kwargs):  # pragma: no cover - must not be called
@@ -29,8 +29,8 @@ def test_pod_url_helper_does_not_create_signed_urls(monkeypatch):
 
 
 def test_signed_supabase_url_in_database_is_served_by_object_path(app, client, monkeypatch):
-    from app.models import Consignment, db
-    from app.services import pod_storage
+    from app.admin.models import Consignment, db
+    from app.admin.services import pod_storage
 
     calls = []
 
@@ -76,7 +76,7 @@ def test_signed_supabase_url_in_database_is_served_by_object_path(app, client, m
 
 
 def test_public_track_pod_serves_local_database_file(app, client):
-    from app.models import Consignment, db
+    from app.admin.models import Consignment, db
 
     upload_folder = Path(app.instance_path) / "uploads"
     upload_folder.mkdir(parents=True, exist_ok=True)

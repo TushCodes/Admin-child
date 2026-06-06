@@ -1,10 +1,11 @@
-"""Request-scoped database session middleware."""
+"""Database session and transaction lifecycle helpers for the admin app."""
 
+from contextlib import contextmanager
 import logging
 
 from flask import g, has_request_context
 
-from app.admin.models import db
+from ..models import db
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +21,36 @@ def mark_db_rollback():
     """Flag the current request so teardown rolls back instead of committing."""
     if has_request_context():
         g.db_should_rollback = True
+
+
+@contextmanager
+def transaction(_db=None):
+    """Commit the active session on success and rollback on exception."""
+    active_db = _db or db
+    session = get_request_db_session()
+    try:
+        yield session
+        session.commit()
+    except Exception:
+        try:
+            session.rollback()
+        except Exception:
+            logger.exception("Failed to rollback DB session")
+        raise
+    finally:
+        if not has_request_context():
+            active_db.session.remove()
+
+
+def request_session():
+    """Return the DB session managed by request middleware when present."""
+    return get_request_db_session()
+
+
+def rollback_request_session():
+    """Ask database middleware to rollback this request at teardown."""
+    mark_db_rollback()
+    get_request_db_session().rollback()
 
 
 def register_database_middleware(app):

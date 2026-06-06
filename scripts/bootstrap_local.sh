@@ -70,7 +70,7 @@ fi
 
 "$VENV_DIR/bin/python" - <<'PY'
 from run_local import app
-from app.models import Consignment
+from app.admin.models import Consignment
 with app.app_context():
     print(f"Local database is ready with {Consignment.query.count()} seeded consignments.")
 PY
