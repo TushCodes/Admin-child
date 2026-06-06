@@ -115,14 +115,6 @@ class SimpleCache:
 # cache instance
 cache = SimpleCache()
 
-# limiter instance shared across the application
-limiter = Limiter(
-    key_func=get_remote_address,
-    default_limits=[],
-    storage_uri=_resolve_rate_limit_storage_uri(),
-)
-
-
 def _load_env_file(path):
     """Load simple KEY=VALUE pairs from a local env file if it exists."""
     if not os.path.exists(path):
