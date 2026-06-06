@@ -15,7 +15,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/css_slider.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/utils.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700&display=swap">
     <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/pages/home/index-custom.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/pages/about/about-us.css') }}">
@@ -23,7 +27,7 @@
     <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/logo.png') }}">
 </head>
 
-<body>
+<body data-enable-chat-widget>
     <header id="home">
         {% include 'partials/header.html' %}
     </header>
@@ -156,19 +160,9 @@
         </div>
     </div>
 
-    <script>
-      window.APP_CONFIG = window.APP_CONFIG || { apiBaseUrl: "{{ config.get('FRONTEND_API_BASE_URL', '') }}" };
-    </script>
-    <script src="{{ url_for('static', filename='js/core/api-client.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/core/toast.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/core/storage.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/features/contact-form.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
-
-    <div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 1060;"></div>
-    <script src="{{ url_for('static', filename='js/about-page.js') }}"></script>
+    {% include 'partials/shared-scripts.html' %}
 </body>
 
 </html>

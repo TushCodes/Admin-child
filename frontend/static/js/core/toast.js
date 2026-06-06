@@ -36,4 +36,5 @@
 
     window.App = window.App || {};
     window.App.toast = { show: show };
+    window.showToast = show;
 })(window, document);

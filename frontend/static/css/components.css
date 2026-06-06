@@ -52,3 +52,101 @@
 .p-4.rounded.shadow-sm.bg-section-1:hover{
   transform:translateY(-6px);box-shadow:0 12px 30px rgba(11,74,102,0.08)
 }
+
+/* Shared toast notifications */
+.toast-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  max-width: 350px;
+  min-width: 300px;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: all 0.3s ease-in-out;
+  box-shadow: var(--shadow-lg, 0 10px 30px rgba(0,0,0,0.16));
+  border-radius: var(--border-radius, 8px);
+  overflow: hidden;
+}
+
+.toast-notification.toast-show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.toast-content {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  background: #fff;
+  border-left: 4px solid var(--color-primary);
+  gap: 12px;
+}
+
+.toast-success .toast-content { border-left-color: var(--success, #82cf2b); }
+.toast-error .toast-content { border-left-color: var(--danger, #dc3545); }
+
+.toast-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  color: #fff;
+  background: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.toast-success .toast-icon { background: var(--success, #82cf2b); }
+.toast-error .toast-icon { background: var(--danger, #dc3545); }
+
+.toast-message {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text-primary, var(--color-dark));
+  line-height: 1.4;
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: var(--text-muted, var(--color-muted));
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.toast-close:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: var(--text-primary, var(--color-dark));
+}
+
+@media (max-width: 480px) {
+  .toast-notification {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+    min-width: auto;
+  }
+}
+
+/* Shared button loading state */
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn:disabled .btn-icon {
+  animation: spin 1s linear infinite;
+}
