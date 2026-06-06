@@ -5,11 +5,12 @@ import logging
 from flask import current_app, request
 from sqlalchemy.exc import DatabaseError, OperationalError
 
-from app.admin import admin_bp
-from app.admin.auth import is_admin_authenticated
-from app.controllers.responses import json_error, json_success
-from app.controllers.serializers import serialize_consignment, serialize_lead
-from app.models import Consignment, Lead
+from .. import admin_bp
+from ..auth import is_admin_authenticated
+from ..controllers.responses import json_error, json_success
+from ..controllers.serializers import serialize_consignment, serialize_lead
+from ..models import Consignment, Lead
+from ..services.pod_storage import send_pod_file_response
 
 logger = logging.getLogger(__name__)
 
@@ -91,3 +92,33 @@ def dashboard_consignment_api(consignment_number):
     except Exception:
         logger.exception("Unexpected error while loading consignment %s", number)
         return json_error("Unable to load consignment data.", 500)
+
+
+@admin_bp.route("/admin/api/consignments/<consignment_number>/pod", methods=["GET"])
+def dashboard_consignment_pod_api(consignment_number):
+    """Return the POD file for one consignment through the admin API."""
+    access_error = _require_dashboard_api_access()
+    if access_error:
+        return access_error
+
+    number = (consignment_number or "").strip().upper()
+    if not number:
+        return json_error("Consignment number required.", 400)
+
+    try:
+        consignment = Consignment.query.filter_by(consignment_number=number).first()
+        if not consignment or not getattr(consignment, "pod_image", None):
+            return json_error("No POD found.", 404)
+
+        try:
+            return send_pod_file_response(consignment.pod_image)
+        except ValueError:
+            return json_error("Invalid POD path.", 400)
+        except FileNotFoundError:
+            return json_error("POD file missing.", 404)
+    except (OperationalError, DatabaseError):
+        logger.exception("Database error while loading POD for consignment %s", number)
+        return json_error("Unable to load POD data.", 503)
+    except Exception:
+        logger.exception("Unexpected error while loading POD for consignment %s", number)
+        return json_error("Unable to load POD data.", 500)
