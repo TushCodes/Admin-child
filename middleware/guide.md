@@ -11,7 +11,6 @@ This folder contains request and response helpers that run around normal page ha
 - `error_handling.py` turns common failures into helpful HTML or JSON responses.
 - `observability.py` configures logging and request timing information.
 - `request_context.py` gives each request its own request ID for logs and troubleshooting.
-- `response_negotiation.py` decides whether an error should be returned as HTML or JSON.
 - `security_headers.py` adds browser security headers to outgoing responses.
 - `README.md` explains middleware order and responsibilities in more detail.
 - `guide.md` is this plain-language guide to the middleware module.

@@ -37,4 +37,4 @@ handlers can stay focused on business behavior.
 - `error_handling.py`: global error handlers for common HTTP failures and
   unexpected exceptions.
 - `utils/content_negotiation.py`: shared helper for choosing JSON vs. HTML/plain-text
-  responses. `middleware/response_negotiation.py` remains a compatibility shim.
+  responses.

@@ -12,6 +12,7 @@ from flask_limiter.util import get_remote_address
 import sys
 from cachelib import FileSystemCache
 from functools import wraps
+from importlib import import_module
 import hashlib
 import os
 import logging
@@ -20,7 +21,7 @@ from sqlalchemy import text
 if __name__ != "app":
     # Pytest may import this repository-level __init__ module by filename.
     # Mark it as package-like before aliasing it to `app` so absolute imports
-    # such as `app.models` still resolve.
+    # such as `app.routes` still resolve.
     __path__ = [os.path.dirname(__file__)]
     sys.modules.setdefault("app", sys.modules[__name__])
 
@@ -246,6 +247,8 @@ def create_app():
     from app.routes.pages import pages_bp
     from app.admin import admin_bp, register_admin_routes
     from app.admin.flask_admin_setup import init_flask_admin
+    import_module("app.admin.routes.admin.auth_routes")
+    import_module("app.admin.api.dashboard")
 
     register_admin_routes()
     app.register_blueprint(main_bp)
@@ -287,7 +290,7 @@ def create_app():
                 200,
             )
         except Exception as error:
-            logger.error("Database health check failed: %s", e)
+            logger.error("Database health check failed: %s", error)
             return (
                 jsonify(
                     {
