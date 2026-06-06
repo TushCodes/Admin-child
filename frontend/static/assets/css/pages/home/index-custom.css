@@ -94,14 +94,14 @@
 }
 
 /* Consistent section styling with vertical rhythm */
-section {
+.home-page main > section {
     padding: var(--section-padding-y) var(--section-padding-x);
     position: relative;
-    overflow: hidden; /* Prevent margin collapse */
+    overflow: hidden;
 }
 
-section + section {
-    margin-top: var(--space-md); /* Consistent spacing between sections */
+.home-page main > section + section {
+    margin-top: var(--space-md);
 }
 
 /* Heading styles with better vertical rhythm */
@@ -197,54 +197,29 @@ section + section {
 
 /* Card with enhanced micro-interactions */
 .card-custom {
+    background-color: transparent;
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-sm);
     height: 100%;
-    transition: transform var(--transition-medium), 
-                box-shadow var(--transition-medium),
-                border-color var(--transition-medium),
-                background-color 0.3s, outline 0.3s;
-    will-change: transform, box-shadow; /* Performance optimization */
     position: relative;
     z-index: 1;
+    transition: transform var(--transition-medium),
+                box-shadow var(--transition-medium),
+                border-color var(--transition-medium),
+                outline var(--transition-medium);
+    will-change: transform, box-shadow;
 }
 
-.card-custom:hover {
-    /* Remove background color on hover */
-    background-color: transparent !important;
-    /* ...existing code... */
-}
-
-/* Remove any background color on hover for .card-custom */
-.card-custom:hover, .card-custom:focus {
-    background: none !important;
-    background-color: transparent !important;
-    box-shadow: var(--shadow);
-    outline: 2px solid var(--primary-lightest);
-    outline-offset: 2px;
-}
-
-.card-custom {
-    background: none !important;
-    background-color: transparent !important;
-}
-
-.card-custom:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow);
+.card-custom:hover,
+.card-custom:focus-within {
+    background-color: transparent;
     border-color: var(--primary-light);
-    z-index: 2;
-    /* Minimalist effect: add subtle outline and scale */
+    box-shadow: var(--shadow);
     outline: 2px solid var(--primary-lightest);
     outline-offset: 2px;
-    /* Optionally, add a slight scale for feedback */
-    /* transform: translateY(-5px) scale(1.02); */
-}
-
-.card-custom:hover .icon-circle {
-    transform: scale(1.1);
-    background-color: rgba(130, 207, 43, 0.2);
+    transform: translateY(-5px);
+    z-index: 2;
 }
 
 /* Stats cards with enhanced styling */
@@ -654,7 +629,7 @@ section + section {
 .top-bar {
     background-color: var(--secondary-color);
     font-size: var(--text-xs);
-    z-index: var(--z-index-sticky) + 1;
+    z-index: calc(var(--z-index-sticky) + 1);
 }
 
 .top-bar a {

@@ -22,7 +22,7 @@
 
 </head>
 
-<body>
+<body class="home-page">
     <header id="home">
         {% include 'partials/header.html' %}
     </header>
@@ -86,7 +86,8 @@
                 <div class="row row-grid">
                     <div class="col-12 col-md-6 col-lg-4">
                         <div class="card-custom">
-                            <div class="card-body text-center p-4">                                <div class="icon-circle mb-4 mx-auto d-flex align-items-center justify-content-center">
+                            <div class="card-body text-center p-4">
+                                <div class="icon-circle mb-4 mx-auto d-flex align-items-center justify-content-center">
                                     <span class="fa fa-users" aria-hidden="true" style="color: var(--primary-color); font-size: var(--text-xl);"></span>
                                 </div>
                                 <h3 class="h5 font-weight-bold mb-3">Warehousing Services</h3>
@@ -185,7 +186,8 @@
                                 <h3 class="stats-number font-weight-bold mb-1" style="font-size: var(--text-2xl); letter-spacing: -0.02em;">2017</h3>
                                 <p class="stats-label text-secondary mb-0" style="font-size: var(--text-sm); letter-spacing: 0.5px;">Founded Year</p>
                             </div>
-                        </div>                        <div class="col-6 col-md-3 mb-4 mb-md-0">
+                        </div>
+                        <div class="col-6 col-md-3 mb-4 mb-md-0">
                             <div class="stats-card p-3 rounded shadow-sm border border-light">
                                 <div class="stats-icon-wrapper mb-3">
                                     <div class="icon-circle mb-0 mx-auto">
@@ -195,7 +197,8 @@
                                 <h3 class="stats-number font-weight-bold mb-1" style="font-size: var(--text-2xl);">920</h3>
                                 <p class="stats-label text-secondary mb-0">Cross Border Deliveries</p>
                             </div>
-                        </div>                        <div class="col-6 col-md-3 mb-4 mb-md-0">
+                        </div>
+                        <div class="col-6 col-md-3 mb-4 mb-md-0">
                             <div class="stats-card p-3 rounded shadow-sm border border-light">
                                 <div class="stats-icon-wrapper mb-3">
                                     <div class="icon-circle mb-0 mx-auto">
@@ -220,8 +223,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- //mission statement section -->
+        </section>
+        <!-- //about section -->
 
         <!-- gallery section: modern, responsive, professional -->
         <section class="gallery-section py-5 bg-section-1 full-bleed" id="gallery">
@@ -290,8 +293,9 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- gallery popups -->            <div id="gal1" class="pop-overlay animate">
+
+            <!-- gallery popups -->
+            <div id="gal1" class="pop-overlay animate">
                 <div class="popup">
                     <div class="p-4">
                         <img src="{{ url_for('static', filename='images/g1.jpg') }}" alt="International shipping at port" class="img-fluid" />
@@ -299,7 +303,8 @@
                         <a class="btn btn-sm btn-outline-secondary close" href="#gallery">&times;</a>
                     </div>
                 </div>
-            </div>            <div id="gal2" class="pop-overlay animate">
+            </div>
+            <div id="gal2" class="pop-overlay animate">
                 <div class="popup">
                     <div class="p-4">
                         <img src="{{ url_for('static', filename='images/g2.jpg') }}" alt="Cargo trucks on the move" class="img-fluid" />
@@ -307,7 +312,8 @@
                         <a class="btn btn-sm btn-outline-secondary close" href="#gallery">&times;</a>
                     </div>
                 </div>
-            </div>            <div id="gal3" class="pop-overlay animate">
+            </div>
+            <div id="gal3" class="pop-overlay animate">
                 <div class="popup">
                     <div class="p-4">
                         <img src="{{ url_for('static', filename='images/g3.jpg') }}" alt="Fleet of delivery trucks" class="img-fluid" />
@@ -315,7 +321,8 @@
                         <a class="btn btn-sm btn-outline-secondary close" href="#gallery">&times;</a>
                     </div>
                 </div>
-            </div>            <div id="gal4" class="pop-overlay animate">
+            </div>
+            <div id="gal4" class="pop-overlay animate">
                 <div class="popup">
                     <div class="p-4">
                         <img src="{{ url_for('static', filename='images/g4.jpg') }}" alt="Traditional cargo trucks" class="img-fluid" />
@@ -323,7 +330,8 @@
                         <a class="btn btn-sm btn-outline-secondary close" href="#gallery">&times;</a>
                     </div>
                 </div>
-            </div>            <div id="gal5" class="pop-overlay animate">
+            </div>
+            <div id="gal5" class="pop-overlay animate">
                 <div class="popup">
                     <div class="p-4">
                         <img src="{{ url_for('static', filename='images/g5.jpg') }}" alt="Container truck operations at port" class="img-fluid" />
@@ -331,7 +339,8 @@
                         <a class="btn btn-sm btn-outline-secondary close" href="#gallery">&times;</a>
                     </div>
                 </div>
-            </div>            <div id="gal6" class="pop-overlay animate">
+            </div>
+            <div id="gal6" class="pop-overlay animate">
                 <div class="popup">
                     <div class="p-4">
                         <img src="{{ url_for('static', filename='images/g6.jpg') }}" alt="Maritime transport solutions" class="img-fluid" />
@@ -354,8 +363,10 @@
                             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3505.044411352865!2d77.2127728142571!3d28.53838479508832!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce398194e6799%3A0x40f2c7b780d291c!2sGRAM%20SCS%20Pvt.%20Ltd.!5e0!3m2!1sen!2sin!4v1591499543546!5m2!1sen!2sin"
                                 frameborder="0" style="border: 0; height:100%; width:100%;" allowfullscreen="" aria-hidden="false" tabindex="0" title="GRAM SCS Location"></iframe>
                         </div>
-                    </div>                    <div class="col-12 col-lg-7">
-                        <div class="contact-form-card bg-section-1 p-4 rounded shadow" style="border: 2px solid var(--primary-color);">                            <h3 class="h4 text-center mb-4 font-weight-bold position-relative">
+                    </div>
+                    <div class="col-12 col-lg-7">
+                        <div class="contact-form-card bg-section-1 p-4 rounded shadow" style="border: 2px solid var(--primary-color);">
+                            <h3 class="h4 text-center mb-4 font-weight-bold position-relative">
                                 <span class="position-relative">
                                     Send Us a Message
                                     <span class="d-block position-absolute" style="height: 3px; width: 40%; background-color: var(--primary-color); bottom: -8px; left: 50%; transform: translateX(-50%);"></span>
@@ -394,7 +405,8 @@
                                 <div class="form-group mb-4">
                                     <label for="contact-message">Message</label>
                                     <textarea class="form-control" id="contact-message" name="message" placeholder="Your message" rows="5" required maxlength="1000"></textarea>
-                                </div>                                <div class="text-center">
+                                </div>
+                                <div class="text-center">
                                     <button class="btn btn-success px-5 py-2 position-relative overflow-hidden" type="submit">
                                         <span class="btn-text">Submit Message</span>
                                         <span class="btn-icon position-absolute d-flex align-items-center justify-content-center">
@@ -408,17 +420,18 @@
                 </div>
             </div>
         </section>
-        <!-- //contact section -->    </main>
-    
+        <!-- //contact section -->
+    </main>
+
     <!-- Footer Section -->
     <footer class="site-footer py-5 bg-dark text-white">
         <div class="container">
             <!-- Main Footer Content -->
             {% include 'partials/footer.html' %}
-            
+
             <!-- Footer Divider -->
             <hr class="footer-divider my-4 bg-light opacity-25">
-            
+
             <!-- Bottom Footer -->
             <div class="d-flex justify-content-between align-items-center flex-wrap">
                 <a href="#home" class="move-top btn btn-outline-light rounded-circle" aria-label="Back to top">
@@ -427,12 +440,13 @@
             </div>
         </div>
     </footer>
-    
+
     <!-- Copyright Section -->
     <div class="copyright-section py-3 bg-black text-white">
         <div class="container">
             <p class="mb-0">&copy; 2026 GRAM SCS. All rights reserved.</p>
-        </div>    </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='js/animations.js') }}"></script>

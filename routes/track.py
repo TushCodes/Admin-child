@@ -2,16 +2,12 @@
 
 import logging
 import re
-import io
-import os
-import requests
-
 from flask import Blueprint, render_template, request
-from flask import redirect, send_file, current_app
 from app.controllers.responses import json_error
 from sqlalchemy.exc import DatabaseError, OperationalError
 
 from app.models import TrackConsignment
+from app.services.pod_storage import send_pod_file_response
 
 logger = logging.getLogger(__name__)
 
@@ -67,11 +63,7 @@ def track_page():
     "/track/pod/<consignment_number>", methods=["GET"], endpoint="consignment_pod"
 )
 def consignment_pod(consignment_number):
-    """Serve or stream the POD for a consignment identified by number.
-
-    This mirrors the admin POD-serving behavior but looks up by consignment number
-    so the public Track page can download the POD.
-    """
+    """Serve the POD for a consignment identified by number without signed URLs."""
     try:
         number = (consignment_number or "").strip().upper()
         if not number:
@@ -83,88 +75,12 @@ def consignment_pod(consignment_number):
         if not consignment or not getattr(consignment, "pod_image", None):
             return json_error("No POD found.", 404)
 
-        pod_path = consignment.pod_image
-        # If it's already a full URL, attempt to proxy and force download
-        if isinstance(pod_path, str) and (
-            pod_path.startswith("http://") or pod_path.startswith("https://")
-        ):
-            try:
-                response = requests.get(pod_path, stream=True, timeout=15)
-                response.raise_for_status()
-                content_bytes = response.content
-                content_type = response.headers.get("content-type", None)
-                filename = f"{number}_pod.jpg"
-
-                # Try to convert to JPEG to ensure consistent .jpg download
-                try:
-                    from PIL import Image
-
-                    image = Image.open(io.BytesIO(content_bytes))
-                    output = io.BytesIO()
-                    rgb_image = image.convert("RGB")
-                    rgb_image.save(output, format="JPEG", quality=85)
-                    output.seek(0)
-                    return send_file(
-                        output,
-                        as_attachment=True,
-                        download_name=filename,
-                        mimetype="image/jpeg",
-                    )
-                except Exception:
-                    # fallback to proxying original bytes with original content-type
-                    content = io.BytesIO(content_bytes)
-                    return send_file(
-                        content,
-                        as_attachment=True,
-                        download_name=filename,
-                        mimetype=content_type,
-                    )
-            except Exception:
-                return json_error("Failed to retrieve external POD.", 502)
-
-        # Supabase-stored value: "supabase:bucket/path"
-        if isinstance(pod_path, str) and pod_path.startswith("supabase:"):
-            try:
-                from app.services.pod_storage import get_pod_url as _get_pod_url
-
-                signed_url_ttl = int(os.getenv("SUPABASE_SIGNED_URL_TTL", "30"))
-                url = _get_pod_url(pod_path, signed_url_ttl=signed_url_ttl)
-                if not url:
-                    return json_error("Unable to generate POD URL.", 500)
-                return redirect(url)
-            except Exception:
-                logger.exception("Error generating Supabase POD URL")
-                return json_error("Failed to serve POD.", 500)
-
-        # Otherwise treat as local filename under instance/uploads
-        upload_folder = os.path.join(current_app.instance_path, "uploads")
-        safe_path = os.path.normpath(os.path.join(upload_folder, pod_path))
-        if not safe_path.startswith(os.path.abspath(upload_folder)):
-            return json_error("Invalid POD path.", 400)
-
-        if not os.path.exists(safe_path):
-            return json_error("POD file missing.", 404)
-
-        # serve as attachment so browsers download; convert to JPEG for consistent .jpg
         try:
-            from PIL import Image
-
-            with open(safe_path, "rb") as file_handle:
-                image = Image.open(file_handle)
-                output = io.BytesIO()
-                rgb_image = image.convert("RGB")
-                rgb_image.save(output, format="JPEG", quality=85)
-                output.seek(0)
-                return send_file(
-                    output,
-                    as_attachment=True,
-                    download_name=f"{number}_pod.jpg",
-                    mimetype="image/jpeg",
-                )
-        except Exception:
-            # if conversion fails, send the original file with its filename
-            return send_file(
-                safe_path, as_attachment=True, download_name=os.path.basename(safe_path)
-            )
+            return send_pod_file_response(consignment.pod_image)
+        except ValueError:
+            return json_error("Invalid POD path.", 400)
+        except FileNotFoundError:
+            return json_error("POD file missing.", 404)
     except Exception:
+        logger.exception("Failed to serve POD for consignment %s", consignment_number)
         return json_error("Failed to serve POD.", 500)

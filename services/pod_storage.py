@@ -1,11 +1,16 @@
 """Proof-of-delivery file storage helpers for Supabase or local uploads."""
 
-import os
-import logging
 import _io
-from flask import current_app
+import logging
+import mimetypes
+import os
+from urllib.parse import unquote, urlparse
+
+from flask import current_app, send_file
 
 logger = logging.getLogger(__name__)
+
+SUPABASE_MARKER_PREFIX = "supabase:"
 
 
 def get_supabase_client():
@@ -27,24 +32,82 @@ def get_supabase_client():
         return None
 
 
+def _split_supabase_marker(pod_value):
+    if not isinstance(pod_value, str) or not pod_value.startswith(
+        SUPABASE_MARKER_PREFIX
+    ):
+        return None
+
+    storage_path = pod_value.split(":", 1)[1]
+    if "/" not in storage_path:
+        return None
+
+    bucket, object_path = storage_path.split("/", 1)
+    if not bucket or not object_path:
+        return None
+    return bucket, object_path
+
+
+def _extract_supabase_path_from_url(pod_value):
+    """Best-effort recovery for legacy public/signed Supabase URLs stored in DB."""
+    if not isinstance(pod_value, str) or not pod_value.startswith(
+        ("http://", "https://")
+    ):
+        return None
+
+    parsed = urlparse(pod_value)
+    marker = "/storage/v1/object/"
+    if marker not in parsed.path:
+        return None
+
+    suffix = parsed.path.split(marker, 1)[1]
+    for prefix in ("public/", "sign/"):
+        if suffix.startswith(prefix):
+            suffix = suffix[len(prefix) :]
+            break
+
+    if "/" not in suffix:
+        return None
+
+    bucket, object_path = suffix.split("/", 1)
+    bucket = unquote(bucket)
+    object_path = unquote(object_path)
+    if not bucket or not object_path:
+        return None
+    return bucket, object_path
+
+
+def resolve_supabase_reference(pod_value):
+    """Return (bucket, object_path) for current markers or legacy Supabase URLs."""
+    return _split_supabase_marker(pod_value) or _extract_supabase_path_from_url(
+        pod_value
+    )
+
+
 def store_pod_bytes(
     filename, file_bytes, content_type=None, bucket_name=None, instance_path=None
 ):
     """Store bytes either in Supabase (if configured) or on local disk.
 
     Returns a marker string for supabase uploads ("supabase:bucket/path") or
-    a local filename.
+    a local filename. Supabase storage keeps the object path permanent; viewing
+    later is handled through the Flask POD endpoint instead of expiring signed URLs.
     """
     client = get_supabase_client()
     if client:
         bucket = bucket_name or os.getenv("SUPABASE_BUCKET", "pod-uploads")
         object_path = f"consignments/{filename}"
-        client.storage.from_(bucket).upload(
-            object_path,
-            _io.BytesIO(file_bytes),
-            {"content-type": content_type or "application/octet-stream"},
-        )
-        return f"supabase:{bucket}/{object_path}"
+        try:
+            client.storage.from_(bucket).upload(
+                object_path,
+                _io.BytesIO(file_bytes),
+                {"content-type": content_type or "application/octet-stream"},
+            )
+            return f"{SUPABASE_MARKER_PREFIX}{bucket}/{object_path}"
+        except Exception:
+            logger.exception(
+                "Supabase POD upload failed; falling back to local storage"
+            )
 
     upload_folder = os.path.join(
         (instance_path or current_app.instance_path), "uploads"
@@ -61,13 +124,13 @@ def delete_pod_file(pod_value, instance_path=None):
     if not pod_value:
         return
 
-    if isinstance(pod_value, str) and pod_value.startswith("supabase:"):
+    supabase_ref = resolve_supabase_reference(pod_value)
+    if supabase_ref:
         client = get_supabase_client()
         if not client:
             return
         try:
-            _, storage_path = pod_value.split(":", 1)
-            bucket, object_path = storage_path.split("/", 1)
+            bucket, object_path = supabase_ref
             client.storage.from_(bucket).remove([object_path])
         except Exception:
             logger.exception("Failed to remove POD from Supabase")
@@ -84,57 +147,77 @@ def delete_pod_file(pod_value, instance_path=None):
             logger.exception("Failed to remove POD file from disk")
 
 
-def get_pod_url(pod_value, signed_url_ttl=None):
-    """Return a URL for the given pod_value when possible.
+def get_pod_url(pod_value):
+    """Return only stable public POD URLs.
 
-    - If `pod_value` is an absolute http(s) URL, return it unchanged.
-    - If `pod_value` is a Supabase marker ("supabase:bucket/path"), attempt
-      to create a short signed URL (or fall back to public URL). Returns None
-      when no URL can be generated (e.g., supabase not configured).
+    Signed URLs are intentionally not created or returned because they expire.
+    Supabase markers should be served through :func:`send_pod_file_response`.
     """
     if not pod_value or not isinstance(pod_value, str):
         return None
 
-    if pod_value.startswith("http://") or pod_value.startswith("https://"):
-        return pod_value
-
-    if pod_value.startswith("supabase:"):
+    if resolve_supabase_reference(pod_value):
+        if "/storage/v1/object/sign/" in pod_value or "token=" in pod_value:
+            return None
+        if pod_value.startswith(("http://", "https://")):
+            return pod_value
         client = get_supabase_client()
         if not client:
             return None
         try:
-            _, storage_path = pod_value.split(":", 1)
-            bucket, object_path = storage_path.split("/", 1)
-            if signed_url_ttl is None:
-                signed_url_ttl = int(os.getenv("SUPABASE_SIGNED_URL_TTL", "30"))
-            signed_response = client.storage.from_(bucket).create_signed_url(
-                object_path, signed_url_ttl
-            )
-            pod_url = None
-            if isinstance(signed_response, dict):
-                pod_url = (
-                    signed_response.get("signedURL")
-                    or signed_response.get("signed_url")
-                    or signed_response.get("signedUrl")
-                )
-            if not pod_url:
-                public_response = client.storage.from_(bucket).get_public_url(
-                    object_path
-                )
-                pod_url = public_response.get("publicURL") or public_response.get(
-                    "publicUrl"
-                )
-            return pod_url
-        except Exception:
-            logger.exception("Error generating Supabase POD URL")
-            try:
-                public_response = client.storage.from_(bucket).get_public_url(
-                    object_path
-                )
+            bucket, object_path = resolve_supabase_reference(pod_value)
+            public_response = client.storage.from_(bucket).get_public_url(object_path)
+            if isinstance(public_response, dict):
                 return public_response.get("publicURL") or public_response.get(
                     "publicUrl"
                 )
-            except Exception:
-                return None
+            return public_response
+        except Exception:
+            logger.exception("Error generating Supabase public POD URL")
+            return None
+
+    if pod_value.startswith(("http://", "https://")):
+        return pod_value
 
     return None
+
+
+def _download_supabase_bytes(client, bucket, object_path):
+    response = client.storage.from_(bucket).download(object_path)
+    if isinstance(response, bytes):
+        return response
+    if hasattr(response, "content"):
+        return response.content
+    if hasattr(response, "read"):
+        return response.read()
+    return bytes(response)
+
+
+def send_pod_file_response(pod_value, instance_path=None):
+    """Build a Flask response for a POD without using expiring signed URLs."""
+    supabase_ref = resolve_supabase_reference(pod_value)
+    if supabase_ref:
+        client = get_supabase_client()
+        if not client:
+            raise FileNotFoundError("Supabase storage is not configured.")
+
+        bucket, object_path = supabase_ref
+        file_bytes = _download_supabase_bytes(client, bucket, object_path)
+        mimetype = mimetypes.guess_type(object_path)[0] or "application/octet-stream"
+        download_name = os.path.basename(object_path) or "pod"
+        return send_file(
+            _io.BytesIO(file_bytes),
+            mimetype=mimetype,
+            download_name=download_name,
+            conditional=False,
+        )
+
+    upload_folder = os.path.join(
+        (instance_path or current_app.instance_path), "uploads"
+    )
+    safe_path = os.path.normpath(os.path.join(upload_folder, pod_value))
+    if not safe_path.startswith(os.path.abspath(upload_folder)):
+        raise ValueError("Invalid POD path.")
+    if not os.path.exists(safe_path):
+        raise FileNotFoundError("POD file missing.")
+    return send_file(safe_path)

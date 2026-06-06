@@ -1,11 +1,9 @@
 """Flask-Admin configuration for managing consignments, leads, exports, and POD files."""
 
-import io as _io
 import logging
-import os
 import uuid
 
-from flask import current_app, flash, redirect, request, send_file, url_for
+from flask import flash, redirect, request, send_file, url_for
 from flask_admin import Admin, AdminIndexView, BaseView, expose
 from flask_admin.theme import Bootstrap4Theme
 from flask_admin.actions import action
@@ -28,8 +26,9 @@ from app.services.logistics import (
 )
 from app.services.pdf_export import generate_consignment_pdf
 from app.services.pod_storage import (
-    get_pod_url as _get_pod_url,
-    get_supabase_client as _get_supabase_client,
+    delete_pod_file,
+    send_pod_file_response,
+    store_pod_bytes,
 )
 
 logger = logging.getLogger(__name__)
@@ -196,20 +195,12 @@ class ConsignmentAdminView(SecureModelView):
             if not consignment or not getattr(consignment, "pod_image", None):
                 return json_error("No POD found.", 404)
 
-            pod_path = consignment.pod_image
-            url = _get_pod_url(pod_path, signed_url_ttl=30)
-            if url:
-                return redirect(url)
-
-            upload_folder = os.path.join(current_app.instance_path, "uploads")
-            safe_path = os.path.normpath(os.path.join(upload_folder, pod_path))
-            if not safe_path.startswith(os.path.abspath(upload_folder)):
+            try:
+                return send_pod_file_response(consignment.pod_image)
+            except ValueError:
                 return json_error("Invalid POD path.", 400)
-
-            if not os.path.exists(safe_path):
+            except FileNotFoundError:
                 return json_error("POD file missing.", 404)
-
-            return send_file(safe_path)
         except Exception:
             logger.exception("Error serving POD file")
             return json_error("Failed to serve POD.", 500)
@@ -232,47 +223,23 @@ class ConsignmentAdminView(SecureModelView):
             filename = f"{uuid.uuid4().hex}_{filename}"
             file_bytes = upload.read()
 
-            client = _get_supabase_client()
-            bucket = os.getenv("SUPABASE_BUCKET", "pod-uploads")
-            if client:
-                try:
-                    object_path = f"{consignment_id}/{filename}"
-                    client.storage.from_(bucket).upload(
-                        object_path,
-                        _io.BytesIO(file_bytes),
-                        {"content-type": upload.mimetype or "application/octet-stream"},
-                    )
-                    with transaction(db):
-                        consignment.pod_image = f"supabase:{bucket}/{object_path}"
-                    return json_success({"pod_image": consignment.pod_image})
-                except Exception:
-                    try:
-                        db.session.rollback()
-                    except Exception:
-                        logger.exception(
-                            "Failed to rollback DB session after supabase upload error"
-                        )
-                    logger.exception(
-                        "Supabase POD upload failed; falling back to local storage"
-                    )
-
             try:
-                upload_folder = os.path.join(current_app.instance_path, "uploads")
-                os.makedirs(upload_folder, exist_ok=True)
-                destination_path = os.path.join(upload_folder, filename)
-                with open(destination_path, "wb") as file_handle:
-                    file_handle.write(file_bytes)
+                pod_image = store_pod_bytes(
+                    filename,
+                    file_bytes,
+                    content_type=upload.mimetype or "application/octet-stream",
+                )
                 with transaction(db):
-                    consignment.pod_image = filename
-                return json_success({"pod_image": filename})
+                    consignment.pod_image = pod_image
+                return json_success({"pod_image": pod_image})
             except Exception:
                 try:
                     db.session.rollback()
                 except Exception:
                     logger.exception(
-                        "Failed to rollback DB session after local POD upload error"
+                        "Failed to rollback DB session after POD upload error"
                     )
-                logger.exception("POD upload failed (local)")
+                logger.exception("POD upload failed")
                 return json_error("Upload failed.", 500)
         except Exception:
             logger.exception("POD upload failed")
@@ -285,33 +252,7 @@ class ConsignmentAdminView(SecureModelView):
             if not consignment or not getattr(consignment, "pod_image", None):
                 return json_error("No POD to delete.", 404)
 
-            pod_value = consignment.pod_image
-            if isinstance(pod_value, str) and pod_value.startswith("supabase:"):
-                client = _get_supabase_client()
-                if client:
-                    try:
-                        _, storage_path = pod_value.split(":", 1)
-                        bucket, object_path = storage_path.split("/", 1)
-                        client.storage.from_(bucket).remove([object_path])
-                    except Exception:
-                        logger.exception("Failed to remove POD from Supabase")
-
-            else:
-                upload_folder = os.path.join(current_app.instance_path, "uploads")
-                pod_filename = consignment.pod_image
-                try:
-                    pod_path = os.path.normpath(
-                        os.path.join(upload_folder, pod_filename)
-                    )
-                    if pod_path.startswith(
-                        os.path.abspath(upload_folder)
-                    ) and os.path.exists(pod_path):
-                        try:
-                            os.remove(pod_path)
-                        except Exception:
-                            logger.exception("Failed to remove POD file from disk")
-                except Exception:
-                    logger.exception("Error while attempting to remove local POD file")
+            delete_pod_file(consignment.pod_image)
 
             with transaction(db):
                 consignment.pod_image = None
