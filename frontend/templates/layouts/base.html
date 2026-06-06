@@ -17,7 +17,7 @@
   {% block head_extra %}{% endblock %}
 </head>
 
-<body class="d-flex flex-column min-vh-100">
+<body class="d-flex flex-column min-vh-100" {% block body_attrs %}{% endblock %}>
   <div class="flex-grow-1">
     {% block header %}
     {% include "partials/header.html" %}
@@ -36,9 +36,6 @@
       {% endblock %}
     </div>
   </footer>
-  <!-- Toast container for inline notifications -->
-  <div id="toast-container" style="position: fixed; top: 20px; right: 20px; z-index: 1060;"></div>
-
   <!-- Copyright Section (site-wide) -->
   <div class="copyright-section py-3 bg-black text-white">
     <div class="container">
@@ -50,6 +47,7 @@
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
   <script src="{{ url_for('static', filename='js/performance.js') }}"></script>
+  {% include "partials/shared-scripts.html" %}
   {% block scripts_extra %}{% endblock %}
 </body>
 
