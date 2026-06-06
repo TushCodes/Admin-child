@@ -5,7 +5,7 @@ transaction boundaries live in service layer.
 """
 
 from typing import Optional, Tuple, List, Dict
-from app.models import Consignment, db
+from app.admin.models import Consignment, db
 from sqlalchemy import or_
 
 

@@ -6,6 +6,7 @@ from flask import (
     request,
     jsonify,
 )
+from jinja2 import ChoiceLoader, FileSystemLoader
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 import sys
@@ -24,8 +25,9 @@ if __name__ != "app":
     sys.modules.setdefault("app", sys.modules[__name__])
 
 from app.frontend import STATIC_FOLDER, TEMPLATE_FOLDER
-from app.models import db as models_db
-from app.db.maintenance import ensure_consignment_columns_async
+from app.admin import TEMPLATE_FOLDER as ADMIN_TEMPLATE_FOLDER
+from app.admin.models import db as models_db
+from app.admin.db.maintenance import ensure_consignment_columns_async
 
 # Configure logging
 logging.basicConfig(
@@ -69,8 +71,8 @@ def _get_env_int(name, default):
         return default
 
 
-from app.db.config import require_database_uri, build_engine_options
-from app.db.seed import seed_development_data
+from app.admin.db.config import require_database_uri, build_engine_options
+from app.admin.db.seed import seed_development_data
 from app.middleware import register_middleware
 
 
@@ -172,6 +174,12 @@ def create_app():
         template_folder=str(TEMPLATE_FOLDER),
         static_folder=str(STATIC_FOLDER),
     )
+    app.jinja_loader = ChoiceLoader(
+        [
+            FileSystemLoader(str(ADMIN_TEMPLATE_FOLDER)),
+            app.jinja_loader,
+        ]
+    )
     # Log effective PORT so platform startup probes can be debugged in deployment logs.
     try:
         effective_port = os.getenv("PORT", "10000")
@@ -236,9 +244,10 @@ def create_app():
     from app.routes.main import main_bp
     from app.routes.track import track_bp
     from app.routes.pages import pages_bp
-    from app.admin import admin_bp
+    from app.admin import admin_bp, register_admin_routes
     from app.admin.flask_admin_setup import init_flask_admin
 
+    register_admin_routes()
     app.register_blueprint(main_bp)
     app.register_blueprint(track_bp)
     app.register_blueprint(pages_bp)

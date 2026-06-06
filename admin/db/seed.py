@@ -3,8 +3,8 @@
 import logging
 import os
 
-from app.models import Consignment
-from app.db.session import transaction
+from app.admin.models import Consignment
+from app.admin.db.session import transaction
 
 logger = logging.getLogger(__name__)
 
