@@ -6,8 +6,8 @@ provides one standard gate for admin URL spaces before requests reach handlers.
 
 from flask import current_app, redirect, request, url_for
 
-from ..controllers.responses import json_error
-from ..utils.content_negotiation import wants_json_response
+from app.controllers.responses import json_error
+from app.utils.content_negotiation import wants_json_response
 
 ADMIN_AUTH_EXEMPT_PATHS = ("/admin/login",)
 ADMIN_AUTH_PREFIXES = ("/admin", "/flask-admin")
@@ -36,7 +36,7 @@ def register_admin_auth_middleware(app):
         if not _is_admin_path(path) or _is_exempt_path(path):
             return None
 
-        from ..auth import is_admin_authenticated
+        from app.admin.auth import is_admin_authenticated
 
         if is_admin_authenticated():
             return None

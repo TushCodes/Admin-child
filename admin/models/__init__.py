@@ -1,8 +1,8 @@
 """Shared SQLAlchemy database object and model exports."""
 
-from .base import db
-from .consignment import Consignment
-from .lead import Lead
-from .track import TrackConsignment
+from app.admin.models.base import db
+from app.admin.models.consignment import Consignment
+from app.admin.models.lead import Lead
+from app.admin.models.track import TrackConsignment
 
 __all__ = ["db", "Consignment", "Lead", "TrackConsignment"]

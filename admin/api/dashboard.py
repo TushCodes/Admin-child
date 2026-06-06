@@ -5,12 +5,12 @@ import logging
 from flask import current_app, request
 from sqlalchemy.exc import DatabaseError, OperationalError
 
-from .. import admin_bp
-from ..auth import is_admin_authenticated
-from ..controllers.responses import json_error, json_success
-from ..controllers.serializers import serialize_consignment, serialize_lead
-from ..models import Consignment, Lead
-from ..services.pod_storage import send_pod_file_response
+from app.admin import admin_bp
+from app.admin.auth import is_admin_authenticated
+from app.controllers.responses import json_error, json_success
+from app.admin.controllers.serializers import serialize_consignment, serialize_lead
+from app.admin.models import Consignment, Lead
+from app.admin.services.pod_storage import send_pod_file_response
 
 logger = logging.getLogger(__name__)
 
