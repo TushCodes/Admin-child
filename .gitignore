@@ -53,3 +53,9 @@ test.db
 .vscode/
 .idea/
 .venv/
+
+# Node dependencies
+node_modules/
+
+# SCSS compile checks
+.scss-build/

@@ -43,6 +43,30 @@ All Flask-rendered frontend code now lives under `frontend/`:
 
 Flask is configured to serve these centralized folders through the standard `render_template(...)` and `url_for('static', ...)` APIs, so templates do not need per-blueprint template folders.
 
+
+## SCSS stylesheets
+
+Project-owned styles are now maintained as SCSS source files with matching compiled CSS files kept in the existing static paths used by Flask templates. Install the Sass toolchain once and rebuild CSS after changing any `.scss` file:
+
+```bash
+npm install
+npm run build:scss
+```
+
+To validate that every CSS file has a matching SCSS source and that all SCSS files compile without overwriting committed CSS, run:
+
+```bash
+npm run verify:scss
+```
+
+For compile-only validation into the temporary `.scss-build` tree, run:
+
+```bash
+npm run check:scss
+```
+
+The build keeps compiled files in the same `frontend/static/css`, `frontend/static/assets/css`, and `admin/static/css` locations so existing `url_for('static', filename='...css')` template references continue to work without UI or routing changes.
+
 ## Local database
 
 The default local database URL is:
