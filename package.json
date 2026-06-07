@@ -1,0 +1,12 @@
+{
+  "name": "admin-child-scss-build",
+  "private": true,
+  "scripts": {
+    "build:scss": "sass --no-error-css --style=expanded --no-source-map frontend/static/scss:frontend/static/css frontend/static/assets/scss:frontend/static/assets/css admin/static/scss:admin/static/css",
+    "check:scss": "rm -rf .scss-build && sass --no-error-css --style=expanded --no-source-map frontend/static/scss:.scss-build/frontend/static/css frontend/static/assets/scss:.scss-build/frontend/static/assets/css admin/static/scss:.scss-build/admin/static/css",
+    "verify:scss": "python scripts/verify_scss_migration.py && npm run check:scss"
+  },
+  "devDependencies": {
+    "sass": "^1.94.2"
+  }
+}

@@ -1,0 +1,17 @@
+/* Small utility helpers */
+
+/* Hero helpers */
+.full-bleed{width:100vw;position:relative;left:50%;right:50%;margin-left:-50vw;margin-right:-50vw;box-sizing:border-box}
+.full-vh{min-height:80vh;display:flex;align-items:center}
+.about-hero-section{color:#fff;padding:3rem 0}
+.bg-section-1{background:linear-gradient(135deg, rgba(0,47,75,0.85), rgba(130,207,43,0.8));background-size:cover;background-position:center}
+.bg-section-2{background:#ffffff}
+
+/* Utility spacing */
+.mt-3-sm{margin-top:var(--space-3)}
+
+/* Image helpers */
+.img-fluid{max-width:100%;height:auto}
+
+/* Accessibility focus */
+:focus{outline:3px solid rgba(130,207,43,0.35);outline-offset:2px}
