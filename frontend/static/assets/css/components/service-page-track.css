@@ -1,0 +1,18 @@
+/* Override track shipment button to use green scheme */
+.track-shipment-btn {
+  background-color: transparent !important;
+  border: 1.5px solid var(--primary-color) !important;
+  color: var(--primary-color) !important;
+}
+
+.track-shipment-btn:hover {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  color: white !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(130, 207, 43, 0.3) !important;
+}
+
+.track-shipment-btn::after {
+  background-color: rgba(130, 207, 43, 0.1) !important;
+}
