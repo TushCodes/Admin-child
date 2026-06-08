@@ -1,0 +1,83 @@
+@mixin service-page-responsive($include-cta: true) {
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .transportation-hero-title {
+            font-size: 2.5rem;
+        }
+        
+        .transportation-hero-subtitle {
+            font-size: 1.1rem;
+        }
+        
+        .hero-features {
+            gap: 1rem;
+        }
+        
+        .hero-feature {
+            font-size: 0.9rem;
+            padding: 0.6rem 1rem;
+        }
+        
+        .service-cards {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        
+        .feature-list {
+            grid-template-columns: 1fr;
+        }
+        
+        @if $include-cta {
+            .cta-title {
+                font-size: 2rem;
+            }
+            
+            .cta-subtitle {
+                font-size: 1.1rem;
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        .transportation-hero-content {
+            padding: 3rem 1rem;
+        }
+        
+        .transportation-hero-title {
+            font-size: 2rem;
+        }
+        
+        .transportation-hero-subtitle {
+            font-size: 1rem;
+        }
+        
+        .hero-features {
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .service-card {
+            padding: 2rem 1.5rem;
+        }
+        
+        .feature-item {
+            padding: 1rem;
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+}
+
+
+@mixin service-page-cta-responsive {
+    @media (max-width: 768px) {
+        .cta-title {
+            font-size: 2rem;
+        }
+
+        .cta-subtitle {
+            font-size: 1.1rem;
+        }
+    }
+}

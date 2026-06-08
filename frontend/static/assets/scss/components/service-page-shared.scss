@@ -1,0 +1,4 @@
+@use '../shared' as *;
+
+@include service-page-sections;
+@include service-page-responsive($include-cta: false);

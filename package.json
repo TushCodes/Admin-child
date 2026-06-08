@@ -4,9 +4,12 @@
   "scripts": {
     "build:scss": "sass --no-error-css --style=expanded --no-source-map frontend/static/scss:frontend/static/css frontend/static/assets/scss:frontend/static/assets/css admin/static/scss:admin/static/css",
     "check:scss": "rm -rf .scss-build && sass --no-error-css --style=expanded --no-source-map frontend/static/scss:.scss-build/frontend/static/css frontend/static/assets/scss:.scss-build/frontend/static/assets/css admin/static/scss:.scss-build/admin/static/css",
-    "verify:scss": "python scripts/verify_scss_migration.py && npm run check:scss"
+    "verify:scss": "python scripts/verify_scss_migration.py && npm run check:scss",
+    "lint:scss": "stylelint \"frontend/static/assets/scss/shared/**/*.scss\" \"frontend/static/assets/scss/components/service-page-*.scss\""
   },
   "devDependencies": {
-    "sass": "^1.94.2"
+    "sass": "^1.94.2",
+    "stylelint": "^17.13.0",
+    "stylelint-config-standard-scss": "^17.0.0"
   }
 }
