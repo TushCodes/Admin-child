@@ -1,7 +1,6 @@
 {% block head_extra %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/css_slider.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/pages/home/index-custom.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/pages/rail-freight/rail-freight.css') }}">
+{% from "partials/stylesheets.html" import page_styles %}
+{{ page_styles('assets/css/pages/rail-freight/rail-freight.css') }}
 {% endblock %}
 {% extends "layouts/base.html" %}
 
@@ -18,20 +17,20 @@
                         tracking and monitoring, delivering your products at optimum time while maintaining best quality.
                     </p>
                     
-                    <div class="hero-features">
-                        <div class="hero-feature">
+                    <div class="hero-features service-page-hero__features">
+                        <div class="hero-feature service-page-hero__feature">
                             <i class="fa fa-train"></i>
                             <span>Rail Network</span>
                         </div>
-                        <div class="hero-feature">
+                        <div class="hero-feature service-page-hero__feature">
                             <i class="fa fa-shield"></i>
                             <span>Safe Transport</span>
                         </div>
-                        <div class="hero-feature">
+                        <div class="hero-feature service-page-hero__feature">
                             <i class="fa fa-search"></i>
                             <span>Real-time Tracking</span>
                         </div>
-                        <div class="hero-feature">
+                        <div class="hero-feature service-page-hero__feature">
                             <i class="fa fa-clock-o"></i>
                             <span>Optimum Timing</span>
                         </div>
@@ -42,21 +41,21 @@
         <!-- //HERO SECTION -->
 
         <!-- OVERVIEW SECTION -->
-        <section class="overview-section" id="overview">
+        <section class="overview-section service-page__overview" id="overview">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="section-title section-title-center">Expert Rail Cargo Services</h2>
                     <p class="text-muted">Leveraging extensive rail networks for efficient freight transportation</p>
                 </div>
                 
-                <div class="overview-content">
-                    <p class="overview-text">
+                <div class="overview-content service-page__overview-content">
+                    <p class="overview-text service-page__overview-text">
                         We offer reliable rail cargo services with huge expertise in safely transporting consignments 
                         from one location to another via rail transportation. Our professionals ensure goods are safely 
                         delivered to desired locations without damage, taking utmost care from packaging to delivery.
                     </p>
                     
-                    <div class="overview-highlight">
+                    <div class="overview-highlight service-page__overview-highlight">
                         <h4 class="text-primary-color mb-3">
                             <i class="fa fa-cogs me-2"></i>
                             Advanced IT Integration
@@ -73,16 +72,16 @@
         <!-- //OVERVIEW SECTION -->
 
         <!-- SERVICES SECTION -->
-        <section class="services-section" id="services">
+        <section class="services-section service-page__services" id="services">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="section-title section-title-center">Our Rail Freight Services</h2>
                     <p class="text-muted">Comprehensive rail transportation solutions for all cargo types</p>
                 </div>
                 
-                <div class="service-cards">
-                    <div class="service-card">
-                        <div class="service-icon">
+                <div class="service-cards service-page__service-list">
+                    <div class="service-card service-page-card">
+                        <div class="service-icon service-card__icon">
                             <i class="fa fa-cube"></i>
                         </div>
                         <h3>Bulk Cargo Transport</h3>
@@ -92,8 +91,8 @@
                         </p>
                     </div>
                     
-                    <div class="service-card">
-                        <div class="service-icon">
+                    <div class="service-card service-page-card">
+                        <div class="service-icon service-card__icon">
                             <i class="fa fa-truck"></i>
                         </div>
                         <h3>Container Rail Services</h3>
@@ -103,8 +102,8 @@
                         </p>
                     </div>
                     
-                    <div class="service-card">
-                        <div class="service-icon">
+                    <div class="service-card service-page-card">
+                        <div class="service-icon service-card__icon">
                             <i class="fa fa-snowflake-o"></i>
                         </div>
                         <h3>Temperature-Controlled Transport</h3>
@@ -114,8 +113,8 @@
                         </p>
                     </div>
                     
-                    <div class="service-card">
-                        <div class="service-icon">
+                    <div class="service-card service-page-card">
+                        <div class="service-icon service-card__icon">
                             <i class="fa fa-warning"></i>
                         </div>
                         <h3>Hazardous Material Handling</h3>

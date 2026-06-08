@@ -1,8 +1,6 @@
 {% block head_extra %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/css_slider.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/pages/home/index-custom.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/pages/about/about-us.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/pages/process-improvement-and-automation/process-improvement-and-automation.css') }}">
+{% from "partials/stylesheets.html" import page_styles %}
+{{ page_styles('assets/css/pages/process-improvement/process-improvement.css', include_about=True, shared_css=['assets/css/components/service-page-shared.css', 'assets/css/components/service-page-cta.css', 'assets/css/components/service-page-track.css']) }}
 {% endblock %}
 {% extends "layouts/base.html" %}
 
@@ -11,32 +9,32 @@
         {% set hero_title = 'Process Improvement & Automation' %}
         {% set hero_subtitle = 'Streamline your logistics operations with cutting-edge automation technologies and process optimization strategies. Reduce manual errors, increase efficiency, and gain real-time visibility across your entire supply chain.' %}
         {% set hero_features_html %}
-            <div class="d-flex justify-content-center flex-wrap gap-4 mt-4 hero-features">
-                <div class="hero-feature reveal delay-2"><i class="fa fa-cogs"></i><span>Automation</span></div>
-                <div class="hero-feature reveal delay-2"><i class="fa fa-chart-line"></i><span>Optimization</span></div>
-                <div class="hero-feature reveal delay-2"><i class="fa fa-clock-o"></i><span>Real-Time Updates</span></div>
-                <div class="hero-feature reveal delay-2"><i class="fa fa-shield"></i><span>Error Reduction</span></div>
+            <div class="d-flex justify-content-center flex-wrap gap-4 mt-4 hero-features service-page-hero__features">
+                <div class="hero-feature service-page-hero__feature reveal delay-2"><i class="fa fa-cogs"></i><span>Automation</span></div>
+                <div class="hero-feature service-page-hero__feature reveal delay-2"><i class="fa fa-chart-line"></i><span>Optimization</span></div>
+                <div class="hero-feature service-page-hero__feature reveal delay-2"><i class="fa fa-clock-o"></i><span>Real-Time Updates</span></div>
+                <div class="hero-feature service-page-hero__feature reveal delay-2"><i class="fa fa-shield"></i><span>Error Reduction</span></div>
             </div>
         {% endset %}
         {% include 'partials/about-hero.html' %}
         
         <!-- OVERVIEW SECTION -->
-        <section class="overview-section full-bleed" id="overview">
+        <section class="overview-section service-page__overview full-bleed" id="overview">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="section-title section-title-center">Comprehensive Process Enhancement</h2>
                     <p class="text-muted">Technology-driven solutions for operational excellence</p>
                 </div>
                 
-                <div class="overview-content">
-                    <p class="overview-text">
+                <div class="overview-content service-page__overview-content">
+                    <p class="overview-text service-page__overview-text">
                         Our process improvement and automation services leverage modern technology to eliminate 
                         inefficiencies, reduce manual errors, and provide real-time visibility across your 
                         logistics operations. Experience enhanced productivity and cost savings through our 
                         systematic approach to operational optimization.
                     </p>
                     
-                    <div class="overview-highlight">
+                    <div class="overview-highlight service-page__overview-highlight">
                         <h4 class="text-primary-color mb-3">
                             <i class="fa fa-robot me-2"></i>
                             Intelligent Automation Solutions
@@ -53,16 +51,16 @@
         <!-- //OVERVIEW SECTION -->
         
         <!-- SERVICES SECTION -->
-        <section class="services-section full-bleed" id="services">
+        <section class="services-section service-page__services full-bleed" id="services">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="section-title section-title-center">Our Automation Services</h2>
                     <p class="text-muted">Comprehensive solutions for process enhancement</p>
                 </div>
                 
-                <div class="service-cards">
-                    <div class="service-card reveal reveal-up delay-2">
-                        <div class="service-icon">
+                <div class="service-cards service-page__service-list">
+                    <div class="service-card service-page-card reveal reveal-up delay-2">
+                        <div class="service-icon service-card__icon">
                             <i class="fa fa-exclamation-triangle"></i>
                         </div>
                         <h3>Error Reduction</h3>
@@ -72,8 +70,8 @@
                         </p>
                     </div>
                     
-                    <div class="service-card reveal reveal-up delay-2">
-                        <div class="service-icon">
+                    <div class="service-card service-page-card reveal reveal-up delay-2">
+                        <div class="service-icon service-card__icon">
                             <i class="fa fa-truck"></i>
                         </div>
                         <h3>Transportation Optimization</h3>
@@ -83,8 +81,8 @@
                         </p>
                     </div>
                     
-                    <div class="service-card reveal reveal-up delay-2">
-                        <div class="service-icon">
+                    <div class="service-card service-page-card reveal reveal-up delay-2">
+                        <div class="service-icon service-card__icon">
                             <i class="fa fa-users"></i>
                         </div>
                         <h3>Enhanced Customer Service</h3>
@@ -94,8 +92,8 @@
                         </p>
                     </div>
                     
-                    <div class="service-card reveal reveal-up delay-2">
-                        <div class="service-icon">
+                    <div class="service-card service-page-card reveal reveal-up delay-2">
+                        <div class="service-icon service-card__icon">
                             <i class="fa fa-chart-bar"></i>
                         </div>
                         <h3>Data Analytics & Reporting</h3>
@@ -110,69 +108,69 @@
         <!-- //SERVICES SECTION -->
         
         <!-- FEATURES SECTION -->
-        <section class="features-section full-bleed" id="features">
+        <section class="features-section service-page__features full-bleed" id="features">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="section-title section-title-center">Key Automation Features</h2>
                     <p class="text-muted">Advanced capabilities that drive operational excellence</p>
                 </div>
                 
-                <div class="feature-list">
-                    <div class="feature-item reveal delay-2">
-                        <div class="feature-icon">
+                <div class="feature-list service-page__feature-list">
+                    <div class="feature-item service-page-feature reveal delay-2">
+                        <div class="feature-icon service-page-feature__icon">
                             <i class="fa fa-link"></i>
                         </div>
-                        <div class="feature-content">
+                        <div class="feature-content service-page-feature__content">
                             <h4>ERP Integration</h4>
                             <p>Seamless integration with existing systems for automated data flow</p>
                         </div>
                     </div>
                     
-                    <div class="feature-item reveal delay-2">
-                        <div class="feature-icon">
+                    <div class="feature-item service-page-feature reveal delay-2">
+                        <div class="feature-icon service-page-feature__icon">
                             <i class="fa fa-bell"></i>
                         </div>
-                        <div class="feature-content">
+                        <div class="feature-content service-page-feature__content">
                             <h4>Automated Notifications</h4>
                             <p>Real-time alerts and updates throughout the shipping process</p>
                         </div>
                     </div>
                     
-                    <div class="feature-item reveal delay-2">
-                        <div class="feature-icon">
+                    <div class="feature-item service-page-feature reveal delay-2">
+                        <div class="feature-icon service-page-feature__icon">
                             <i class="fa fa-calculator"></i>
                         </div>
-                        <div class="feature-content">
+                        <div class="feature-content service-page-feature__content">
                             <h4>Auto Rate Calculation</h4>
                             <p>Automatic freight rate calculations with fuel surcharges included</p>
                         </div>
                     </div>
                     
-                    <div class="feature-item reveal delay-2">
-                        <div class="feature-icon">
+                    <div class="feature-item service-page-feature reveal delay-2">
+                        <div class="feature-icon service-page-feature__icon">
                             <i class="fa fa-search"></i>
                         </div>
-                        <div class="feature-content">
+                        <div class="feature-content service-page-feature__content">
                             <h4>Carrier Comparison</h4>
                             <p>Multiple carrier options with cost and transit time comparisons</p>
                         </div>
                     </div>
                     
-                    <div class="feature-item reveal delay-2">
-                        <div class="feature-icon">
+                    <div class="feature-item service-page-feature reveal delay-2">
+                        <div class="feature-icon service-page-feature__icon">
                             <i class="fa fa-shield-alt"></i>
                         </div>
-                        <div class="feature-content">
+                        <div class="feature-content service-page-feature__content">
                             <h4>Insurance Management</h4>
                             <p>Automated insurance selection and claims processing</p>
                         </div>
                     </div>
                     
-                    <div class="feature-item reveal delay-2">
-                        <div class="feature-icon">
+                    <div class="feature-item service-page-feature reveal delay-2">
+                        <div class="feature-icon service-page-feature__icon">
                             <i class="fa fa-file-invoice"></i>
                         </div>
-                        <div class="feature-content">
+                        <div class="feature-content service-page-feature__content">
                             <h4>Custom Accounting</h4>
                             <p>Freight accounting built to your specific business requirements</p>
                         </div>

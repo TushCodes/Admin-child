@@ -1,0 +1,19 @@
+{% macro page_styles(page_css=None, include_about=False, shared_css=None) -%}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/css_slider.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/pages/home/index-custom.css') }}">
+{%- if include_about %}
+<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/pages/about/about-us.css') }}">
+{%- endif %}
+{%- if page_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename=page_css) }}">
+{%- endif %}
+{%- if shared_css %}
+{%- if shared_css is string %}
+<link rel="stylesheet" href="{{ url_for('static', filename=shared_css) }}">
+{%- else %}
+{%- for css in shared_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename=css) }}">
+{%- endfor %}
+{%- endif %}
+{%- endif %}
+{%- endmacro %}

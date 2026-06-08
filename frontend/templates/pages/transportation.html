@@ -1,8 +1,6 @@
 {% block head_extra %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/css_slider.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/pages/home/index-custom.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/pages/about/about-us.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/pages/transportation/transportation.css') }}">
+{% from "partials/stylesheets.html" import page_styles %}
+{{ page_styles('assets/css/pages/transportation/transportation.css', include_about=True, shared_css=['assets/css/components/service-page-shared.css', 'assets/css/components/service-page-cta.css']) }}
 {% endblock %}
 {% extends "layouts/base.html" %}
 
@@ -22,7 +20,7 @@
 
 
 <!-- OVERVIEW SECTION -->
-<section class="overview-section py-5 bg-section-2 full-bleed">
+<section class="overview-section service-page__overview py-5 bg-section-2 full-bleed">
   <div class="container text-center">
 
     <h2 class="section-title reveal section-title-center mb-4">
@@ -53,7 +51,7 @@
 
 
 <!-- SERVICES SECTION -->
-<section class="services-section py-5 bg-section-1 full-bleed">
+<section class="services-section service-page__services py-5 bg-section-1 full-bleed">
   <div class="container">
 
     <div class="text-center mb-5">
@@ -112,7 +110,7 @@
 
 
 <!-- FEATURES SECTION -->
-<section class="features-section py-5 bg-section-2 full-bleed">
+<section class="features-section service-page__features py-5 bg-section-2 full-bleed">
   <div class="container">
 
     <div class="text-center mb-5">

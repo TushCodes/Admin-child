@@ -1,8 +1,6 @@
 {% block head_extra %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/css_slider.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/pages/home/index-custom.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/pages/about/about-us.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/pages/post-shipment-services/post-shipment-services.css') }}">
+{% from "partials/stylesheets.html" import page_styles %}
+{{ page_styles('assets/css/pages/post-shipment-services/post-shipment-services.css', include_about=True, shared_css=['assets/css/components/service-page-shared.css', 'assets/css/components/service-page-track.css']) }}
 {% endblock %}
 {% extends "layouts/base.html" %}
 
@@ -11,31 +9,31 @@
         {% set hero_title = 'Post Shipment Services' %}
         {% set hero_subtitle = "Our responsibility doesn't end when your freight arrives safely. We offer specialized post shipment activities through our team of experienced professionals, ensuring complete support for duty drawbacks, verifications, audits, and compliance requirements." %}
         {% set hero_features_html %}
-            <div class="d-flex justify-content-center flex-wrap gap-4 mt-4 hero-features">
-                <div class="hero-feature"><i class="fa fa-money"></i><span>Duty Drawbacks</span></div>
-                <div class="hero-feature"><i class="fa fa-check-circle"></i><span>DEPB Verification</span></div>
-                <div class="hero-feature"><i class="fa fa-file-text"></i><span>Audit Services</span></div>
-                <div class="hero-feature"><i class="fa fa-shield"></i><span>Bond Cancellations</span></div>
+            <div class="d-flex justify-content-center flex-wrap gap-4 mt-4 hero-features service-page-hero__features">
+                <div class="hero-feature service-page-hero__feature"><i class="fa fa-money"></i><span>Duty Drawbacks</span></div>
+                <div class="hero-feature service-page-hero__feature"><i class="fa fa-check-circle"></i><span>DEPB Verification</span></div>
+                <div class="hero-feature service-page-hero__feature"><i class="fa fa-file-text"></i><span>Audit Services</span></div>
+                <div class="hero-feature service-page-hero__feature"><i class="fa fa-shield"></i><span>Bond Cancellations</span></div>
             </div>
         {% endset %}
         {% include 'partials/about-hero.html' %}
 
         <!-- OVERVIEW SECTION -->
-        <section class="overview-section" id="overview">
+        <section class="overview-section service-page__overview" id="overview">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="section-title reveal section-title-center">Comprehensive Post Shipment Support</h2>
                     <p class="text-muted">Expert guidance and professional assistance for all post shipment requirements</p>
                 </div>
                 
-                <div class="overview-content">
-                    <p class="overview-text">
+                <div class="overview-content service-page__overview-content">
+                    <p class="overview-text service-page__overview-text">
                         At GRAM Supply Chain Solutions, we realize that our responsibility does not cease just after 
                         your freight has arrived safely. We offer specialized post shipment activities through our 
                         team of experienced and knowledgeable individual professionals.
                     </p>
                     
-                    <div class="overview-highlight">
+                    <div class="overview-highlight service-page__overview-highlight">
                         <h4 class="text-primary-color mb-3">
                             <i class="fa fa-cogs me-2"></i>
                             Complete Post Shipment Solutions
@@ -52,16 +50,16 @@
         <!-- //OVERVIEW SECTION -->
 
         <!-- SERVICES SECTION -->
-        <section class="services-section" id="services">
+        <section class="services-section service-page__services" id="services">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="section-title section-title-center">Our Post Shipment Services</h2>
                     <p class="text-muted">Specialized services for all your post shipment requirements</p>
                 </div>
                 
-                <div class="service-cards">
-                    <div class="service-card reveal reveal-up delay-2">
-                        <div class="service-icon">
+                <div class="service-cards service-page__service-list">
+                    <div class="service-card service-page-card reveal reveal-up delay-2">
+                        <div class="service-icon service-card__icon">
                             <i class="fa fa-money"></i>
                         </div>
                         <h3>Duty Drawback Claims</h3>
@@ -71,8 +69,8 @@
                         </p>
                     </div>
                     
-                    <div class="service-card reveal reveal-up delay-2">
-                        <div class="service-icon">
+                    <div class="service-card service-page-card reveal reveal-up delay-2">
+                        <div class="service-icon service-card__icon">
                             <i class="fa fa-check-circle"></i>
                         </div>
                         <h3>DEPB Verification</h3>
@@ -82,8 +80,8 @@
                         </p>
                     </div>
                     
-                    <div class="service-card reveal reveal-up delay-2">
-                        <div class="service-icon">
+                    <div class="service-card service-page-card reveal reveal-up delay-2">
+                        <div class="service-icon service-card__icon">
                             <i class="fa fa-search"></i>
                         </div>
                         <h3>DEEC Audit</h3>
@@ -93,8 +91,8 @@
                         </p>
                     </div>
                     
-                    <div class="service-card reveal reveal-up delay-2">
-                        <div class="service-icon">
+                    <div class="service-card service-page-card reveal reveal-up delay-2">
+                        <div class="service-icon service-card__icon">
                             <i class="fa fa-file-text-o"></i>
                         </div>
                         <h3>DFRC Verification</h3>
@@ -104,8 +102,8 @@
                         </p>
                     </div>
                     
-                    <div class="service-card reveal reveal-up delay-2">
-                        <div class="service-icon">
+                    <div class="service-card service-page-card reveal reveal-up delay-2">
+                        <div class="service-icon service-card__icon">
                             <i class="fa fa-shield"></i>
                         </div>
                         <h3>Bond/BG Cancellations</h3>
@@ -115,8 +113,8 @@
                         </p>
                     </div>
                     
-                    <div class="service-card reveal reveal-up delay-2">
-                        <div class="service-icon">
+                    <div class="service-card service-page-card reveal reveal-up delay-2">
+                        <div class="service-icon service-card__icon">
                             <i class="fa fa-dollar"></i>
                         </div>
                         <h3>Additional SAD Refund</h3>
@@ -131,89 +129,89 @@
         <!-- //SERVICES SECTION -->
 
         <!-- FEATURES SECTION -->
-        <section class="features-section" id="features">
+        <section class="features-section service-page__features" id="features">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="section-title section-title-center">Why Choose Our Post Shipment Services</h2>
                     <p class="text-muted">Professional expertise and reliable service delivery</p>
                 </div>
                 
-                <div class="feature-list">
-                    <div class="feature-item reveal delay-2">
-                        <div class="feature-icon">
+                <div class="feature-list service-page__feature-list">
+                    <div class="feature-item service-page-feature reveal delay-2">
+                        <div class="feature-icon service-page-feature__icon">
                             <i class="fa fa-users"></i>
                         </div>
-                        <div class="feature-content">
+                        <div class="feature-content service-page-feature__content">
                             <h4>Expert Team</h4>
                             <p>Experienced and knowledgeable professionals with deep industry expertise</p>
                         </div>
                     </div>
                     
-                    <div class="feature-item reveal delay-2">
-                        <div class="feature-icon">
+                    <div class="feature-item service-page-feature reveal delay-2">
+                        <div class="feature-icon service-page-feature__icon">
                             <i class="fa fa-clock-o"></i>
                         </div>
-                        <div class="feature-content">
+                        <div class="feature-content service-page-feature__content">
                             <h4>Timely Submission</h4>
                             <p>Accurate paperwork submitted to appropriate authorities within deadlines</p>
                         </div>
                     </div>
                     
-                    <div class="feature-item reveal delay-2">
-                        <div class="feature-icon">
+                    <div class="feature-item service-page-feature reveal delay-2">
+                        <div class="feature-icon service-page-feature__icon">
                             <i class="fa fa-check-circle"></i>
                         </div>
-                        <div class="feature-content">
+                        <div class="feature-content service-page-feature__content">
                             <h4>Complete Accuracy</h4>
                             <p>Thorough verification ensuring all documentation is complete and accurate</p>
                         </div>
                     </div>
                     
-                    <div class="feature-item reveal delay-2">
-                        <div class="feature-icon">
+                    <div class="feature-item service-page-feature reveal delay-2">
+                        <div class="feature-icon service-page-feature__icon">
                             <i class="fa fa-globe"></i>
                         </div>
-                        <div class="feature-content">
+                        <div class="feature-content service-page-feature__content">
                             <h4>All Locations</h4>
                             <p>Services available at all major locations across the country</p>
                         </div>
                     </div>
                     
-                    <div class="feature-item reveal delay-2">
-                        <div class="feature-icon">
+                    <div class="feature-item service-page-feature reveal delay-2">
+                        <div class="feature-icon service-page-feature__icon">
                             <i class="fa fa-flash"></i>
                         </div>
-                        <div class="feature-content">
+                        <div class="feature-content service-page-feature__content">
                             <h4>Express Service</h4>
                             <p>Fast-track processing for urgent post shipment requirements</p>
                         </div>
                     </div>
                     
-                    <div class="feature-item reveal delay-2">
-                        <div class="feature-icon">
+                    <div class="feature-item service-page-feature reveal delay-2">
+                        <div class="feature-icon service-page-feature__icon">
                             <i class="fa fa-shield"></i>
                         </div>
-                        <div class="feature-content">
+                        <div class="feature-content service-page-feature__content">
                             <h4>Compliance Assurance</h4>
                             <p>Full regulatory compliance and adherence to all procedural requirements</p>
                         </div>
                     </div>
                     
-                    <div class="feature-item reveal delay-2">
-                        <div class="feature-icon">
+                    <div class="feature-item service-page-feature reveal delay-2">
+                        <div class="feature-icon service-page-feature__icon">
                             <i class="fa fa-handshake-o"></i>
                         </div>
-                        <div class="feature-content">
+                        <div class="feature-content service-page-feature__content">
                             <h4>Ongoing Support</h4>
                             <p>Continuous support and guidance throughout the post shipment process</p>
                         </div>
                     </div>
                     
-                    <div class="feature-item reveal delay-2">
-                        <div class="feature-icon">
+                    <div class="feature-item service-page-feature reveal delay-2">
+                        <div class="feature-icon service-page-feature__icon">
                             <i class="fa fa-dollar"></i>
                         </div>
-                        <div class="feature-content">
+                        <div class="feature-content service-page-feature__content">
                             <h4>Maximum Benefits</h4>
                             <p>Expert guidance to maximize your refund benefits and compliance advantages</p>
                         </div>

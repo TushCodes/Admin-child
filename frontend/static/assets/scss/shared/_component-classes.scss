@@ -1,0 +1,22 @@
+@use 'mixins' as *;
+
+@mixin service-page-icon-circle-class {
+    .service-page-icon-circle {
+        @include flex-center;
+        @include green-gradient;
+        border-radius: 50%;
+        color: white;
+    }
+}
+
+@mixin service-page-card-surface-class {
+    .service-page-card-surface {
+        background: var(--bg-section-1);
+        border: 1px solid rgba(130, 207, 43, 0.1);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-sm);
+        overflow: hidden;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+}

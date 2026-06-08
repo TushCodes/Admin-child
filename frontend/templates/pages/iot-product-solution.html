@@ -1,8 +1,6 @@
 {% block head_extra %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/css_slider.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/pages/home/index-custom.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/pages/about/about-us.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/pages/iot-product-solution/iot-product-solution.css') }}">
+{% from "partials/stylesheets.html" import page_styles %}
+{{ page_styles('assets/css/pages/iot-product-solution/iot-product-solution.css', include_about=True, shared_css=['assets/css/components/service-page-shared.css', 'assets/css/components/service-page-cta.css', 'assets/css/components/service-page-track.css']) }}
 {% endblock %}
 {% extends "layouts/base.html" %}
 
@@ -11,26 +9,26 @@
         {% set hero_title = 'IoT Product Solutions' %}
         {% set hero_subtitle = 'Harness the power of IoT for smarter logistics, automation, and real-time supply chain visibility. Our IoT solutions drive efficiency, reduce errors, and enable data-driven decision making for your business.' %}
         {% set hero_features_html %}
-            <div class="d-flex justify-content-center flex-wrap gap-4 mt-4 hero-features">
-                <div class="hero-feature reveal delay-2"><i class="fa fa-microchip"></i><span>Smart Devices</span></div>
-                <div class="hero-feature reveal delay-2"><i class="fa fa-signal"></i><span>Real-Time Data</span></div>
-                <div class="hero-feature reveal delay-2"><i class="fa fa-cogs"></i><span>Automation</span></div>
-                <div class="hero-feature reveal delay-2"><i class="fa fa-shield"></i><span>Secure Connectivity</span></div>
+            <div class="d-flex justify-content-center flex-wrap gap-4 mt-4 hero-features service-page-hero__features">
+                <div class="hero-feature service-page-hero__feature reveal delay-2"><i class="fa fa-microchip"></i><span>Smart Devices</span></div>
+                <div class="hero-feature service-page-hero__feature reveal delay-2"><i class="fa fa-signal"></i><span>Real-Time Data</span></div>
+                <div class="hero-feature service-page-hero__feature reveal delay-2"><i class="fa fa-cogs"></i><span>Automation</span></div>
+                <div class="hero-feature service-page-hero__feature reveal delay-2"><i class="fa fa-shield"></i><span>Secure Connectivity</span></div>
             </div>
         {% endset %}
         {% include 'partials/about-hero.html' %}
         <!-- OVERVIEW SECTION -->
-        <section class="overview-section full-bleed" id="overview">
+        <section class="overview-section service-page__overview full-bleed" id="overview">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="section-title section-title-center">Comprehensive IoT Solutions</h2>
                     <p class="text-muted">Technology-driven automation and monitoring for logistics and industry</p>
                 </div>
-                <div class="overview-content">
-                    <p class="overview-text">
+                <div class="overview-content service-page__overview-content">
+                    <p class="overview-text service-page__overview-text">
                         Our IoT product solutions enable seamless integration of smart sensors, automated tracking, and real-time analytics into your logistics and supply chain operations. Experience reduced human error, improved efficiency, and actionable insights with our state-of-the-art IoT platform.
                     </p>
-                    <div class="overview-highlight">
+                    <div class="overview-highlight service-page__overview-highlight">
                         <h4 class="text-primary-color mb-3">
                             <i class="fa fa-wifi me-2"></i>
                             Connected Intelligence
@@ -44,15 +42,15 @@
         </section>
         <!-- //OVERVIEW SECTION -->
         <!-- SERVICES SECTION -->
-        <section class="services-section full-bleed" id="services">
+        <section class="services-section service-page__services full-bleed" id="services">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="section-title section-title-center">Our IoT Services</h2>
                     <p class="text-muted">Comprehensive IoT solutions tailored to your business needs</p>
                 </div>
-                <div class="service-cards">
-                    <div class="service-card reveal reveal-up delay-2">
-                        <div class="service-icon">
+                <div class="service-cards service-page__service-list">
+                    <div class="service-card service-page-card reveal reveal-up delay-2">
+                        <div class="service-icon service-card__icon">
                             <i class="fa fa-thermometer-half"></i>
                         </div>
                         <h3>Environmental Monitoring</h3>
@@ -60,8 +58,8 @@
                             Real-time temperature, humidity, and environmental sensors for sensitive goods and facilities.
                         </p>
                     </div>
-                    <div class="service-card reveal reveal-up delay-2">
-                        <div class="service-icon">
+                    <div class="service-card service-page-card reveal reveal-up delay-2">
+                        <div class="service-icon service-card__icon">
                             <i class="fa fa-truck"></i>
                         </div>
                         <h3>Asset & Fleet Tracking</h3>
@@ -69,8 +67,8 @@
                             GPS and RFID-based tracking for vehicles, shipments, and high-value assets.
                         </p>
                     </div>
-                    <div class="service-card reveal reveal-up delay-2">
-                        <div class="service-icon">
+                    <div class="service-card service-page-card reveal reveal-up delay-2">
+                        <div class="service-icon service-card__icon">
                             <i class="fa fa-cogs"></i>
                         </div>
                         <h3>Process Automation</h3>
@@ -78,8 +76,8 @@
                             Automated workflows and machine integration for error-free, efficient operations.
                         </p>
                     </div>
-                    <div class="service-card reveal reveal-up delay-2">
-                        <div class="service-icon">
+                    <div class="service-card service-page-card reveal reveal-up delay-2">
+                        <div class="service-icon service-card__icon">
                             <i class="fa fa-database"></i>
                         </div>
                         <h3>Data Analytics</h3>
@@ -92,45 +90,45 @@
         </section>
         <!-- //SERVICES SECTION -->
         <!-- FEATURES SECTION -->
-        <section class="features-section full-bleed" id="features">
+        <section class="features-section service-page__features full-bleed" id="features">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="section-title section-title-center">Key IoT Features</h2>
                     <p class="text-muted">What makes our IoT solutions stand out</p>
                 </div>
-                <div class="feature-list">
-                    <div class="feature-item reveal delay-2">
-                        <div class="feature-icon">
+                <div class="feature-list service-page__feature-list">
+                    <div class="feature-item service-page-feature reveal delay-2">
+                        <div class="feature-icon service-page-feature__icon">
                             <i class="fa fa-bolt"></i>
                         </div>
-                        <div class="feature-content">
+                        <div class="feature-content service-page-feature__content">
                             <h4>Instant Alerts</h4>
                             <p>Automated notifications for anomalies, delays, or security breaches</p>
                         </div>
                     </div>
-                    <div class="feature-item reveal delay-2">
-                        <div class="feature-icon">
+                    <div class="feature-item service-page-feature reveal delay-2">
+                        <div class="feature-icon service-page-feature__icon">
                             <i class="fa fa-chart-line"></i>
                         </div>
-                        <div class="feature-content">
+                        <div class="feature-content service-page-feature__content">
                             <h4>Live Analytics</h4>
                             <p>Real-time dashboards and reporting for data-driven decisions</p>
                         </div>
                     </div>
-                    <div class="feature-item reveal delay-2">
-                        <div class="feature-icon">
+                    <div class="feature-item service-page-feature reveal delay-2">
+                        <div class="feature-icon service-page-feature__icon">
                             <i class="fa fa-lock"></i>
                         </div>
-                        <div class="feature-content">
+                        <div class="feature-content service-page-feature__content">
                             <h4>Secure Data</h4>
                             <p>End-to-end encryption and secure cloud storage</p>
                         </div>
                     </div>
-                    <div class="feature-item reveal delay-2">
-                        <div class="feature-icon">
+                    <div class="feature-item service-page-feature reveal delay-2">
+                        <div class="feature-icon service-page-feature__icon">
                             <i class="fa fa-mobile-alt"></i>
                         </div>
-                        <div class="feature-content">
+                        <div class="feature-content service-page-feature__content">
                             <h4>Mobile Access</h4>
                             <p>Monitor and control your operations from anywhere</p>
                         </div>

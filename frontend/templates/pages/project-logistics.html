@@ -1,8 +1,6 @@
 {% block head_extra %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/css_slider.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/pages/home/index-custom.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/pages/about/about-us.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/pages/project-logistics/project-logistics.css') }}">
+{% from "partials/stylesheets.html" import page_styles %}
+{{ page_styles('assets/css/pages/project-logistics/project-logistics.css', include_about=True) }}
 {% endblock %}
 {% extends "layouts/base.html" %}
 
@@ -11,32 +9,32 @@
         {% set hero_title = 'Project Logistics Solutions' %}
         {% set hero_subtitle = 'Turnkey heavy-lift and project cargo solutions with specialized equipment, engineering expertise, and comprehensive project management. From wind energy components to industrial plant relocations, we deliver complex logistics with precision and safety.' %}
         {% set hero_features_html %}
-            <div class="d-flex justify-content-center flex-wrap gap-4 mt-4 hero-features">
-                <div class="hero-feature reveal reveal-up delay-2"><i class="fa fa-truck"></i><span>Heavy Transport Fleet</span></div>
-                <div class="hero-feature reveal reveal-up delay-2"><i class="fa fa-cogs"></i><span>Lifting Assets</span></div>
-                <div class="hero-feature reveal reveal-up delay-2"><i class="fa fa-users"></i><span>Expert Engineers</span></div>
-                <div class="hero-feature reveal reveal-up delay-2"><i class="fa fa-shield"></i><span>Safety First</span></div>
+            <div class="d-flex justify-content-center flex-wrap gap-4 mt-4 hero-features service-page-hero__features">
+                <div class="hero-feature service-page-hero__feature reveal reveal-up delay-2"><i class="fa fa-truck"></i><span>Heavy Transport Fleet</span></div>
+                <div class="hero-feature service-page-hero__feature reveal reveal-up delay-2"><i class="fa fa-cogs"></i><span>Lifting Assets</span></div>
+                <div class="hero-feature service-page-hero__feature reveal reveal-up delay-2"><i class="fa fa-users"></i><span>Expert Engineers</span></div>
+                <div class="hero-feature service-page-hero__feature reveal reveal-up delay-2"><i class="fa fa-shield"></i><span>Safety First</span></div>
             </div>
         {% endset %}
         {% include 'partials/about-hero.html' %}
 
         <!-- OVERVIEW SECTION -->
-        <section class="overview-section" id="overview">
+        <section class="overview-section service-page__overview" id="overview">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="section-title section-title-center">Asset-Backed Logistics Specialist</h2>
                     <p class="text-muted">Comprehensive project cargo solutions with integrated capabilities</p>
                 </div>
                 
-                <div class="overview-content">
-                    <p class="overview-text">
+                <div class="overview-content service-page__overview-content">
+                    <p class="overview-text service-page__overview-text">
                         As an asset-backed logistics specialist, we provide turnkey heavy-lift and project cargo solutions 
                         through our comprehensive fleet of specialized equipment and expert engineering team. Our integrated 
                         approach combines heavy transport, lifting assets, technical expertise, and strategic network coverage 
                         to deliver complex project logistics with unmatched precision and safety standards.
                     </p>
                     
-                    <div class="overview-highlight">
+                    <div class="overview-highlight service-page__overview-highlight">
                         <h4 class="text-primary-color mb-3">
                             <i class="fa fa-industry me-2"></i>
                             Integrated Capabilities
@@ -53,16 +51,16 @@
         <!-- //OVERVIEW SECTION -->
 
         <!-- SERVICES SECTION -->
-        <section class="services-section" id="services">
+        <section class="services-section service-page__services" id="services">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="section-title section-title-center">Sector Expertise</h2>
                     <p class="text-muted">Specialized solutions across diverse industrial sectors</p>
                 </div>
                 
-                <div class="service-cards">
-                    <div class="service-card reveal reveal-up delay-2">
-                        <div class="service-icon">
+                <div class="service-cards service-page__service-list">
+                    <div class="service-card service-page-card reveal reveal-up delay-2">
+                        <div class="service-icon service-card__icon">
                             <i class="fa fa-bolt"></i>
                         </div>
                         <h3>Energy Logistics</h3>
@@ -72,8 +70,8 @@
                         </p>
                     </div>
                     
-                    <div class="service-card reveal reveal-up delay-2">
-                        <div class="service-icon">
+                    <div class="service-card service-page-card reveal reveal-up delay-2">
+                        <div class="service-icon service-card__icon">
                             <i class="fa fa-industry"></i>
                         </div>
                         <h3>Industrial Projects</h3>
@@ -83,8 +81,8 @@
                         </p>
                     </div>
                     
-                    <div class="service-card reveal reveal-up delay-2">
-                        <div class="service-icon">
+                    <div class="service-card service-page-card reveal reveal-up delay-2">
+                        <div class="service-icon service-card__icon">
                             <i class="fa fa-road"></i>
                         </div>
                         <h3>Infrastructure Support</h3>
@@ -94,8 +92,8 @@
                         </p>
                     </div>
                     
-                    <div class="service-card reveal reveal-up delay-2">
-                        <div class="service-icon">
+                    <div class="service-card service-page-card reveal reveal-up delay-2">
+                        <div class="service-icon service-card__icon">
                             <i class="fa fa-ship"></i>
                         </div>
                         <h3>ODC Transportation</h3>
@@ -110,89 +108,89 @@
         <!-- //SERVICES SECTION -->
 
         <!-- FEATURES SECTION -->
-        <section class="features-section" id="features">
+        <section class="features-section service-page__features" id="features">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="section-title section-title-center">Our Differentiators</h2>
                     <p class="text-muted">What sets us apart in project logistics execution</p>
                 </div>
                 
-                <div class="feature-list">
-                    <div class="feature-item reveal delay-2">
-                        <div class="feature-icon">
+                <div class="feature-list service-page__feature-list">
+                    <div class="feature-item service-page-feature reveal delay-2">
+                        <div class="feature-icon service-page-feature__icon">
                             <i class="fa fa-check-circle"></i>
                         </div>
-                        <div class="feature-content">
+                        <div class="feature-content service-page-feature__content">
                             <h4>Single-Point Responsibility</h4>
                             <p>End-to-end contract logistics with unified project management and consolidated billing</p>
                         </div>
                     </div>
                     
-                    <div class="feature-item reveal delay-2">
-                        <div class="feature-icon">
+                    <div class="feature-item service-page-feature reveal delay-2">
+                        <div class="feature-icon service-page-feature__icon">
                             <i class="fa fa-calculator"></i>
                         </div>
-                        <div class="feature-content">
+                        <div class="feature-content service-page-feature__content">
                             <h4>Engineering-Led Approach</h4>
                             <p>Route feasibility studies, transportability analysis, and CAD simulations for critical loads</p>
                         </div>
                     </div>
                     
-                    <div class="feature-item reveal delay-2">
-                        <div class="feature-icon">
+                    <div class="feature-item service-page-feature reveal delay-2">
+                        <div class="feature-icon service-page-feature__icon">
                             <i class="fa fa-file-text-o"></i>
                         </div>
-                        <div class="feature-content">
+                        <div class="feature-content service-page-feature__content">
                             <h4>Regulatory Compliance</h4>
                             <p>In-house permit processing team with state-specific escort coordination and customs bonded movement</p>
                         </div>
                     </div>
                     
-                    <div class="feature-item reveal delay-2">
-                        <div class="feature-icon">
+                    <div class="feature-item service-page-feature reveal delay-2">
+                        <div class="feature-icon service-page-feature__icon">
                             <i class="fa fa-map"></i>
                         </div>
-                        <div class="feature-content">
+                        <div class="feature-content service-page-feature__content">
                             <h4>Pre-Mobilization Planning</h4>
                             <p>Site reconnaissance, method statement development, and comprehensive risk mitigation planning</p>
                         </div>
                     </div>
                     
-                    <div class="feature-item reveal delay-2">
-                        <div class="feature-icon">
+                    <div class="feature-item service-page-feature reveal delay-2">
+                        <div class="feature-icon service-page-feature__icon">
                             <i class="fa fa-eye"></i>
                         </div>
-                        <div class="feature-content">
+                        <div class="feature-content service-page-feature__content">
                             <h4>Real-time Monitoring</h4>
                             <p>Live cargo tracking with daily progress reporting and proactive contingency management</p>
                         </div>
                     </div>
                     
-                    <div class="feature-item reveal delay-2">
-                        <div class="feature-icon">
+                    <div class="feature-item service-page-feature reveal delay-2">
+                        <div class="feature-icon service-page-feature__icon">
                             <i class="fa fa-certificate"></i>
                         </div>
-                        <div class="feature-content">
+                        <div class="feature-content service-page-feature__content">
                             <h4>Certified Operations</h4>
                             <p>Trained riggers and certified crane operators with comprehensive safety protocols</p>
                         </div>
                     </div>
                     
-                    <div class="feature-item reveal delay-2">
-                        <div class="feature-icon">
+                    <div class="feature-item service-page-feature reveal delay-2">
+                        <div class="feature-icon service-page-feature__icon">
                             <i class="fa fa-globe"></i>
                         </div>
-                        <div class="feature-content">
+                        <div class="feature-content service-page-feature__content">
                             <h4>Strategic Network</h4>
                             <p>12 strategic hubs across India with bonded warehouses for seamless project coordination</p>
                         </div>
                     </div>
                     
-                    <div class="feature-item reveal delay-2">
-                        <div class="feature-icon">
+                    <div class="feature-item service-page-feature reveal delay-2">
+                        <div class="feature-icon service-page-feature__icon">
                             <i class="fa fa-handshake-o"></i>
                         </div>
-                        <div class="feature-content">
+                        <div class="feature-content service-page-feature__content">
                             <h4>Project Handover</h4>
                             <p>As-built documentation, lessons learned analysis, and professional client handover protocols</p>
                         </div>

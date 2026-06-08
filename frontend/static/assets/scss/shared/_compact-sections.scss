@@ -1,0 +1,173 @@
+@mixin compact-service-page-sections {
+    /* Overview Section */
+    .overview-section,
+    .service-page__overview {
+        padding: 5rem 0;
+        background: var(--bg-section-1);
+    }
+
+    .overview-content,
+    .service-page__overview-content {
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .overview-text,
+    .service-page__overview-text {
+        font-size: 1.125rem;
+        line-height: 1.8;
+        color: var(--text-secondary);
+        margin-bottom: 2.5rem;
+    }
+
+    .overview-highlight,
+    .service-page__overview-highlight {
+        background: var(--bg-section-2);
+        padding: 2rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-sm);
+        border-left: 4px solid var(--primary-color);
+    }
+
+    /* Services Section */
+    .services-section,
+    .service-page__services {
+        padding: 5rem 0;
+        background: var(--bg-section-2);
+    }
+
+    .service-cards,
+    .service-page__service-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+    }
+
+    .service-card,
+    .service-page-card {
+        background: var(--bg-section-1);
+        padding: 2.5rem 2rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-sm);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(130, 207, 43, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .service-card::before,
+    .service-page-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    }
+
+    .service-card:hover,
+    .service-page-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary-color);
+    }
+
+    .service-icon,
+    .service-card__icon {
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 1.8rem;
+        color: white;
+        box-shadow: 0 4px 15px rgba(130, 207, 43, 0.3);
+    }
+
+    .service-card h3,
+    .service-card__title {
+        font-size: 1.4rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        color: var(--text-primary);
+        text-align: center;
+    }
+
+    .service-card p,
+    .service-card__description {
+        color: var(--text-secondary);
+        line-height: 1.6;
+        text-align: center;
+    }
+
+    /* Features Section */
+    .features-section,
+    .service-page__features {
+        padding: 5rem 0;
+        background: var(--bg-section-1);
+    }
+
+    .feature-list,
+    .service-page__feature-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-top: 3rem;
+    }
+
+    .feature-item,
+    .service-page-feature {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1.5rem;
+        background: var(--bg-section-2);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-sm);
+        transition: all 0.3s ease;
+    }
+
+    .feature-item:hover,
+    .service-page-feature:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .feature-icon,
+    .service-page-feature__icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border-radius: var(--border-radius);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+
+    .feature-content h4,
+    .service-page-feature__title {
+        font-size: 1.1rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+    }
+
+    .feature-content p,
+    .service-page-feature__description {
+        color: var(--text-secondary);
+        margin: 0;
+        line-height: 1.5;
+        font-size: 0.95rem;
+    }
+
+
+}
