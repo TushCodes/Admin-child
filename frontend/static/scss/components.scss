@@ -37,7 +37,7 @@
 
 /* Small responsive helpers */
 @media (max-width:767px){
-  .about-hero-title{font-size:1.75rem}
+  .page-hero__title,.about-hero-title{font-size:1.75rem}
 }
 
 /* Compatibility: make existing utility combos behave like service-card */
