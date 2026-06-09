@@ -7,6 +7,7 @@
 {% block body_attrs %}data-enable-chat-widget{% endblock %}
 
 {% block content %}
+<div class="service-page service-page--warehousing">
 
 {% set hero_title = 'Advanced Warehousing Solutions' %}
 {% set hero_subtitle = 'Professional warehousing services with state-of-the-art facilities, climate control, and comprehensive inventory management systems.' %}
@@ -15,7 +16,7 @@
 {% include 'partials/about-hero.html' %}
 
 <!-- OVERVIEW (placed in About-style timeline area) -->
-<section class="timeline-section py-5 bg-section-2 full-bleed" id="overview">
+<section class="service-page__section service-page__section--overview timeline-section py-5 bg-section-2 full-bleed" id="overview">
     <div class="container-fluid px-0">
         <div class="container">
             <div class="text-center mb-5">
@@ -45,7 +46,7 @@
 </section>
 
 <!-- SERVICES (rendered using About UI values cards) -->
-<section class="values-section py-5 bg-section-1 full-bleed" id="services">
+<section class="service-page__section service-page__section--services values-section py-5 bg-section-1 full-bleed" id="services">
     <div class="container-fluid px-0">
         <div class="container">
             <div class="text-center mb-5">
@@ -81,5 +82,5 @@
         </div>
     </div>
 </section>
-
+</div>
 {% endblock %}

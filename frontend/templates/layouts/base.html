@@ -19,8 +19,8 @@
   {% block head_extra %}{% endblock %}
 </head>
 
-<body class="d-flex flex-column min-vh-100" {% block body_attrs %}{% endblock %}>
-  <div class="flex-grow-1">
+<body class="l-site d-flex flex-column min-vh-100" {% block body_attrs %}{% endblock %}>
+  <div class="l-site__main flex-grow-1">
     {# Pages can replace the header here. #}
     {% block header %}
     {% include "partials/header.html" %}
@@ -42,9 +42,9 @@
     </div>
   </footer>
   <!-- Copyright Section (site-wide) -->
-  <div class="copyright-section py-3 bg-black text-white">
+  <div class="site-copyright copyright-section py-3 bg-black text-white">
     <div class="container">
-      <p class="mb-0">&copy; 2026 GRAM SCS. All rights reserved.</p>
+      <p class="site-copyright__text mb-0">&copy; 2026 GRAM SCS. All rights reserved.</p>
     </div>
   </div>
   <!-- Bootstrap 5 JS bundle (no jQuery required) -->
