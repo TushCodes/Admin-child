@@ -1,4 +1,5 @@
 /* About Us Page Styles */
+.page-hero--about,
 .about-hero-section {
     position: relative;
     min-height: 55vh;
@@ -11,6 +12,7 @@
     overflow: hidden;
 }
 
+.page-hero--about::before,
 .about-hero-section::before {
     content: '';
     position: absolute;
@@ -22,6 +24,7 @@
     z-index: 1;
 }
 
+.page-hero__content,
 .about-hero-content {
     position: relative;
     z-index: 2;
@@ -34,6 +37,7 @@
     margin: 0 auto;
 }
 
+.page-hero__title,
 .about-hero-title {
     font-size: 2.7rem;
     font-weight: bold;
@@ -41,6 +45,7 @@
     text-shadow: 1px 2px 8px rgba(0,0,0,0.18);
 }
 
+.page-hero__subtitle,
 .about-hero-subtitle {
     font-size: 1.25rem;
     opacity: 0.96;
@@ -118,6 +123,7 @@
 }
 
 /* Values Section */
+.values,
 .values-section {
     background-color: var(--section-bg-2);
     padding: var(--section-padding-y) 0;
@@ -138,6 +144,7 @@
     box-shadow: var(--shadow-lg);
 }
 
+.value-card__icon,
 .value-icon {
     width: 80px;
     height: 80px;
@@ -151,6 +158,7 @@
     color: white;
 }
 
+.value-card__title,
 .value-title {
     font-size: var(--text-lg);
     font-weight: var(--font-bold);
@@ -158,6 +166,7 @@
     margin-bottom: 1rem;
 }
 
+.value-card__description,
 .value-description {
     color: var(--text-secondary);
     line-height: var(--line-height-relaxed);
@@ -212,7 +221,8 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .about-hero-title {
+    .page-hero__title,
+.about-hero-title {
         font-size: var(--text-3xl);
     }
     
@@ -240,7 +250,8 @@
 }
 
 @media (max-width: 576px) {
-    .about-hero-section {
+    .page-hero--about,
+.about-hero-section {
         padding: 4rem 0 3rem;
     }
     
@@ -248,6 +259,7 @@
         padding: 1.5rem 0;
     }
     
+    .value-card__icon,
     .value-icon {
         width: 60px;
         height: 60px;
@@ -256,6 +268,7 @@
 }
 
 /* Utilities */
+.page-hero--full,
 .about-hero-section.full-vh {
     /* Account for sticky header so hero fills viewport without being hidden under nav */
     --main-menu-height: 72px;
@@ -264,7 +277,8 @@
 }
 
 @media (max-width: 768px) {
-    .about-hero-section.full-vh {
+    .page-hero--full,
+.about-hero-section.full-vh {
         --main-menu-height: 56px;
         min-height: calc(60vh - var(--main-menu-height));
         padding-top: var(--main-menu-height);

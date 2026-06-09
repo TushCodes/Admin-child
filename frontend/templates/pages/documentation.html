@@ -5,6 +5,7 @@
 {% extends "layouts/base.html" %}
 
 {% block content %}
+<div class="service-page service-page--documentation">
 <main>
         {% set hero_title = 'Professional Documentation Services' %}
         {% set hero_subtitle = 'Precision in paperwork for seamless global trade. Our comprehensive documentation services ensure compliance, reduce delays, and keep your cargo moving efficiently across international borders with expert handling of all trade-related documentation.' %}
@@ -19,7 +20,7 @@
         {% include 'partials/about-hero.html' %}
 
         <!-- OVERVIEW SECTION -->
-        <section class="overview-section" id="overview">
+        <section class="service-page__section service-page__section--overview overview-section" id="overview">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="section-title reveal section-title-center">Documentation Excellence Network</h2>
@@ -52,7 +53,7 @@
         <!-- //OVERVIEW SECTION -->
 
         <!-- SERVICES SECTION -->
-        <section class="services-section" id="services">
+        <section class="service-page__section service-page__section--services services-section" id="services">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="section-title section-title-center">Our Documentation Services</h2>
@@ -109,7 +110,7 @@
         <!-- //SERVICES SECTION -->
 
         <!-- FEATURES SECTION -->
-        <section class="features-section" id="features">
+        <section class="service-page__section service-page__section--features features-section" id="features">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="section-title section-title-center">Advanced Documentation Features</h2>
@@ -202,4 +203,5 @@
         
         
     </main>
+</div>
 {% endblock %}

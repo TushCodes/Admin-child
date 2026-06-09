@@ -2,18 +2,20 @@
 {% if hero_subtitle is not defined %}{% set hero_subtitle = '' %}{% endif %}
 {% if hero_features_html is not defined %}{% set hero_features_html = '' %}{% endif %}
 
-<section class="about-hero-section full-vh bg-section-1 full-bleed">
-  <div class="container-fluid px-0">
-    <div class="container text-center">
-      <div class="about-hero-content">
+<section class="page-hero page-hero--about page-hero--full about-hero-section full-vh bg-section-1 full-bleed">
+  <div class="page-hero__shell container-fluid px-0">
+    <div class="page-hero__container container text-center">
+      <div class="page-hero__content about-hero-content">
         {% if hero_title %}
-        <h1 class="about-hero-title reveal reveal-up">{{ hero_title }}</h1>
+        <h1 class="page-hero__title about-hero-title reveal reveal-up">{{ hero_title }}</h1>
         {% endif %}
         {% if hero_subtitle %}
-        <p class="about-hero-subtitle reveal reveal-up delay-1">{{ hero_subtitle }}</p>
+        <p class="page-hero__subtitle about-hero-subtitle reveal reveal-up delay-1">{{ hero_subtitle }}</p>
         {% endif %}
         {% if hero_features_html %}
+        <div class="page-hero__features">
         {{ hero_features_html | safe }}
+        </div>
         {% endif %}
       </div>
     </div>

@@ -25,11 +25,65 @@
 
 .service-card:hover{transform:translateY(-6px);box-shadow:0 12px 30px rgba(11,74,102,0.08)}
 
+.service-card__title { color: var(--text-primary, var(--color-dark)); }
+.service-card__description { color: var(--text-secondary, var(--color-grey)); }
+
 .feature-item{
   display:flex;gap:1rem;align-items:flex-start;padding:1rem;border-radius:10px;background:#fff;border:1px solid rgba(0,0,0,0.03)
 }
 
 .feature-icon{width:48px;height:48px;display:flex;align-items:center;justify-content:center;border-radius:8px;background:linear-gradient(135deg, rgba(0,47,75,0.06), rgba(130,207,43,0.04));color:var(--color-primary)}
+
+
+
+/* Page-level BEM shell for service and information pages */
+.service-page {
+  width: 100%;
+}
+
+.service-page__section {
+  position: relative;
+}
+
+.service-page__section > .container,
+.service-page__section > .container-fluid {
+  position: relative;
+}
+
+/* Reusable BEM card blocks */
+.feature-card,
+.card-custom {
+  border: 1px solid var(--border-color, rgba(0,0,0,0.08));
+  border-radius: var(--border-radius, 12px);
+  box-shadow: var(--shadow-sm, 0 6px 18px rgba(11,74,102,0.06));
+  height: 100%;
+  position: relative;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+.feature-card:hover,
+.feature-card:focus-within,
+.card-custom:hover {
+  border-color: var(--primary-light, var(--color-primary));
+  box-shadow: var(--shadow, 0 12px 30px rgba(11,74,102,0.08));
+  transform: translateY(-5px);
+}
+
+.feature-card__body { height: 100%; }
+.feature-card__title { color: var(--text-primary, var(--color-dark)); }
+.feature-card__description { color: var(--text-secondary, var(--color-grey)); }
+
+.gallery__image,
+.gallery-img {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  transition: transform .3s ease;
+}
+
+.gallery__link:hover .gallery__image,
+.gallery-link:hover .gallery-img {
+  transform: scale(1.03);
+}
 
 /* Form controls */
 .input-rounded{border-radius:8px;padding:.6rem .75rem}
@@ -37,7 +91,7 @@
 
 /* Small responsive helpers */
 @media (max-width:767px){
-  .about-hero-title{font-size:1.75rem}
+  .page-hero__title,.about-hero-title{font-size:1.75rem}
 }
 
 /* Compatibility: make existing utility combos behave like service-card */
