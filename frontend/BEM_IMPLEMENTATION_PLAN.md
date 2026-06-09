@@ -37,7 +37,6 @@ This plan moves the public frontend toward predictable BEM class names without f
 
 ## Stage 5 — Cleanup and enforcement
 
-- Keep legacy aliases only where templates still use the legacy class during the additive migration.
-- Add `npm run check:bem` as a lightweight guardrail that verifies migrated templates keep required BEM hooks and page-level `service-page` wrappers.
-- Use `npm run verify:frontend` before BEM-related PRs to run the BEM guardrail and SCSS compilation together.
+- Remove legacy class aliases no longer used by templates.
+- Add lint/documentation checks that discourage new non-BEM component selectors.
 - Update frontend guides with examples for future pages and components.
