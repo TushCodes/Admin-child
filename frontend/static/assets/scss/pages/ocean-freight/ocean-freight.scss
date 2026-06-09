@@ -37,124 +37,43 @@
     background: var(--bg-section-2);
 }
 
-.service-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    margin-top: 3rem;
-}
+@include transportation-page-hero('../../../../images/Ocean-Freight.jpg');
 
+/* Ocean Freight Shared Section Overrides */
 .service-card {
-    background: var(--bg-section-1);
-    padding: 2.5rem 2rem;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-sm);
-    transition: all 0.3s ease;
-    border: 1px solid rgba(0, 66, 116, 0.1);
-    position: relative;
-    overflow: hidden;
+    border-color: rgba(0, 66, 116, 0.1);
 }
 
 .service-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
     background: linear-gradient(90deg, #004274, var(--primary-color));
 }
 
 .service-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
     border-color: #004274;
 }
 
-.service-icon {
-    width: 70px;
-    height: 70px;
+.service-icon,
+.feature-icon {
     background: linear-gradient(135deg, #004274, var(--primary-color));
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1.5rem;
-    font-size: 1.8rem;
-    color: white;
+}
+
+.service-icon {
     box-shadow: 0 4px 15px rgba(0, 66, 116, 0.3);
 }
 
-.service-card h3 {
-    font-size: 1.4rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-    color: var(--text-primary);
-    text-align: center;
-}
-
-.service-card p {
-    color: var(--text-secondary);
-    line-height: 1.6;
-    text-align: center;
-}
-
-/* Features Section */
-.features-section {
-    padding: 5rem 0;
-    background: var(--bg-section-1);
-}
-
 .feature-list {
-    display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2rem;
-    margin-top: 3rem;
 }
 
 .feature-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
     padding: 2rem;
-    background: var(--bg-section-2);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-sm);
-    transition: all 0.3s ease;
     border-left: 3px solid #004274;
 }
 
 .feature-item:hover {
     transform: translateY(-3px);
-    box-shadow: var(--shadow-md);
     border-left-color: var(--primary-color);
-}
-
-.feature-icon {
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, #004274, var(--primary-color));
-    border-radius: var(--border-radius);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.2rem;
-    flex-shrink: 0;
-}
-
-.feature-content h4 {
-    font-size: 1.1rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    color: var(--text-primary);
-}
-
-.feature-content p {
-    color: var(--text-secondary);
-    margin: 0;
-    line-height: 1.5;
-    font-size: 0.95rem;
 }
 
 /* Ports Section */

@@ -122,6 +122,7 @@
   color: white;
 }
 
+.service-icon i,
 .service-card h4 {
   font-size: 1.3rem;
   font-weight: 600;
