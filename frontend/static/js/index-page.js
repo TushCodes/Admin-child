@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var totalSlides = 3;
     var slideInterval = 7000;
 
+    /** Moves home slider to next slide. */
     function nextSlide() {
         currentSlide = currentSlide >= totalSlides ? 1 : currentSlide + 1;
         var slideInput = document.getElementById("slides_" + currentSlide);

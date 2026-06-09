@@ -1,10 +1,17 @@
 # Admin JavaScript guide
 
-This folder contains browser helpers used by admin screens.
+This folder has small browser helpers for admin pages.
 
-## File purposes
+## Where code lives
 
-- `api.js` calls admin API endpoints and turns server responses into predictable results.
-- `state.js` stores shared admin page state in one browser object.
-- `validation.js` checks common admin form values before they are submitted.
-- `guide.md` is this plain-language guide to admin JavaScript.
+- `api.js` talks to admin API endpoints.
+- `state.js` remembers table edits before Save is clicked.
+- `validation.js` checks admin form and row values.
+- `guide.md` explains this folder for future vendors/maintainers.
+
+## Comment style
+
+- Keep comments short and practical.
+- Explain which admin screen or action the code supports.
+- Keep `window.adminAPI`, `window.adminState`, and `window.adminValidation` stable because other admin scripts use them.
+- Do not change the no-framework style unless a future task asks for it.

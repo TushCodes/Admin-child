@@ -1,9 +1,10 @@
 /**
- * @file Provides a shared admin API client with timeout, login, and JSON handling.
+ * @file Admin API calls for table pages.
  */
 (function () {
   var DEFAULT_TIMEOUT = 15000;
 
+  /** Fetches JSON for admin screens and handles login/timeouts. */
   function _fetchJson(url, options) {
     options = options || {};
     var signal = options.signal || null;
@@ -84,6 +85,7 @@
     });
   }
 
+  /** Gets consignment rows for the admin table. */
   function fetchList(listUrl, params) {
     var queryString = params ? ('?' + new URLSearchParams(params).toString()) : '';
     return _fetchJson(listUrl + queryString, { method: 'GET' }).catch(function (error) {
@@ -96,6 +98,7 @@
     });
   }
 
+  /** Saves admin table changes. */
   function saveRows(saveUrl, payload) {
     return _fetchJson(saveUrl, {
       method: 'POST',
@@ -111,6 +114,7 @@
     });
   }
 
+  /** Deletes POD for one consignment. */
   function deletePod(rowId) {
     var url = '/admin/consignments/' + encodeURIComponent(rowId) + '/pod';
     return _fetchJson(url, {

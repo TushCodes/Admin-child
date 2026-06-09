@@ -1,5 +1,5 @@
 /**
- * @file Bootstraps shared frontend modules after the page loads.
+ * @file Starts shared frontend code.
  */
 document.addEventListener("DOMContentLoaded", function () {
     if (window.App && window.App.popupManager) {
@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+/** Console helper to view saved contact forms. */
 window.viewStoredSubmissions = function () {
     var submissions = window.App && window.App.storage
         ? window.App.storage.getJson("contactSubmissions", [])

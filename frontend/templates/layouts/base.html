@@ -1,3 +1,4 @@
+{# Main layout used by public pages. #}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,18 +15,22 @@
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
   <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/logo.png') }}">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  {# Extra CSS/meta for one page goes here. #}
   {% block head_extra %}{% endblock %}
 </head>
 
 <body class="d-flex flex-column min-vh-100" {% block body_attrs %}{% endblock %}>
   <div class="flex-grow-1">
+    {# Pages can replace the header here. #}
     {% block header %}
     {% include "partials/header.html" %}
     {% endblock %}
+    {# Tracking page has its own menu. #}
     {% if request.endpoint != 'track.track_page' %}
     {% include "partials/menu.html" %}
     {% endif %}
     <div class="container mt-4">
+      {# Page content goes here. #}
       {% block content %}{% endblock %}
     </div>
   </div>
@@ -48,6 +53,7 @@
   <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
   <script src="{{ url_for('static', filename='js/performance.js') }}"></script>
   {% include "partials/shared-scripts.html" %}
+  {# Extra page JS goes here. #}
   {% block scripts_extra %}{% endblock %}
 </body>
 

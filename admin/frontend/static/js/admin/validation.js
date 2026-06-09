@@ -1,19 +1,22 @@
 /**
- * @file Validates admin form fields before code sends data to the server.
+ * @file Admin form checks.
  */
 (function () {
+  /** Checks optional 6-digit Indian pincode. */
   function validatePincode(value) {
     var raw = (value || '').trim();
     if (raw === '') return true;
     return /^[1-9][0-9]{5}$/.test(raw);
   }
 
+  /** Trims pincode text. */
   function normalizePincode(value) {
     var raw = (value || '').trim();
     if (raw === '') return '';
     return raw;
   }
 
+  /** Checks required consignment row fields. */
   function validateRow(row) {
     var errors = [];
     var cn = (row && row.consignment_number) ? String(row.consignment_number).trim() : "";

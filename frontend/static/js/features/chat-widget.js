@@ -17,6 +17,7 @@
         order: "whatsapp,sms,call,email"
     };
 
+    /** Loads the WhatsHelp chat button. */
     function init(options) {
         if (document.querySelector('script[data-chat-widget="whatshelp"]')) return;
 

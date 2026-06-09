@@ -1,9 +1,10 @@
 /**
- * @file Adds shared browser-side validation feedback for unmanaged forms.
+ * @file Shared form checks.
  */
 (function (window, document) {
     "use strict";
 
+    /** Marks required fields that are empty. */
     function markRequiredFields(form) {
         var hasError = false;
         form.querySelectorAll("[required]").forEach(function (field) {
@@ -14,10 +15,12 @@
         return !hasError;
     }
 
+    /** Skips forms that have their own checks. */
     function shouldSkip(form) {
         return form.id === "contactForm" || form.hasAttribute("data-skip-shared-validation");
     }
 
+    /** Stops submit when form is invalid. */
     function bind(form) {
         form.addEventListener("submit", function (event) {
             if (shouldSkip(form)) return;
@@ -32,6 +35,7 @@
         }, false);
     }
 
+    /** Starts validation for normal forms. */
     function init() {
         document.querySelectorAll("form").forEach(bind);
     }

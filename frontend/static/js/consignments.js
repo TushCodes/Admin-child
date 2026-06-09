@@ -1,5 +1,5 @@
 /**
- * @file Runs the interactive admin consignment table, edits, POD preview, and save flow.
+ * @file Admin consignment table actions.
  */
 document.addEventListener("DOMContentLoaded", function () {
     var tableBody = document.getElementById("sheet-body");
@@ -40,6 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var stagedPodUpload = null;
     var statusTimeoutId = null;
 
+    /** Shows save/load/POD messages on the admin page. */
     function showStatus(message, type) {
         var statusElement = document.getElementById("status-msg");
         if (!statusElement) {
@@ -62,6 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
         } catch (error) {}
     }
 
+    /** Cleans text before putting it into HTML. */
     function escapeHtml(text) {
         return String(text == null ? "" : text)
             .replaceAll("&", "&amp;")
@@ -71,6 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .replaceAll("'", "&#39;");
     }
 
+    /** Fills the edit popup with row data. */
     function populateModal(row) {
         var consignmentInput = document.getElementById("modal-consignment-number");
         consignmentInput.value = row.consignment_number || "";
@@ -113,6 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    /** Clears the popup for a new row. */
     function clearModal() {
         stagedPodUpload = null;
         if (modalPodFile) {
@@ -137,6 +141,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    /** Keeps row data in one common shape. */
     function buildRowData(source, fallbackId) {
         var data = source || {};
         return {
@@ -159,6 +164,7 @@ document.addEventListener("DOMContentLoaded", function () {
         };
     }
 
+    /** Reads row JSON stored on the table row. */
     function getRowDataFromElement(rowElement) {
         try {
             return buildRowData(JSON.parse(rowElement.dataset.row || "{}"), rowElement.dataset.id ? Number(rowElement.dataset.id) : null);
@@ -167,6 +173,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    /** Adds one consignment row to the table. */
     function addRow(row, isLocal) {
         var source = buildRowData(row || {});
         var rowElement = document.createElement("tr");
@@ -240,6 +247,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    /** Copies popup edits back to the table row. */
     function updateRowFromModal(rowElement, source) {
         var consignmentNumber = document.getElementById("modal-consignment-number").value.trim();
         var status = document.getElementById("modal-status").value.trim();
@@ -312,6 +320,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return true;
     }
 
+    /** Collects table rows for saving. */
     function collectRows() {
         var rows = [];
         var tableRows = document.querySelectorAll("#sheet-body tr");
@@ -326,6 +335,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return rows;
     }
 
+    /** Sends all table changes to the server. */
     async function saveSheet() {
         if (!saveUrl) {
             showStatus("Save endpoint is missing.", "danger");
@@ -422,6 +432,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    /** Loads table rows for the selected page/search/sort. */
     async function loadPage(page, search, perPage, sortBy, sortOrder) {
         if (!listUrl) {
             showStatus("List endpoint is missing.", "danger");
@@ -501,6 +512,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    /** Updates page buttons below the table. */
     function updatePaginationUI() {
         var showingStart = (currentPage - 1) * currentPerPage + 1;
         var showingEnd = Math.min(currentPage * currentPerPage, totalRows);
@@ -573,6 +585,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    /** Shows current sort on table headers. */
     function updateSortHeaders() {
         var headers = document.querySelectorAll(".sort-header");
         headers.forEach(function (header) {
@@ -588,6 +601,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    /** Shows or hides the table loader. */
     function showLoadingSpinner(show) {
         var spinner = document.getElementById("loading-spinner");
         if (show) {
@@ -598,6 +612,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Event Listeners
+    // Save in popup updates the row or adds a new temp row.
     modalSaveButton.addEventListener("click", function () {
         if (isCreatingRow) {
             var newId = adminState.nextLocalId();
@@ -635,6 +650,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    // Add Row opens the same popup in new-row mode.
     addRowButton.addEventListener("click", function () {
         isCreatingRow = true;
         currentEditingRow = null;
@@ -650,6 +666,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // POD chooser: stage selected image silently until the modal Save button is clicked.
     if (modalPodFile) {
+        // Keep selected POD ready for preview before Save.
         modalPodFile.addEventListener('change', function () {
             var file = modalPodFile.files && modalPodFile.files[0];
             if (!file) {
@@ -677,6 +694,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (modalPodRemoveButton) {
+        // Remove POD from server, then update this screen.
         modalPodRemoveButton.addEventListener('click', async function () {
             if (!currentEditingRow) {
                 modalPodPreview.innerHTML = '<em class="text-muted">No POD uploaded.</em>';
@@ -749,6 +767,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    /** Opens POD preview. */
     function openPodViewer(rowData) {
         if (!podViewerModal || !podViewerContent) return;
         rowData = rowData || {};
@@ -767,6 +786,7 @@ document.addEventListener("DOMContentLoaded", function () {
     saveButton.addEventListener("click", saveSheet);
 
     // Search with debouncing
+    // Wait a moment before searching while user types.
     searchInput.addEventListener("input", function () {
         clearTimeout(searchTimeout);
         searchTimeout = setTimeout(function () {
@@ -804,6 +824,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Sort headers
     var sortHeaders = document.querySelectorAll(".sort-header");
+    // Click headers to switch sort order.
     sortHeaders.forEach(function (header) {
         header.addEventListener("click", function () {
             var column = header.dataset.sortColumn;

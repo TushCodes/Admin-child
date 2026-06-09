@@ -1,7 +1,8 @@
 /**
- * @file Reveals page elements as they enter the visitor viewport.
+ * @file Fade-in effects while scrolling.
  */
 (function(){
+  /** Runs code after the page is ready. */
   function onReady(callback){
     if(document.readyState !== 'loading') return callback();
     document.addEventListener('DOMContentLoaded', callback);
@@ -11,6 +12,7 @@
     const revealElements = document.querySelectorAll('.reveal');
     if(!revealElements.length) return;
 
+    // Reveal items when they enter the screen.
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if(entry.isIntersecting){

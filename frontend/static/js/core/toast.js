@@ -4,6 +4,7 @@
 (function (window, document) {
     "use strict";
 
+    /** Shows a small message popup. */
     function show(message, type) {
         type = type || "info";
         document.querySelectorAll(".toast-notification").forEach(function (toast) {

@@ -1,9 +1,10 @@
 /**
- * @file Provides shared hash popup lifecycle and scroll-lock behavior.
+ * @file Popup open/close helper.
  */
 (function (window, document) {
     "use strict";
 
+    /** Finds the popup from the URL hash. */
     function getTargetPopup(selector) {
         var hash = window.location.hash;
         if (!hash) return null;
@@ -15,10 +16,12 @@
         }
     }
 
+    /** Stops page scroll while popup is open. */
     function setScrollLocked(isLocked) {
         document.body.style.overflow = isLocked ? "hidden" : "";
     }
 
+    /** Closes the popup. */
     function close(closeHash) {
         if (closeHash) {
             window.location.hash = closeHash;
@@ -39,6 +42,7 @@
         window.location.hash = "";
     }
 
+    /** Wires popup clicks, Escape key, and hash links. */
     function init(options) {
         options = options || {};
         var selector = options.selector || ".pop-overlay";
