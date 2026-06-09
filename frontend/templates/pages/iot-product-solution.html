@@ -5,6 +5,7 @@
 {% extends "layouts/base.html" %}
 
 {% block content %}
+<div class="service-page service-page--iot-product-solution">
 <main>
         {% set hero_title = 'IoT Product Solutions' %}
         {% set hero_subtitle = 'Harness the power of IoT for smarter logistics, automation, and real-time supply chain visibility. Our IoT solutions drive efficiency, reduce errors, and enable data-driven decision making for your business.' %}
@@ -18,7 +19,7 @@
         {% endset %}
         {% include 'partials/about-hero.html' %}
         <!-- OVERVIEW SECTION -->
-        <section class="overview-section full-bleed" id="overview">
+        <section class="service-page__section service-page__section--overview overview-section full-bleed" id="overview">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="section-title section-title-center">Comprehensive IoT Solutions</h2>
@@ -42,7 +43,7 @@
         </section>
         <!-- //OVERVIEW SECTION -->
         <!-- SERVICES SECTION -->
-        <section class="services-section full-bleed" id="services">
+        <section class="service-page__section service-page__section--services services-section full-bleed" id="services">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="section-title section-title-center">Our IoT Services</h2>
@@ -90,7 +91,7 @@
         </section>
         <!-- //SERVICES SECTION -->
         <!-- FEATURES SECTION -->
-        <section class="features-section full-bleed" id="features">
+        <section class="service-page__section service-page__section--features features-section full-bleed" id="features">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="section-title section-title-center">Key IoT Features</h2>
@@ -137,4 +138,5 @@
             </div>
         </section>
     </main>
+</div>
 {% endblock %}
