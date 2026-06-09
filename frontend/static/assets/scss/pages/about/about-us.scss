@@ -1,4 +1,5 @@
 /* About Us Page Styles */
+.page-hero--about,
 .about-hero-section {
     position: relative;
     min-height: 55vh;
@@ -11,6 +12,7 @@
     overflow: hidden;
 }
 
+.page-hero--about::before,
 .about-hero-section::before {
     content: '';
     position: absolute;
@@ -22,6 +24,7 @@
     z-index: 1;
 }
 
+.page-hero__content,
 .about-hero-content {
     position: relative;
     z-index: 2;
@@ -34,6 +37,7 @@
     margin: 0 auto;
 }
 
+.page-hero__title,
 .about-hero-title {
     font-size: 2.7rem;
     font-weight: bold;
@@ -41,6 +45,7 @@
     text-shadow: 1px 2px 8px rgba(0,0,0,0.18);
 }
 
+.page-hero__subtitle,
 .about-hero-subtitle {
     font-size: 1.25rem;
     opacity: 0.96;
@@ -212,7 +217,8 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .about-hero-title {
+    .page-hero__title,
+.about-hero-title {
         font-size: var(--text-3xl);
     }
     
@@ -240,7 +246,8 @@
 }
 
 @media (max-width: 576px) {
-    .about-hero-section {
+    .page-hero--about,
+.about-hero-section {
         padding: 4rem 0 3rem;
     }
     
@@ -256,6 +263,7 @@
 }
 
 /* Utilities */
+.page-hero--full,
 .about-hero-section.full-vh {
     /* Account for sticky header so hero fills viewport without being hidden under nav */
     --main-menu-height: 72px;
@@ -264,7 +272,8 @@
 }
 
 @media (max-width: 768px) {
-    .about-hero-section.full-vh {
+    .page-hero--full,
+.about-hero-section.full-vh {
         --main-menu-height: 56px;
         min-height: calc(60vh - var(--main-menu-height));
         padding-top: var(--main-menu-height);
