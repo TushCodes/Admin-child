@@ -196,6 +196,7 @@
 }
 
 /* Card with enhanced micro-interactions */
+.feature-card,
 .card-custom {
     background-color: transparent;
     border: 1px solid var(--border-color);
@@ -211,6 +212,8 @@
     will-change: transform, box-shadow;
 }
 
+.feature-card:hover,
+.feature-card:focus-within,
 .card-custom:hover,
 .card-custom:focus-within {
     background-color: transparent;
@@ -255,21 +258,25 @@
 }
 
 /* Gallery improvements */
+.gallery__image,
 .gallery-img {
     aspect-ratio: 4/3;
     object-fit: cover;
     transition: transform 0.3s;
 }
 
+.gallery__link:hover .gallery__image,
 .gallery-link:hover .gallery-img {
     transform: scale(1.03);
 }
 
 /* Improved popup styling */
+.gallery__dialog,
 .pop-overlay {
     background: rgba(0, 0, 0, 0.8);
 }        
 
+.gallery__dialog-content,
 .popup {
     background: #fff;
     border-radius: var(--border-radius);
@@ -469,6 +476,7 @@
 }
 
 /* Gallery card with refined hover effects */
+.gallery__card,
 .gallery-card {
     position: relative;
     overflow: hidden;
@@ -477,6 +485,7 @@
     backface-visibility: hidden; /* Prevent glitches during animations */
 }
 
+.gallery__card::after,
 .gallery-card::after {
     content: '';
     position: absolute;
@@ -490,10 +499,12 @@
     z-index: 1;
 }
 
+.gallery__card:hover::after,
 .gallery-card:hover::after {
     opacity: 1;
 }
 
+.gallery__overlay,
 .gallery-overlay {
     position: absolute;
     top: 0;
@@ -509,6 +520,7 @@
 }
 
 /* Refined popup styling with animations */
+.gallery__dialog,
 .pop-overlay {
     position: fixed;
     top: 0;
@@ -533,6 +545,7 @@
     opacity: 1;
 }
 
+.gallery__dialog-content,
 .popup {
     background: #fff;
     border-radius: var(--border-radius);
@@ -563,10 +576,12 @@
 }
 
 /* Close button styling */
+.gallery__dialog-content .close,
 .popup .close {
     transition: all var(--transition-fast);
 }
 
+.gallery__dialog-content .close:hover,
 .popup .close:hover {
     color: var(--primary-color);
     background-color: var(--light-bg);
@@ -574,6 +589,7 @@
 }
 
 /* Gallery Modal Image Improvements */
+.gallery__dialog-content img,
 .popup img {
     max-height: 70vh;
     width: 100%;

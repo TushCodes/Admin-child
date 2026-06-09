@@ -123,6 +123,7 @@
 }
 
 /* Values Section */
+.values,
 .values-section {
     background-color: var(--section-bg-2);
     padding: var(--section-padding-y) 0;
@@ -143,6 +144,7 @@
     box-shadow: var(--shadow-lg);
 }
 
+.value-card__icon,
 .value-icon {
     width: 80px;
     height: 80px;
@@ -156,6 +158,7 @@
     color: white;
 }
 
+.value-card__title,
 .value-title {
     font-size: var(--text-lg);
     font-weight: var(--font-bold);
@@ -163,6 +166,7 @@
     margin-bottom: 1rem;
 }
 
+.value-card__description,
 .value-description {
     color: var(--text-secondary);
     line-height: var(--line-height-relaxed);
@@ -255,6 +259,7 @@
         padding: 1.5rem 0;
     }
     
+    .value-card__icon,
     .value-icon {
         width: 60px;
         height: 60px;

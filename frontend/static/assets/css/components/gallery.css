@@ -1,19 +1,23 @@
 /* Gallery improvements */
+.gallery__image,
 .gallery-img {
     aspect-ratio: 4/3;
     object-fit: cover;
     transition: transform 0.3s;
 }
 
+.gallery__link:hover .gallery__image,
 .gallery-link:hover .gallery-img {
     transform: scale(1.03);
 }
 
 /* Improved popup styling */
+.gallery__dialog,
 .pop-overlay {
     background: rgba(0, 0, 0, 0.8);
 }        
 
+.gallery__dialog-content,
 .popup {
     background: #fff;
     border-radius: var(--border-radius);
@@ -24,6 +28,7 @@
     position: relative;
 }
 
+.gallery__dialog-content img,
 .popup img {
     width: 100%;
     height: auto;
@@ -31,6 +36,7 @@
     margin-bottom: 1em;
 }
 
+.gallery__dialog-content .close,
 .popup .close {
     position: absolute;
     top: 0.5em;
@@ -41,6 +47,7 @@
     transition: color 0.3s;
 }
 
+.gallery__dialog-content .close:hover,
 .popup .close:hover {
     color: var(--primary-color);
 }
