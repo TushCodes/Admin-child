@@ -5,6 +5,7 @@
 {% extends "layouts/base.html" %}
 
 {% block content %}
+<div class="service-page service-page--chartering-services">
 <main>
         {% set hero_title = 'Professional Chartering Services' %}
         {% set hero_subtitle = 'Complete charter solutions for all your freight needs. Our extensive experience in chartering air cargo, sea and barge freight enables us to provide the fastest, most reliable and cost-effective transport solutions for your urgent logistics requirements.' %}
@@ -31,7 +32,7 @@
         {% include 'partials/about-hero.html' %}
 
         <!-- OVERVIEW SECTION -->
-        <section class="overview-section full-bleed" id="overview">
+        <section class="service-page__section service-page__section--overview overview-section full-bleed" id="overview">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="section-title reveal section-title-center">Comprehensive Charter Network</h2>
@@ -64,7 +65,7 @@
         <!-- //OVERVIEW SECTION -->
 
         <!-- SERVICES SECTION -->
-        <section class="services-section" id="services">
+        <section class="service-page__section service-page__section--services services-section" id="services">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="section-title section-title-center">Our Charter Services</h2>
@@ -121,7 +122,7 @@
         <!-- //SERVICES SECTION -->
 
         <!-- FEATURES SECTION -->
-        <section class="features-section" id="features">
+        <section class="service-page__section service-page__section--features features-section" id="features">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="section-title section-title-center">Charter Service Features</h2>
@@ -213,4 +214,5 @@
         </section>
         
     </main>
+</div>
 {% endblock %}

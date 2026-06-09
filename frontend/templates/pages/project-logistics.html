@@ -5,6 +5,7 @@
 {% extends "layouts/base.html" %}
 
 {% block content %}
+<div class="service-page service-page--project-logistics">
 <main>
         {% set hero_title = 'Project Logistics Solutions' %}
         {% set hero_subtitle = 'Turnkey heavy-lift and project cargo solutions with specialized equipment, engineering expertise, and comprehensive project management. From wind energy components to industrial plant relocations, we deliver complex logistics with precision and safety.' %}
@@ -19,7 +20,7 @@
         {% include 'partials/about-hero.html' %}
 
         <!-- OVERVIEW SECTION -->
-        <section class="overview-section" id="overview">
+        <section class="service-page__section service-page__section--overview overview-section" id="overview">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="section-title section-title-center">Asset-Backed Logistics Specialist</h2>
@@ -51,7 +52,7 @@
         <!-- //OVERVIEW SECTION -->
 
         <!-- SERVICES SECTION -->
-        <section class="services-section" id="services">
+        <section class="service-page__section service-page__section--services services-section" id="services">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="section-title section-title-center">Sector Expertise</h2>
@@ -108,7 +109,7 @@
         <!-- //SERVICES SECTION -->
 
         <!-- FEATURES SECTION -->
-        <section class="features-section" id="features">
+        <section class="service-page__section service-page__section--features features-section" id="features">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2 class="section-title section-title-center">Our Differentiators</h2>
@@ -200,4 +201,5 @@
         </section>
         
     </main>
+</div>
 {% endblock %}
