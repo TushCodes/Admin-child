@@ -841,6 +841,7 @@ p.copy-right-grids a:hover { color: var(--color-black); }
 }
 
 /* === HEADER === */
+.site-header__top-bar,
 .site-header .top-bar {
     background: linear-gradient(90deg, #8BC34A 0%, #7eb540 60%, #6daf3e 100%);
     color: #fff;
@@ -879,20 +880,25 @@ p.copy-right-grids a:hover { color: var(--color-black); }
     background: #252525;
     color: #fff;
 }
+.site-footer__link,
 .site-footer a {
     color: var(--color-footer-link);
 }
+.site-footer__link:hover,
 .site-footer a:hover {
     color: var(--color-primary);
 }
+.site-footer__grid,
 .footer-row {
     font-size: 0.9rem;
     font-weight: 500;
 }
+.site-footer__contact-heading,
 .footer-contact h3 {
     font-size: 1.1rem;
     margin-bottom: 0.5rem;
 }
+.site-footer__address,
 .footer-contact address {
     font-style: normal;
     line-height: 1.5;

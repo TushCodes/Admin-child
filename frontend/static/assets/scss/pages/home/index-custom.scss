@@ -302,6 +302,7 @@
     background: linear-gradient(to bottom, #343a40, #212529);
 }
 
+.site-footer__heading,
 .footer-heading {
     font-size: 1rem;
     font-weight: var(--font-bold);
@@ -310,6 +311,7 @@
     display: inline-block;
 }
 
+.site-footer__heading::after,
 .footer-heading::after {
     content: '';
     position: absolute;
@@ -320,6 +322,7 @@
     background-color: var(--primary-color);
 }
 
+.site-footer__link,
 .footer-links a {
     color: rgba(255, 255, 255, 0.8);
     transition: all var(--transition-fast);
@@ -328,27 +331,32 @@
     position: relative;
 }
 
+.site-footer__link:hover,
 .footer-links a:hover {
     color: var(--primary-color);
     transform: translateX(3px);
 }
 
+.site-footer__address,
 .footer-address {
     font-style: normal;
     color: rgba(255, 255, 255, 0.8);
     line-height: 1.6;
 }
 
+.site-footer__address .site-footer__link,
 .footer-address a {
     color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
     transition: all var(--transition-fast);
 }
 
+.site-footer__address .site-footer__link:hover,
 .footer-address a:hover {
     color: var(--primary-color);
 }
 
+.site-footer__divider,
 .footer-divider {
     border-top-width: 1px;
     opacity: 0.2;
@@ -389,6 +397,7 @@
 }
 
 /* Copyright Section */
+.site-copyright,
 .copyright-section {
     background-color: #0f1011;
 }
@@ -425,11 +434,13 @@
         margin-top: 1rem;
     }
     
+    .site-footer__heading::after,
     .footer-heading::after {
         left: 50%;
         transform: translateX(-50%);
     }
     
+    .site-footer__link:hover,
     .footer-links a:hover {
         transform: none;
     }
@@ -626,17 +637,20 @@
 }
 
 /* Top Bar Styling */
+.site-header__top-bar,
 .top-bar {
     background-color: var(--secondary-color);
     font-size: var(--text-xs);
     z-index: calc(var(--z-index-sticky) + 1);
 }
 
+.site-header__top-bar a,
 .top-bar a {
     transition: color var(--transition-fast);
     text-decoration: none;
 }
 
+.site-header__top-bar a:hover,
 .top-bar a:hover {
     color: var(--primary-color) !important;
 }
