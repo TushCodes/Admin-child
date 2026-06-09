@@ -75,6 +75,7 @@ def _get_env_int(name, default):
 from app.admin.db.config import require_database_uri, build_engine_options
 from app.admin.db.seed import seed_development_data
 from app.middleware import register_middleware
+from app.admin.extensions import limiter
 
 
 # Simple cache shim exposing `cached(timeout=...)` decorator.

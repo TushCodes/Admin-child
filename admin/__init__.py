@@ -9,6 +9,7 @@ TEMPLATE_FOLDER = ADMIN_ROOT / "frontend" / "templates"
 STATIC_FOLDER = ADMIN_ROOT / "frontend" / "static"
 
 from flask import Blueprint, current_app, redirect, url_for
+from importlib import import_module
 
 ADMIN_ROOT = Path(__file__).resolve().parent
 TEMPLATE_FOLDER = ADMIN_ROOT / "frontend" / "templates"
