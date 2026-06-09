@@ -1,6 +1,6 @@
 {% block head_extra %}
 {% from "partials/stylesheets.html" import page_styles %}
-{{ page_styles('assets/css/pages/project-logistics/project-logistics.css', include_about=True) }}
+{{ page_styles('assets/css/pages/project-logistics/project-logistics.css', shared_css=['assets/css/components/service-page-partners.css'], include_about=True) }}
 {% endblock %}
 {% extends "layouts/base.html" %}
 

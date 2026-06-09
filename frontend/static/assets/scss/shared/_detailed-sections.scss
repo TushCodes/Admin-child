@@ -1,23 +1,4 @@
 @mixin detailed-service-page-sections {
-    /* Overview Section */
-    .overview-section {
-        padding: 5rem 0;
-        background: var(--bg-section-1);
-    }
-
-    .overview-content {
-        max-width: 800px;
-        margin: 0 auto;
-        text-align: center;
-    }
-
-    .overview-text {
-        font-size: 1.125rem;
-        line-height: 1.8;
-        color: var(--text-secondary);
-        margin-bottom: 2.5rem;
-    }
-
     .overview-highlight {
         background: var(--light-bg);
         padding: 2rem;
@@ -25,16 +6,6 @@
         border-left: 4px solid var(--primary-color);
         text-align: left;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    }
-
-    .text-primary-color {
-        color: var(--primary-color) !important;
-    }
-
-    /* Services Section */
-    .services-section {
-        padding: 5rem 0;
-        background: var(--bg-section-2);
     }
 
     .service-cards {
@@ -89,7 +60,8 @@
         transition: all 0.3s ease;
     }
 
-    .service-card:hover .service-icon {
+    .service-card:hover .service-icon,
+    .feature-item:hover .feature-icon {
         transform: scale(1.1);
     }
 
@@ -109,12 +81,6 @@
         color: var(--text-secondary);
         line-height: 1.6;
         margin: 0;
-    }
-
-    /* Features Section */
-    .features-section {
-        padding: 5rem 0;
-        background: var(--bg-section-1);
     }
 
     .feature-list {
@@ -150,10 +116,6 @@
         justify-content: center;
         flex-shrink: 0;
         transition: all 0.3s ease;
-    }
-
-    .feature-item:hover .feature-icon {
-        transform: scale(1.1);
     }
 
     .feature-icon i {
@@ -222,35 +184,8 @@
 
     /* Responsive Design */
     @media (max-width: 768px) {
-        .transportation-hero-title {
-            font-size: 2.5rem;
-        }
-
-        .transportation-hero-subtitle {
-            font-size: 1.1rem;
-        }
-
-        .hero-features {
-            gap: 1rem;
-        }
-
-        .hero-feature {
-            padding: 0.6rem 1rem;
-            font-size: 0.9rem;
-        }
-
         .section-title {
             font-size: 2rem;
-        }
-
-        .service-cards {
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-        }
-
-        .feature-list {
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
         }
 
         .feature-item {

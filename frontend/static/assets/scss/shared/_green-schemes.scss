@@ -56,7 +56,22 @@ $green-context-schemes: (
     /* Green scheme for #{$context-label} elements */
     @include green-context-utility($utility-selector);
 
-    /* Green scheme for buttons in #{$context-label} context */
+    /* Green scheme for service cards in #{$context-label} context */
+    .service-card.#{$selector} .service-icon {
+        background: linear-gradient(135deg, #82CF2B, #69a823);
+    }
+
+    .service-card.#{$selector}:hover {
+        border-color: #82CF2B;
+    }
+
+    .service-card.#{$selector}::before {
+        background: linear-gradient(90deg, #82CF2B, #69a823);
+    }
+}
+
+
+@mixin service-page-track-button-base {
     .btn-track-green {
         background: linear-gradient(135deg, #82CF2B, #69a823);
         border: none;
@@ -78,17 +93,55 @@ $green-context-schemes: (
         box-shadow: 0 6px 20px rgba(130, 207, 43, 0.4);
         text-decoration: none;
     }
+}
 
-    /* Green scheme for service cards in #{$context-label} context */
-    .service-card.#{$selector} .service-icon {
+
+@mixin service-page-green-contexts {
+    .track-shipment-green,
+    .customs-green,
+    .export-green,
+    .import-green,
+    .post-shipment-green,
+    .automation-green,
+    .it-automation-green {
+        @each $property, $value in map.get($green-context-schemes, base) {
+            #{$property}: $value;
+        }
+    }
+
+    .track-shipment-green:hover,
+    .customs-green:hover,
+    .export-green:hover,
+    .import-green:hover,
+    .post-shipment-green:hover,
+    .automation-green:hover,
+    .it-automation-green:hover {
+        @each $property, $value in map.get($green-context-schemes, hover) {
+            #{$property}: $value;
+        }
+    }
+
+    .service-card.customs-green .service-icon,
+    .service-card.export-green .service-icon,
+    .service-card.import-green .service-icon,
+    .service-card.post-shipment-green .service-icon,
+    .service-card.automation-green .service-icon {
         background: linear-gradient(135deg, #82CF2B, #69a823);
     }
 
-    .service-card.#{$selector}:hover {
+    .service-card.customs-green:hover,
+    .service-card.export-green:hover,
+    .service-card.import-green:hover,
+    .service-card.post-shipment-green:hover,
+    .service-card.automation-green:hover {
         border-color: #82CF2B;
     }
 
-    .service-card.#{$selector}::before {
+    .service-card.customs-green::before,
+    .service-card.export-green::before,
+    .service-card.import-green::before,
+    .service-card.post-shipment-green::before,
+    .service-card.automation-green::before {
         background: linear-gradient(90deg, #82CF2B, #69a823);
     }
 }
