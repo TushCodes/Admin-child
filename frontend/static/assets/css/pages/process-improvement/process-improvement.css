@@ -2,3 +2,33 @@
 .transportation-hero-section {
   background: linear-gradient(135deg, rgba(0, 47, 75, 0.95), rgba(130, 207, 43, 0.85)), url("../../../../images/process-improvement-and-automation.jpg");
 }
+
+/* Green scheme for tracking and IT automation elements */
+.track-shipment-green,
+.it-automation-green {
+  background-color: #82CF2B !important;
+  border-color: #82CF2B !important;
+  color: white !important;
+}
+
+.track-shipment-green:hover,
+.it-automation-green:hover {
+  background-color: #69a823 !important;
+  border-color: #69a823 !important;
+  color: white !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(130, 207, 43, 0.3);
+}
+
+/* Green scheme for service cards in tracking and IT automation context */
+.service-card.automation-green .service-icon {
+  background: linear-gradient(135deg, #82CF2B, #69a823);
+}
+
+.service-card.automation-green:hover {
+  border-color: #82CF2B;
+}
+
+.service-card.automation-green::before {
+  background: linear-gradient(90deg, #82CF2B, #69a823);
+}

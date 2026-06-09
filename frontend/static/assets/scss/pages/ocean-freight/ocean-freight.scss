@@ -4,6 +4,41 @@
 
 @include transportation-page-hero('../../../../images/Ocean-Freight.jpg');
 
+/* Overview Section */
+.overview-section {
+    padding: 5rem 0;
+    background: var(--bg-section-1);
+}
+
+.overview-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.overview-text {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    margin-bottom: 2.5rem;
+}
+
+.overview-highlight {
+    background: var(--bg-section-2);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    border-left: 4px solid var(--primary-color);
+}
+
+/* Services Section */
+.services-section {
+    padding: 5rem 0;
+    background: var(--bg-section-2);
+}
+
+@include transportation-page-hero('../../../../images/Ocean-Freight.jpg');
+
 /* Ocean Freight Shared Section Overrides */
 .service-card {
     border-color: rgba(0, 66, 116, 0.1);
@@ -167,6 +202,32 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    .transportation-hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .transportation-hero-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .hero-features {
+        gap: 1rem;
+    }
+    
+    .hero-feature {
+        font-size: 0.9rem;
+        padding: 0.6rem 1rem;
+    }
+    
+    .service-cards {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .feature-list {
+        grid-template-columns: 1fr;
+    }
+    
     .ports-grid {
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     }
@@ -178,6 +239,28 @@
 }
 
 @media (max-width: 480px) {
+    .transportation-hero-content {
+        padding: 3rem 1rem;
+    }
+    
+    .transportation-hero-title {
+        font-size: 2rem;
+    }
+    
+    .transportation-hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .hero-features {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .service-card {
+        padding: 2rem 1.5rem;
+    }
+    
     .feature-item {
         padding: 1.5rem;
         flex-direction: column;

@@ -2,3 +2,33 @@
 .transportation-hero-section {
   background: linear-gradient(135deg, rgba(0, 47, 75, 0.95), rgba(130, 207, 43, 0.85)), url("../../../../images/Post-Shipment-Services.png");
 }
+
+/* Green scheme for post-shipment related elements */
+.track-shipment-green,
+.post-shipment-green {
+  background-color: #82CF2B !important;
+  border-color: #82CF2B !important;
+  color: white !important;
+}
+
+.track-shipment-green:hover,
+.post-shipment-green:hover {
+  background-color: #69a823 !important;
+  border-color: #69a823 !important;
+  color: white !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(130, 207, 43, 0.3);
+}
+
+/* Green scheme for service cards in post-shipment related context */
+.service-card.post-shipment-green .service-icon {
+  background: linear-gradient(135deg, #82CF2B, #69a823);
+}
+
+.service-card.post-shipment-green:hover {
+  border-color: #82CF2B;
+}
+
+.service-card.post-shipment-green::before {
+  background: linear-gradient(90deg, #82CF2B, #69a823);
+}

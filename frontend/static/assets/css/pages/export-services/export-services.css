@@ -2,3 +2,33 @@
 .transportation-hero-section {
   background: linear-gradient(135deg, rgba(0, 47, 75, 0.95), rgba(130, 207, 43, 0.85)), url("../../../../images/Export-Services.jpg");
 }
+
+/* Green scheme for export-related elements */
+.track-shipment-green,
+.export-green {
+  background-color: #82CF2B !important;
+  border-color: #82CF2B !important;
+  color: white !important;
+}
+
+.track-shipment-green:hover,
+.export-green:hover {
+  background-color: #69a823 !important;
+  border-color: #69a823 !important;
+  color: white !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(130, 207, 43, 0.3);
+}
+
+/* Green scheme for service cards in export-related context */
+.service-card.export-green .service-icon {
+  background: linear-gradient(135deg, #82CF2B, #69a823);
+}
+
+.service-card.export-green:hover {
+  border-color: #82CF2B;
+}
+
+.service-card.export-green::before {
+  background: linear-gradient(90deg, #82CF2B, #69a823);
+}

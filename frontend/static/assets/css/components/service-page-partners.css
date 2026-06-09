@@ -28,8 +28,7 @@
   max-width: 280px;
 }
 
-.partner-card:hover,
-.certification-item:hover {
+.partner-card:hover {
   transform: translateY(-5px);
   box-shadow: var(--shadow-lg);
   border-color: var(--primary-color);
@@ -48,34 +47,24 @@
   filter: grayscale(0%);
 }
 
-.placeholder-logo,
-.cert-logo {
+.placeholder-logo {
   width: 80px;
   height: 80px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0 auto 1rem;
   color: white;
   font-size: 2rem;
   transition: all 0.3s ease;
 }
 
-.placeholder-logo {
-  margin: 0 auto 1rem;
-}
-
-.cert-logo {
-  margin: 0 auto 1.5rem;
-}
-
-.placeholder-logo.manufacturing,
-.cert-logo.customs {
+.placeholder-logo.manufacturing {
   background: linear-gradient(135deg, #3498db, #2980b9);
 }
 
-.placeholder-logo.pharmaceutical,
-.cert-logo.fire {
+.placeholder-logo.pharmaceutical {
   background: linear-gradient(135deg, #e74c3c, #c0392b);
 }
 
@@ -83,8 +72,7 @@
   background: linear-gradient(135deg, #f39c12, #e67e22);
 }
 
-.placeholder-logo.automotive,
-.cert-logo.security {
+.placeholder-logo.automotive {
   background: linear-gradient(135deg, #9b59b6, #8e44ad);
 }
 
@@ -92,21 +80,18 @@
   background: linear-gradient(135deg, #1abc9c, #16a085);
 }
 
-.partner-card:hover .placeholder-logo,
-.certification-item:hover .cert-logo {
+.partner-card:hover .placeholder-logo {
   transform: scale(1.1);
 }
 
-.partner-info h5,
-.certification-item h5 {
+.partner-info h5 {
   font-size: 1.1rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
   color: var(--text-primary);
 }
 
-.partner-info p,
-.certification-item p {
+.partner-info p {
   color: var(--text-secondary);
   font-size: 0.9rem;
   margin: 0;
@@ -156,6 +141,25 @@
   border: 1px solid rgba(130, 207, 43, 0.1);
 }
 
+.certification-item:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-color);
+}
+
+.cert-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  color: white;
+  font-size: 2rem;
+  transition: all 0.3s ease;
+}
+
 .cert-logo.iso {
   background: linear-gradient(135deg, #2c3e50, #34495e);
 }
@@ -164,12 +168,67 @@
   background: linear-gradient(135deg, #27ae60, #2ecc71);
 }
 
+.cert-logo.fire {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+.cert-logo.customs {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+}
+
+.cert-logo.security {
+  background: linear-gradient(135deg, #8e44ad, #9b59b6);
+}
+
 .cert-logo.environment {
   background: linear-gradient(135deg, #27ae60, #16a085);
 }
 
+.certification-item:hover .cert-logo {
+  transform: scale(1.1);
+}
+
+.certification-item h5 {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.certification-item p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
+  .transportation-hero-title {
+    font-size: 2.5rem;
+  }
+  .transportation-hero-subtitle {
+    font-size: 1.1rem;
+  }
+  .hero-features {
+    gap: 1rem;
+  }
+  .hero-feature {
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+  }
+  .service-cards {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .feature-list {
+    grid-template-columns: 1fr;
+  }
+  .cta-title {
+    font-size: 2rem;
+  }
+  .cta-subtitle {
+    font-size: 1.1rem;
+  }
   .partners-grid {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
@@ -188,6 +247,28 @@
   }
 }
 @media (max-width: 480px) {
+  .transportation-hero-content {
+    padding: 3rem 1rem;
+  }
+  .transportation-hero-title {
+    font-size: 2rem;
+  }
+  .transportation-hero-subtitle {
+    font-size: 1rem;
+  }
+  .hero-features {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  .service-card {
+    padding: 2rem 1.5rem;
+  }
+  .feature-item {
+    padding: 1rem;
+    flex-direction: column;
+    text-align: center;
+  }
   .partners-grid {
     grid-template-columns: 1fr;
   }
