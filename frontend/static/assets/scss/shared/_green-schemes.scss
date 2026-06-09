@@ -56,7 +56,22 @@ $green-context-schemes: (
     /* Green scheme for #{$context-label} elements */
     @include green-context-utility($utility-selector);
 
-    /* Green scheme for buttons in #{$context-label} context */
+    /* Green scheme for service cards in #{$context-label} context */
+    .service-card.#{$selector} .service-icon {
+        background: linear-gradient(135deg, #82CF2B, #69a823);
+    }
+
+    .service-card.#{$selector}:hover {
+        border-color: #82CF2B;
+    }
+
+    .service-card.#{$selector}::before {
+        background: linear-gradient(90deg, #82CF2B, #69a823);
+    }
+}
+
+
+@mixin service-page-track-button-base {
     .btn-track-green {
         background: linear-gradient(135deg, #82CF2B, #69a823);
         border: none;
@@ -77,18 +92,5 @@ $green-context-schemes: (
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(130, 207, 43, 0.4);
         text-decoration: none;
-    }
-
-    /* Green scheme for service cards in #{$context-label} context */
-    .service-card.#{$selector} .service-icon {
-        background: linear-gradient(135deg, #82CF2B, #69a823);
-    }
-
-    .service-card.#{$selector}:hover {
-        border-color: #82CF2B;
-    }
-
-    .service-card.#{$selector}::before {
-        background: linear-gradient(90deg, #82CF2B, #69a823);
     }
 }

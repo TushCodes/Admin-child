@@ -1,6 +1,7 @@
 {% macro page_styles(page_css=None, include_about=False, shared_css=None) -%}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/css_slider.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/pages/home/index-custom.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/components/service-page-shared.css') }}">
 {%- if include_about %}
 <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/pages/about/about-us.css') }}">
 {%- endif %}
