@@ -3,7 +3,4 @@
 @use '../../shared' as *;
 
 @include transportation-page-hero('../../../../images/Import-Services.jpg');
-@include partner-service-page-sections;
-@include track-shipment-button-green;
 @include contextual-green-scheme('import-green', 'import-related');
-@include partner-service-page-responsive;

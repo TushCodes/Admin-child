@@ -1,6 +1,6 @@
 {% block head_extra %}
 {% from "partials/stylesheets.html" import page_styles %}
-{{ page_styles('assets/css/pages/labelling/labelling.css') }}
+{{ page_styles('assets/css/pages/labelling/labelling.css', shared_css=['assets/css/components/service-page-detailed.css']) }}
 {% endblock %}
 {% extends "layouts/base.html" %}
 

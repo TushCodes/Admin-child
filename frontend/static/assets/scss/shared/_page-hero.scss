@@ -1,9 +1,8 @@
 @use 'mixins' as *;
 
-@mixin transportation-page-hero($image-url) {
+@mixin transportation-page-hero-base {
     /* Hero Section */
     .transportation-hero-section {
-        background: linear-gradient(135deg, rgba(0, 47, 75, 0.95), rgba(130, 207, 43, 0.85)), url('#{$image-url}');
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
@@ -74,5 +73,11 @@
     .hero-feature i {
         font-size: 1.2rem;
         color: var(--primary-color);
+    }
+}
+
+@mixin transportation-page-hero($image-url) {
+    .transportation-hero-section {
+        background: linear-gradient(135deg, rgba(0, 47, 75, 0.95), rgba(130, 207, 43, 0.85)), url('#{$image-url}');
     }
 }

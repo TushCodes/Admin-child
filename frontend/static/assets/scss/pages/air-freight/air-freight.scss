@@ -3,8 +3,6 @@
 @use '../../shared' as *;
 
 @include transportation-page-hero('../../../../images/Air-Freight.jpg');
-@include service-page-sections;
-@include service-page-cta;
 
 /* Responsive Design */
 @media (max-width: 768px) {
