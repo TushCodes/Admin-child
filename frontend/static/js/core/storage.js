@@ -4,6 +4,7 @@
 (function (window) {
     "use strict";
 
+    /** Saves a limited list in browser storage. */
     function appendLimited(key, value, limit) {
         limit = limit || 50;
         var values = [];
@@ -18,6 +19,7 @@
         return values;
     }
 
+    /** Reads JSON from browser storage. */
     function getJson(key, fallback) {
         try {
             return JSON.parse(localStorage.getItem(key)) || fallback;

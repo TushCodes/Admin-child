@@ -1,5 +1,5 @@
 /**
- * @file Supports public consignment tracking interactions.
+ * @file Public tracking page map.
  */
 document.addEventListener("DOMContentLoaded", function () {
     var mapElement = document.getElementById("map");
@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
+    // Flask puts map points in data attributes.
     var pickupLat = parseFloat(mapElement.dataset.pickupLat);
     var pickupLng = parseFloat(mapElement.dataset.pickupLng);
     var dropLat = parseFloat(mapElement.dataset.dropLat);
@@ -33,6 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var pickup = [pickupLat, pickupLng];
     var drop = [dropLat, dropLng];
 
+    // Create the tracking map.
     var map = L.map("map", {
         zoomControl: false,
         scrollWheelZoom: false
@@ -44,6 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
         attribution: "&copy; OpenStreetMap contributors"
     }).addTo(map);
 
+    // Use simple colored map dots.
     var pickupIcon = L.divIcon({
         className: "",
         html: '<span style="display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:999px;background:#62a92a;border:2px solid #dbf7b7;box-shadow:0 0 0 4px rgba(98,169,42,.24);"></span>',
@@ -61,6 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
     L.marker(pickup, { icon: pickupIcon }).addTo(map).bindPopup("Pickup Location").openPopup();
     L.marker(drop, { icon: dropIcon }).addTo(map).bindPopup("Drop Location");
 
+    // Draw a basic line from pickup to drop.
     var routeLine = L.polyline([pickup, drop], {
         color: "#8bd136",
         weight: 4,

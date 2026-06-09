@@ -1,11 +1,12 @@
 /**
- * @file Adds browser-side feedback and submission behavior to contact forms.
+ * @file Contact form browser code.
  */
 (function (window, document) {
     "use strict";
 
     var REQUIRED_FIELDS = ["name", "email", "phone", "subject", "message"];
 
+    /** Turns form data into a plain object. */
     function toObject(formData) {
         var formObject = {};
         formData.forEach(function (value, key) { formObject[key] = value; });
@@ -13,6 +14,7 @@
         return formObject;
     }
 
+    /** Checks contact form fields. */
     function validate(formData) {
         for (var i = 0; i < REQUIRED_FIELDS.length; i += 1) {
             var field = REQUIRED_FIELDS[i];
@@ -22,6 +24,7 @@
         return /[\d+\-() ]{7,20}/.test(formData.phone);
     }
 
+    /** Shows Sending... on the submit button. */
     function setLoading(form, isLoading, originalText) {
         var submitButton = form.querySelector('button[type="submit"]');
         if (!submitButton) return "";
@@ -33,6 +36,7 @@
         return currentText;
     }
 
+    /** Handles contact form submit. */
     function bind(form) {
         form.addEventListener("submit", function (event) {
             event.preventDefault();
@@ -67,6 +71,7 @@
         });
     }
 
+    /** Starts contact form code if the form exists. */
     function init() {
         var form = document.getElementById("contactForm");
         if (form) bind(form);

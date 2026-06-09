@@ -1,7 +1,8 @@
 /**
- * @file Stores shared admin screen state on one safe browser object.
+ * @file Keeps unsaved admin table changes.
  */
 (function () {
+  /** Makes a fresh Set for row ids. */
   function createSet() { return new Set(); }
 
   var state = {
@@ -10,12 +11,15 @@
     locallyAddedRows: [],
     newRowIdCounter: 0,
 
+    // Rows marked for delete before Save is clicked.
     addDeleted: function (id) { if (id) this.deletedIds.add(Number(id)); },
     clearDeleted: function () { this.deletedIds.clear(); },
 
+    // Rows edited locally before Save is clicked.
     addModified: function (id) { if (id) this.modifiedRowIds.add(Number(id)); },
     clearModified: function () { this.modifiedRowIds.clear(); },
 
+    // New rows use temporary negative ids until saved.
     pushLocalRow: function (row) { this.locallyAddedRows.push(row); },
     removeLocalRowById: function (id) {
       var rowIndex = this.locallyAddedRows.findIndex(function (row) { return row.id === id; });
@@ -23,6 +27,7 @@
     },
     nextLocalId: function () { this.newRowIdCounter += 1; return -(this.newRowIdCounter); },
 
+    // Reset local table changes after save/reload.
     resetAfterSave: function () {
       this.clearDeleted();
       this.clearModified();

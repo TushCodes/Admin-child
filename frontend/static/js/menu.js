@@ -1,11 +1,12 @@
 /**
- * @file Controls navigation sidebar opening, closing, and responsive behavior.
+ * @file Menu popup and nav behavior.
  */
 document.addEventListener("DOMContentLoaded", function () {
 	var openBtn = document.getElementById("openMenuModal");
 	var modal = document.getElementById("menuModal");
 	var closeButton = modal ? modal.querySelector(".menu-modal-close") : null;
 
+	/** Opens the menu popup. */
 	function openSidebar() {
 		if (!modal || !openBtn) {
 			return;
@@ -16,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		document.body.style.overflow = "hidden";
 	}
 
+	/** Closes the menu popup. */
 	function closeSidebar() {
 		if (!modal || !openBtn) {
 			return;

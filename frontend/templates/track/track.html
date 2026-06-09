@@ -293,9 +293,11 @@
 <script src="{{ url_for('static', filename='js/menu.js') }}"></script>
 {% if consignment and consignment.pod_image %}
 <script>
+// Download button is added only when POD exists.
 document.addEventListener('DOMContentLoaded', function(){
     const btn = document.getElementById('download-pod-btn');
     if (!btn) return;
+    // Flask gives us the POD download URL.
     const url = "{{ url_for('track.consignment_pod', consignment_number=consignment.consignment_number) }}";
     btn.addEventListener('click', async function(){
         btn.disabled = true;
@@ -308,8 +310,10 @@ document.addEventListener('DOMContentLoaded', function(){
                 alert(body && body.message ? body.message : 'Failed to download POD');
                 return;
             }
+            // Download file without leaving the page.
             const blob = await res.blob();
             let filename = '{{ consignment.consignment_number or "pod" }}_pod';
+            // Use server file name when available.
             const cd = res.headers.get('content-disposition') || '';
             const m = cd.match(/filename\*=UTF-8''([^;]+)/) || cd.match(/filename=\"?([^\";]+)\"?/);
             if(m) filename = decodeURIComponent(m[1]);
