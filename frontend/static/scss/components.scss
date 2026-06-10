@@ -35,21 +35,6 @@
 .feature-icon{width:48px;height:48px;display:flex;align-items:center;justify-content:center;border-radius:8px;background:linear-gradient(135deg, rgba(0,47,75,0.06), rgba(130,207,43,0.04));color:var(--color-primary)}
 
 
-
-/* Page-level BEM shell for service and information pages */
-.service-page {
-  width: 100%;
-}
-
-.service-page__section {
-  position: relative;
-}
-
-.service-page__section > .container,
-.service-page__section > .container-fluid {
-  position: relative;
-}
-
 /* Reusable BEM card blocks */
 .feature-card,
 .card-custom {
