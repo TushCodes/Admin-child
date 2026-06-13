@@ -17,9 +17,8 @@ track_bp = Blueprint("track", __name__)
 CONSIGNMENT_NUMBER_PATTERN = re.compile(r"^[A-Za-z0-9]{1,16}$")
 
 
-@track_bp.route("/track", methods=["GET", "POST"])
-def track_page():
-    """Show the tracking form and display a matching consignment when found."""
+def _render_tracking_page():
+    """Render a tracking form and optional consignment lookup result."""
     consignment = None
     error_message = None
 
@@ -66,6 +65,18 @@ def track_page():
         consignment=consignment,
         error_message=error_message,
     )
+
+
+@track_bp.route("/track", methods=["GET", "POST"])
+def track_page():
+    """Show the tracking form and display a matching consignment when found."""
+    return _render_tracking_page()
+
+
+@track_bp.route("/track-test-widget", methods=["GET", "POST"])
+def track_test_widget_page():
+    """Show the tracking widget test route with the same behavior as /track."""
+    return _render_tracking_page()
 
 
 @track_bp.route(
