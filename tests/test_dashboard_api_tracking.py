@@ -77,6 +77,34 @@ def test_track_page_fetches_consignment_through_dashboard_api(app, client):
     assert b"Origin Hub" in response.data
 
 
+def test_track_test_widget_matches_track_lookup_behavior(app, client):
+    from app.admin.models import Consignment, db
+
+    with app.app_context():
+        db.session.add(
+            Consignment(
+                consignment_number="WIDGETAPI1",
+                status="In Transit",
+                pickup_tag="Widget Origin",
+                pickup_pincode="333333",
+                drop_tag="Widget Destination",
+                drop_pincode="444444",
+                eta="Tomorrow",
+            )
+        )
+        db.session.commit()
+
+    response = client.post(
+        "/track-test-widget", data={"consignment_number": "widgetapi1"}
+    )
+
+    assert response.status_code == 200
+    assert b"WIDGETAPI1" in response.data
+    assert b"In Transit" in response.data
+    assert b"Widget Origin" in response.data
+    assert b"Widget Destination" in response.data
+
+
 def test_track_pod_uses_dashboard_api_for_consignment_data(app, client):
     from app.admin.models import Consignment, db
 
