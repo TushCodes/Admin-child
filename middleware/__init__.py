@@ -1,12 +1,13 @@
 """Application middleware registration."""
 
+from .cors import register_cors_middleware
+from .database import register_database_middleware
+from .error_handling import register_error_handlers
+from .observability import register_observability
+from .request_context import register_request_context_middleware
+from .security_headers import register_security_headers_middleware
+
 from app.admin.middleware.admin_auth import register_admin_auth_middleware
-from app.middleware.cors import register_cors_middleware
-from app.middleware.database import register_database_middleware
-from app.middleware.error_handling import register_error_handlers
-from app.middleware.observability import register_observability
-from app.middleware.request_context import register_request_context_middleware
-from app.middleware.security_headers import register_security_headers_middleware
 
 __all__ = ["register_middleware"]
 

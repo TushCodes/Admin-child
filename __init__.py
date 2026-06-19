@@ -74,8 +74,7 @@ def _get_env_int(name, default):
 
 from app.admin.db.config import require_database_uri, build_engine_options
 from app.admin.db.seed import seed_development_data
-from app.middleware import register_middleware
-from app.admin.extensions import limiter
+from middleware import register_middleware
 
 
 # Simple cache shim exposing `cached(timeout=...)` decorator.
@@ -235,13 +234,11 @@ def create_app():
         logger.info("AUTO_CREATE_TABLES disabled. Skipping db.create_all() at startup.")
         logger.info("Consignment schema repair runs asynchronously in production.")
 
-    from app.routes.main import main_bp
-    from app.routes.track import track_bp
-    from app.routes.pages import pages_bp
+    from routes.main import main_bp
+    from routes.track import track_bp
+    from routes.pages import pages_bp
     from app.admin import admin_bp, register_admin_routes
     from app.admin.flask_admin_setup import init_flask_admin
-    import_module("app.admin.routes.admin.auth_routes")
-    import_module("app.admin.api.dashboard")
 
     register_admin_routes()
     app.register_blueprint(main_bp)

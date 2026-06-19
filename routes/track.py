@@ -4,7 +4,7 @@ import logging
 import re
 from flask import Blueprint, render_template, request
 from app.controllers.responses import json_error
-from app.services.dashboard_api import (
+from services.dashboard_api import (
     DashboardAPIError,
     fetch_consignment,
     fetch_consignment_pod_response,

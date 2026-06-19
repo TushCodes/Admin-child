@@ -39,3 +39,48 @@ def rollback_request_session():
     """Ask database middleware to rollback this request at teardown."""
     mark_db_rollback()
     get_request_db_session().rollback()
+
+
+def register_database_middleware(app):
+    """Register minimal database middleware for the Flask app.
+
+    This binds `get_request_db_session` to the SQLAlchemy `db.session`
+    from `admin.models` and installs a teardown handler that commits
+    or rolls back the session based on errors or explicit rollback requests.
+    """
+    from flask import g
+
+    try:
+        from admin.models import db as sa_db
+    except Exception:
+        sa_db = None
+
+    def _get_session():
+        if sa_db is not None:
+            return sa_db.session
+        return get_request_db_session()
+
+    # Override the module-level accessor to prefer the SQLAlchemy session
+    globals()["get_request_db_session"] = _get_session
+
+    def _mark_db_rollback():
+        setattr(g, "_db_rollback", True)
+
+    globals()["mark_db_rollback"] = _mark_db_rollback
+
+    @app.teardown_request
+    def _teardown(exception=None):
+        try:
+            sess = _get_session()
+            if getattr(g, "_db_rollback", False) or exception:
+                try:
+                    sess.rollback()
+                except Exception:
+                    logger.exception("Failed to rollback DB session in teardown")
+            else:
+                try:
+                    sess.commit()
+                except Exception:
+                    logger.exception("Failed to commit DB session in teardown")
+        except Exception:
+            logger.exception("Database teardown failed")
